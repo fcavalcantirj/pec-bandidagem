@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEC da Bandidagem - Deputados Individuais</title>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P47CK1TDL8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-P47CK1TDL8', {
+        send_page_view: true,
+        page_title: 'PEC da Bandidagem - Deputados Individuais',
+        content_group1: 'Deputy Analysis',
+        content_group2: 'Political Analysis'
+      });
+    </script>
+    <script src="analytics.js"></script>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1e293b;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            padding: 1.5rem 1rem;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+            border-bottom: 4px solid #4f46e5;
+            border-radius: 0 0 24px 24px;
+            border-left: 1px solid rgba(255,255,255,0.8);
+            border-right: 1px solid rgba(255,255,255,0.8);
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+            text-align: center;
+            line-height: 1.2;
+            font-weight: 800;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .header p {
+            font-size: 1rem;
+            color: #334155;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .nav a {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(79, 70, 229, 0.1);
+            color: #4f46e5;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(79, 70, 229, 0.2);
+        }
+
+        .nav a:hover {
+            background: #4f46e5;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .search-section {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        .search-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .search-container {
+                grid-template-columns: 2fr 1fr 1fr;
+            }
+        }
+
+        .search-input, .filter-select {
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .search-input:focus, .filter-select:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-card {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            border-left: 4px solid #4f46e5;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4f46e5;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-top: 0.25rem;
+        }
+
+        .deputies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .deputy-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.8);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .deputy-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 50px rgba(0,0,0,0.15);
+        }
+
+        .deputy-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+
+        .deputy-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .party-state {
+            font-weight: 600;
+        }
+
+        .voting-badges {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .vote-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .vote-sim {
+            background: #10b981;
+        }
+
+        .vote-nao {
+            background: #ef4444;
+        }
+
+        .vote-abstencao {
+            background: #f59e0b;
+        }
+
+        .vote-ausente {
+            background: #6b7280;
+        }
+
+        .deputy-details {
+            font-size: 0.9rem;
+            color: #475569;
+        }
+
+        .secret-vote-indicator {
+            margin-top: 0.5rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .defended-secret {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .opposed-secret {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .consistency-indicator {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .consistent {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .changed {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .load-more {
+            display: block;
+            margin: 2rem auto;
+            padding: 1rem 2rem;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .load-more:hover {
+            background: #3730a3;
+            transform: translateY(-2px);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.6rem;
+            }
+
+            .deputies-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .deputy-card {
+                padding: 1.2rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+        }
+
+        /* GitHub Fork Ribbon */
+        .github-fork-ribbon {
+            width: 12.1em;
+            height: 12.1em;
+            position: fixed;
+            overflow: hidden;
+            top: 0;
+            right: 0;
+            z-index: 9999;
+            pointer-events: none;
+            font-size: 13px;
+            text-decoration: none;
+            text-indent: -999999px;
+            opacity: 0.9;
+        }
+
+        .github-fork-ribbon:before, .github-fork-ribbon:after {
+            position: absolute;
+            display: block;
+            width: 15.38em;
+            height: 1.54em;
+            top: 3.23em;
+            right: -3.23em;
+            box-sizing: content-box;
+            transform: rotate(45deg);
+        }
+
+        .github-fork-ribbon:before {
+            content: "";
+            padding: .38em 0;
+            background-color: #a00;
+            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
+            box-shadow: 0 .15em .23em 0 rgba(0, 0, 0, 0.5);
+            pointer-events: auto;
+        }
+
+        .github-fork-ribbon:after {
+            content: attr(data-ribbon);
+            color: #fff;
+            font: 700 1em "Helvetica Neue", Helvetica, Arial, sans-serif;
+            line-height: 1.54em;
+            text-decoration: none;
+            text-shadow: 0 -.08em rgba(0, 0, 0, 0.5);
+            text-align: center;
+            text-indent: 0;
+            padding: .15em 0;
+            margin: .15em 0;
+            border-width: .08em 0;
+            border-style: dotted;
+            border-color: #fff;
+            border-color: rgba(255, 255, 255, 0.7);
+        }
+
+        @media (max-width: 480px) {
+            .github-fork-ribbon {
+                font-size: 10px;
+                opacity: 0.8;
+            }
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(30, 41, 59, 0.95);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.4;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <!-- GitHub Fork Ribbon -->
+    <a class="github-fork-ribbon" href="https://github.com/fcavalcantirj/pec-bandidagem" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
+
+    <div class="header">
+        <h1>👥 PEC da Bandidagem</h1>
+        <p>Busca e Análise Individual de Deputados</p>
+
+        <nav class="nav">
+            <a href="index.html">🏠 Início</a>
+            <a href="partidos.html">🎯 Partidos</a>
+            <a href="estados.html">🗺️ Estados</a>
+            <a href="fluxo.html">🔄 Fluxo</a>
+            <a href="relatorio.html">📋 Relatório</a>
+        </nav>
+    </div>
+
+    <div class="container">
+        <div class="search-section">
+            <h2 style="text-align: center; margin-bottom: 1.5rem; color: #0f172a;">🔍 Buscar Deputados</h2>
+
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-input" placeholder="Digite o nome do deputado...">
+                <select id="partyFilter" class="filter-select">
+                    <option value="">Todos os Partidos</option>
+                </select>
+                <select id="stateFilter" class="filter-select">
+                    <option value="">Todos os Estados</option>
+                </select>
+            </div>
+
+            <div class="stats-summary" id="searchStats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalCount">-</div>
+                    <div class="stat-label">Total Encontrado</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="simCount">-</div>
+                    <div class="stat-label">Votaram SIM</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="naoCount">-</div>
+                    <div class="stat-label">Votaram NÃO</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="changedCount">-</div>
+                    <div class="stat-label">Mudaram Voto</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="deputies-grid" id="deputiesGrid">
+            <!-- Deputies will be populated here -->
+        </div>
+
+        <div class="no-results" id="noResults" style="display: none;">
+            🔍 Nenhum deputado encontrado com os critérios selecionados.
+        </div>
+
+        <button class="load-more" id="loadMore" style="display: none;">
+            Carregar Mais Deputados
+        </button>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <div class="footer" style="background: rgba(30, 41, 59, 0.95); color: white; padding: 2rem; margin-top: 3rem; text-align: center;">
+        <div class="footer-content" style="max-width: 1200px; margin: 0 auto;">
+            <div id="version-info" style="margin: 1rem 0; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                <!-- Version info will be injected here by version.js -->
+            </div>
+            <p style="margin-top: 1rem; font-size: 0.9rem; color: #94a3b8;">
+                <a href="index.html" style="color: #3b82f6; text-decoration: none;">← Voltar ao início</a> |
+                Criado por <a href="https://github.com/fcavalcantirj" style="color: #3b82f6; text-decoration: none;">fcavalcantirj</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="version.js"></script>
+    <script>
+        let allDeputies = [];
+        let filteredDeputies = [];
+        let currentPage = 0;
+        const itemsPerPage = 50;
+
+        // Load and process deputy data
+        function loadDeputyData() {
+            if (typeof VISUALIZATION_DATA !== 'undefined') {
+                console.log('Loading deputy data...');
+
+                // Combine data from both rounds
+                const round1Data = VISUALIZATION_DATA.round1 || [];
+                const round2Data = VISUALIZATION_DATA.round2 || [];
+
+                // Create a map for round 2 data
+                const round2Map = new Map();
+                round2Data.forEach(deputy => {
+                    round2Map.set(deputy.name, deputy);
+                });
+
+                // Process all deputies
+                allDeputies = round1Data.map(deputy1 => {
+                    const deputy2 = round2Map.get(deputy1.name);
+
+                    return {
+                        name: deputy1.name,
+                        party: deputy1.party,
+                        state: deputy1.state,
+                        round1_vote: deputy1.vote,
+                        round2_vote: deputy2 ? deputy2.vote : 'Ausente',
+                        secret_defense: deputy2 ? deputy2.secret_defense : 'Não informado',
+                        changed_vote: deputy1.vote !== (deputy2 ? deputy2.vote : deputy1.vote),
+                        consistency: deputy1.vote === (deputy2 ? deputy2.vote : deputy1.vote) ? 'Consistente' : 'Mudou'
+                    };
+                });
+
+                console.log(`Loaded ${allDeputies.length} deputies`);
+
+                setupFilters();
+                filterDeputies();
+                trackVisualizationInteraction('deputy_search', 'data_loaded', `${allDeputies.length} deputies`);
+            } else {
+                console.error('Deputy data not found');
+            }
+        }
+
+        // Setup filter options
+        function setupFilters() {
+            const parties = [...new Set(allDeputies.map(d => d.party))].sort();
+            const states = [...new Set(allDeputies.map(d => d.state))].sort();
+
+            const partySelect = document.getElementById('partyFilter');
+            const stateSelect = document.getElementById('stateFilter');
+
+            parties.forEach(party => {
+                const option = document.createElement('option');
+                option.value = party;
+                option.textContent = party;
+                partySelect.appendChild(option);
+            });
+
+            states.forEach(state => {
+                const option = document.createElement('option');
+                option.value = state;
+                option.textContent = state;
+                stateSelect.appendChild(option);
+            });
+        }
+
+        // Filter deputies based on search and filters
+        function filterDeputies() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const partyFilter = document.getElementById('partyFilter').value;
+            const stateFilter = document.getElementById('stateFilter').value;
+
+            filteredDeputies = allDeputies.filter(deputy => {
+                const matchesSearch = deputy.name.toLowerCase().includes(searchTerm);
+                const matchesParty = !partyFilter || deputy.party === partyFilter;
+                const matchesState = !stateFilter || deputy.state === stateFilter;
+
+                return matchesSearch && matchesParty && matchesState;
+            });
+
+            currentPage = 0;
+            updateStats();
+            renderDeputies();
+
+            // Track search if there's a search term
+            if (searchTerm) {
+                trackVisualizationInteraction('deputy_search', 'search_performed', searchTerm);
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            const total = filteredDeputies.length;
+            const simCount = filteredDeputies.filter(d => d.round2_vote === 'Sim').length;
+            const naoCount = filteredDeputies.filter(d => d.round2_vote === 'Não').length;
+            const changedCount = filteredDeputies.filter(d => d.changed_vote).length;
+
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('simCount').textContent = simCount;
+            document.getElementById('naoCount').textContent = naoCount;
+            document.getElementById('changedCount').textContent = changedCount;
+        }
+
+        // Render deputies grid
+        function renderDeputies() {
+            const grid = document.getElementById('deputiesGrid');
+            const noResults = document.getElementById('noResults');
+            const loadMore = document.getElementById('loadMore');
+
+            if (filteredDeputies.length === 0) {
+                grid.innerHTML = '';
+                noResults.style.display = 'block';
+                loadMore.style.display = 'none';
+                return;
+            }
+
+            noResults.style.display = 'none';
+
+            const endIndex = Math.min((currentPage + 1) * itemsPerPage, filteredDeputies.length);
+            const deputiesToShow = filteredDeputies.slice(0, endIndex);
+
+            grid.innerHTML = deputiesToShow.map(deputy => createDeputyCard(deputy)).join('');
+
+            // Show/hide load more button
+            if (endIndex < filteredDeputies.length) {
+                loadMore.style.display = 'block';
+            } else {
+                loadMore.style.display = 'none';
+            }
+        }
+
+        // Create deputy card HTML
+        function createDeputyCard(deputy) {
+            const getVoteBadge = (vote) => {
+                const classes = {
+                    'Sim': 'vote-sim',
+                    'Não': 'vote-nao',
+                    'Abstenção': 'vote-abstencao',
+                    'Ausente': 'vote-ausente'
+                };
+                return `<span class="vote-badge ${classes[vote] || 'vote-ausente'}">${vote}</span>`;
+            };
+
+            const getSecretVoteIndicator = (defense) => {
+                if (defense === 'Sim') {
+                    return '<div class="secret-vote-indicator defended-secret">🔐 Defendeu voto secreto</div>';
+                } else if (defense === 'Não') {
+                    return '<div class="secret-vote-indicator opposed-secret">🔓 Contra voto secreto</div>';
+                }
+                return '';
+            };
+
+            const getConsistencyIndicator = (consistency) => {
+                if (consistency === 'Consistente') {
+                    return '<span class="consistency-indicator consistent">✓ Consistente</span>';
+                } else {
+                    return '<span class="consistency-indicator changed">⚠ Mudou voto</span>';
+                }
+            };
+
+            return `
+                <div class="deputy-card" onclick="showDeputyDetails('${deputy.name}')">
+                    <div class="deputy-name">${deputy.name}</div>
+                    <div class="deputy-info">
+                        <span class="party-state">${deputy.party} - ${deputy.state}</span>
+                        ${getConsistencyIndicator(deputy.consistency)}
+                    </div>
+                    <div class="voting-badges">
+                        <span style="font-size: 0.8rem; color: #64748b;">1º Turno:</span>
+                        ${getVoteBadge(deputy.round1_vote)}
+                        <span style="font-size: 0.8rem; color: #64748b; margin-left: 0.5rem;">2º Turno:</span>
+                        ${getVoteBadge(deputy.round2_vote)}
+                    </div>
+                    <div class="deputy-details">
+                        <div>Padrão de votação: ${deputy.round1_vote} → ${deputy.round2_vote}</div>
+                        ${getSecretVoteIndicator(deputy.secret_defense)}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Show deputy details (could be expanded to modal)
+        function showDeputyDetails(deputyName) {
+            const deputy = allDeputies.find(d => d.name === deputyName);
+            if (deputy) {
+                trackVisualizationInteraction('deputy_search', 'deputy_selected', deputyName);
+
+                alert(`
+Deputado: ${deputy.name}
+Partido: ${deputy.party}
+Estado: ${deputy.state}
+
+Votação:
+• 1º Turno: ${deputy.round1_vote}
+• 2º Turno: ${deputy.round2_vote}
+• Posição sobre voto secreto: ${deputy.secret_defense}
+• Consistência: ${deputy.consistency}
+                `);
+            }
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', filterDeputies);
+        document.getElementById('partyFilter').addEventListener('change', filterDeputies);
+        document.getElementById('stateFilter').addEventListener('change', filterDeputies);
+
+        document.getElementById('loadMore').addEventListener('click', () => {
+            currentPage++;
+            renderDeputies();
+            trackVisualizationInteraction('deputy_search', 'load_more', `page_${currentPage}`);
+        });
+
+        // Analytics function (from analytics.js)
+        function trackVisualizationInteraction(chartType, action, details, value = 1) {
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'visualization_interaction', {
+                    chart_type: chartType,
+                    interaction_action: action,
+                    interaction_details: details,
+                    event_category: 'Data Visualization',
+                    page_type: 'Deputy Search'
+                });
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDeputyData();
+        });
+    </script>
+</body>
+</html>
