@@ -8,7 +8,7 @@ Visualizações interativas dos padrões de votação da **PEC da Bandidagem** n
 
 ## 🚀 Visualizar Online
 
-**[👉 Acesse as visualizações interativas](https://fcavalcantirj.github.io/pec-bandidagem)**
+**[👉 Acesse as visualizações interativas](https://pec-bandidagem.vercel.app/)**
 
 ## 📊 Visão Geral
 
