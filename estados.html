@@ -372,6 +372,34 @@
             .map-legend {
                 flex-direction: column;
             }
+
+            /* Mobile chart improvements */
+            .chart-container {
+                padding: 1rem;
+                margin: 1rem 0;
+            }
+
+            .chart-title {
+                font-size: 1.5rem;
+            }
+
+            .chart-subtitle {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chart-container {
+                padding: 0.5rem;
+            }
+
+            .chart-title {
+                font-size: 1.3rem;
+            }
+
+            .chart-subtitle {
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -473,6 +501,29 @@
 
     <script src="data.js"></script>
     <script>
+        // Mobile responsiveness functions
+        function isMobile() {
+            return window.innerWidth <= 768;
+        }
+
+        function getMobileMargins() {
+            if (window.innerWidth <= 480) {
+                return {top: 20, right: 20, bottom: 80, left: 60};
+            } else if (window.innerWidth <= 768) {
+                return {top: 20, right: 30, bottom: 90, left: 80};
+            }
+            return {top: 40, right: 40, bottom: 100, left: 120};
+        }
+
+        function getMobileHeight() {
+            if (window.innerWidth <= 480) {
+                return 400;
+            } else if (window.innerWidth <= 768) {
+                return 500;
+            }
+            return 600;
+        }
+
         // Brazilian states mapping and regions
         const stateRegions = {
             'AC': {name: 'Acre', region: 'Norte'},
@@ -657,11 +708,12 @@
                 const svg = d3.select('#state-ranking');
                 const container = svg.node().parentNode;
                 const containerWidth = container.clientWidth - 40;
-                const margin = {top: 20, right: 100, bottom: 60, left: 200};
-                const width = containerWidth - margin.left - margin.right;
-                const height = 600 - margin.top - margin.bottom;
+                const margin = getMobileMargins();
+                const width = Math.max(200, containerWidth - margin.left - margin.right);
+                const chartHeight = getMobileHeight();
+                const height = chartHeight - margin.top - margin.bottom;
 
-                svg.attr('width', containerWidth).attr('height', 600);
+                svg.attr('width', containerWidth).attr('height', chartHeight);
                 svg.selectAll('*').remove();
 
                 const g = svg.append('g')
@@ -801,11 +853,12 @@
                 const svg = d3.select('#comparison-chart');
                 const container = svg.node().parentNode;
                 const containerWidth = container.clientWidth - 40;
-                const margin = {top: 20, right: 30, bottom: 60, left: 60};
-                const width = containerWidth - margin.left - margin.right;
-                const height = 400 - margin.top - margin.bottom;
+                const margin = isMobile() ? {top: 20, right: 20, bottom: 70, left: 50} : {top: 20, right: 30, bottom: 60, left: 60};
+                const width = Math.max(200, containerWidth - margin.left - margin.right);
+                const chartHeight = isMobile() ? 350 : 400;
+                const height = chartHeight - margin.top - margin.bottom;
 
-                svg.attr('width', containerWidth).attr('height', 400);
+                svg.attr('width', containerWidth).attr('height', chartHeight);
 
                 const g = svg.append('g')
                     .attr('transform', `translate(${margin.left},${margin.top})`);
