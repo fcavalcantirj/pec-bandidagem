@@ -65,45 +65,95 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: #333;
+            /* Mobile-first: prevent horizontal scroll and smooth experience */
+            overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
         .header {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            padding: 2rem;
+            padding: 1.5rem 1rem;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             border-bottom: 3px solid #4f46e5;
         }
 
         .header h1 {
-            font-size: 2.5rem;
+            font-size: 1.8rem;
             color: #1e293b;
             margin-bottom: 0.5rem;
             text-align: center;
+            line-height: 1.2;
         }
 
         .header p {
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: #64748b;
             text-align: center;
             margin-bottom: 1rem;
         }
 
+        /* Tablet and up */
+        @media (min-width: 768px) {
+            .header {
+                padding: 2rem;
+            }
+
+            .header h1 {
+                font-size: 2.2rem;
+            }
+
+            .header p {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Desktop */
+        @media (min-width: 1024px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .header p {
+                font-size: 1.2rem;
+            }
+        }
+
         .nav {
             display: flex;
             justify-content: center;
-            gap: 1rem;
+            gap: 0.5rem;
             margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* Tablet and up */
+        @media (min-width: 768px) {
+            .nav {
+                gap: 1rem;
+                flex-wrap: nowrap;
+            }
         }
 
         .nav a {
-            padding: 0.75rem 1.5rem;
+            padding: 0.6rem 1rem;
             background: #4f46e5;
             color: white;
             text-decoration: none;
-            border-radius: 25px;
+            border-radius: 20px;
             transition: all 0.3s ease;
             font-weight: 500;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        /* Tablet and up */
+        @media (min-width: 768px) {
+            .nav a {
+                padding: 0.75rem 1.5rem;
+                border-radius: 25px;
+                font-size: 1rem;
+            }
         }
 
         .nav a:hover, .nav a.active {
@@ -113,19 +163,56 @@
         }
 
         .container {
-            max-width: 1400px;
+            width: 100%;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 1rem;
+        }
+
+        /* Tablet and up */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 1200px;
+                padding: 1.5rem;
+            }
+        }
+
+        /* Desktop */
+        @media (min-width: 1024px) {
+            .container {
+                max-width: 1400px;
+                padding: 2rem;
+            }
         }
 
         .chart-container {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 2rem;
-            margin: 2rem 0;
+            border-radius: 15px;
+            padding: 1rem;
+            margin: 1rem 0;
             box-shadow: 0 8px 32px rgba(0,0,0,0.1);
             border: 1px solid rgba(255,255,255,0.2);
+            /* Ensure charts don't overflow on mobile */
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Tablet and up */
+        @media (min-width: 768px) {
+            .chart-container {
+                border-radius: 20px;
+                padding: 1.5rem;
+                margin: 1.5rem 0;
+                overflow-x: visible;
+            }
+        }
+
+        /* Desktop */
+        @media (min-width: 1024px) {
+            .chart-container {
+                padding: 2rem;
+                margin: 2rem 0;
+            }
         }
 
         .chart-title {
@@ -314,6 +401,96 @@
                 right: -40px;
             }
         }
+        /* Mobile landscape optimization */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .header {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .header p {
+                font-size: 0.9rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .nav {
+                gap: 0.3rem;
+                margin-top: 0.5rem;
+            }
+
+            .nav a {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .container {
+                padding: 0.5rem;
+            }
+
+            .chart-container {
+                padding: 0.8rem;
+                margin: 0.5rem 0;
+            }
+
+            .chart-title {
+                font-size: 1.3rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .chart-subtitle {
+                font-size: 0.85rem;
+                margin-bottom: 1rem;
+            }
+        }
+
+        /* Small mobile optimizations */
+        @media (max-width: 480px) {
+            .chart-title {
+                font-size: 1.4rem;
+            }
+
+            .chart-subtitle {
+                font-size: 0.9rem;
+            }
+
+            /* Make tooltips larger for touch */
+            .tooltip {
+                font-size: 12px !important;
+                padding: 10px !important;
+                min-width: 200px !important;
+            }
+
+            /* Hide GitHub fork ribbon on very small screens */
+            .github-fork-ribbon {
+                display: none !important;
+            }
+        }
+
+        /* Touch improvements for interactive elements */
+        @media (hover: none) and (pointer: coarse) {
+            .control-button {
+                min-height: 44px;
+                padding: 0.8rem 1.2rem;
+                font-size: 1rem;
+            }
+
+            .nav a {
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Larger touch targets for chart elements */
+            .legend-item {
+                padding: 0.5rem;
+                margin: 0.25rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -454,12 +631,12 @@
             function updatePartyChart(sortedParties) {
                 const svg = d3.select('#party-chart');
                 const container = svg.node().parentNode;
-                const containerWidth = container.clientWidth - 40;
-                const margin = {top: 20, right: 30, bottom: 80, left: 120};
-                const width = containerWidth - margin.left - margin.right;
-                const height = 500 - margin.top - margin.bottom;
+                const containerWidth = container.clientWidth - (isMobile() ? 20 : 40);
+                const margin = getMobileMargins();
+                const width = Math.max(280, containerWidth - margin.left - margin.right);
+                const height = getMobileHeight() - margin.top - margin.bottom;
 
-                svg.attr('width', containerWidth).attr('height', 500);
+                svg.attr('width', containerWidth).attr('height', getMobileHeight());
                 svg.selectAll('*').remove();
 
                 const g = svg.append('g')
@@ -539,12 +716,13 @@
             function createCohesionChart() {
                 const svg = d3.select('#cohesion-chart');
                 const container = svg.node().parentNode;
-                const containerWidth = container.clientWidth - 40;
-                const margin = {top: 20, right: 30, bottom: 60, left: 120};
-                const width = containerWidth - margin.left - margin.right;
-                const height = 400 - margin.top - margin.bottom;
+                const containerWidth = container.clientWidth - (isMobile() ? 20 : 40);
+                const margin = getMobileMargins();
+                const width = Math.max(280, containerWidth - margin.left - margin.right);
+                const chartHeight = isMobile() ? 350 : 400;
+                const height = chartHeight - margin.top - margin.bottom;
 
-                svg.attr('width', containerWidth).attr('height', 400);
+                svg.attr('width', containerWidth).attr('height', chartHeight);
 
                 const g = svg.append('g')
                     .attr('transform', `translate(${margin.left},${margin.top})`);
@@ -612,12 +790,15 @@
             function createCorrelationChart() {
                 const svg = d3.select('#correlation-chart');
                 const container = svg.node().parentNode;
-                const containerWidth = container.clientWidth - 40;
-                const margin = {top: 20, right: 30, bottom: 60, left: 60};
-                const width = containerWidth - margin.left - margin.right;
-                const height = 400 - margin.top - margin.bottom;
+                const containerWidth = container.clientWidth - (isMobile() ? 20 : 40);
+                const margin = isMobile() ?
+                    {top: 15, right: 15, bottom: 50, left: 50} :
+                    {top: 20, right: 30, bottom: 60, left: 60};
+                const width = Math.max(250, containerWidth - margin.left - margin.right);
+                const chartHeight = isMobile() ? 300 : 400;
+                const height = chartHeight - margin.top - margin.bottom;
 
-                svg.attr('width', containerWidth).attr('height', 400);
+                svg.attr('width', containerWidth).attr('height', chartHeight);
 
                 const g = svg.append('g')
                     .attr('transform', `translate(${margin.left},${margin.top})`);
@@ -749,10 +930,44 @@
         // Initialize when page loads
         loadData();
 
-        // Responsive resize
+        // Enhanced responsive handling
+        let resizeTimeout;
         window.addEventListener('resize', function() {
-            // Reload charts on resize
-            location.reload();
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+                // Reload charts on resize with debouncing
+                loadData();
+            }, 250);
+        });
+
+        // Mobile-specific chart optimizations
+        function isMobile() {
+            return window.innerWidth <= 768;
+        }
+
+        function getMobileMargins() {
+            if (window.innerWidth <= 480) {
+                return {top: 15, right: 15, bottom: 60, left: 80};
+            } else if (window.innerWidth <= 768) {
+                return {top: 20, right: 20, bottom: 70, left: 100};
+            }
+            return {top: 20, right: 30, bottom: 80, left: 120};
+        }
+
+        function getMobileHeight() {
+            if (window.innerWidth <= 480) {
+                return 350;
+            } else if (window.innerWidth <= 768) {
+                return 400;
+            }
+            return 500;
+        }
+
+        // Orientation change handling
+        window.addEventListener('orientationchange', function() {
+            setTimeout(function() {
+                loadData();
+            }, 500);
         });
     </script>
 </body>
