@@ -505,7 +505,7 @@
 
     <div class="header">
         <h1>🏛️ PEC da Bandidagem</h1>
-        <p>Análise Detalhada por Partidos Políticos</p>
+        <p>⚠️ ALERTA: Análise dos Partidos que Aprovaram a PEC</p>
         <nav class="nav">
             <a href="index.html">🏠 Início</a>
             <a href="deputados.html">👥 Deputados</a>
@@ -518,13 +518,13 @@
 
     <div class="container">
         <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number" id="total-parties">20</div>
-                <div class="stat-label">Partidos Políticos</div>
+            <div class="stat-card" style="border-left-color: #dc2626; background: linear-gradient(135deg, rgba(220,38,38,0.05), transparent);">
+                <div class="stat-number" id="total-parties" style="color: #dc2626;">15</div>
+                <div class="stat-label" style="color: #991b1b; font-weight: 700;">Partidos que Votaram SIM</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-number" id="unanimous-parties">7</div>
-                <div class="stat-label">Partidos com 100% Coesão</div>
+            <div class="stat-card" style="border-left-color: #dc2626; background: linear-gradient(135deg, rgba(220,38,38,0.05), transparent);">
+                <div class="stat-number" id="unanimous-parties" style="color: #dc2626;">7</div>
+                <div class="stat-label" style="color: #991b1b; font-weight: 700;">Partidos 100% A FAVOR</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" id="split-parties">9</div>
@@ -537,8 +537,8 @@
         </div>
 
         <div class="chart-container">
-            <h2 class="chart-title">📊 Aprovação por Partido - 2º Turno</h2>
-            <p class="chart-subtitle">Porcentagem de votos SIM por partido (ordenado por aprovação)</p>
+            <h2 class="chart-title" style="color: #dc2626;">🚨 Partidos que Aprovaram a PEC - 2º Turno</h2>
+            <p class="chart-subtitle" style="color: #7f1d1d; font-weight: 600;">⚠️ Percentual de deputados que votaram SIM por partido</p>
 
             <div class="controls">
                 <button class="control-button active" onclick="sortBy('approval')">Ordenar por Aprovação</button>
@@ -550,12 +550,12 @@
 
             <div class="legend">
                 <div class="legend-item">
-                    <div class="legend-color" style="background: #10b981;"></div>
-                    <span>Apoio Massivo (>90%)</span>
+                    <div class="legend-color" style="background: #dc2626;"></div>
+                    <span style="color: #dc2626; font-weight: 600;">⚠️ Aprovação Massiva (>90%)</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background: #3b82f6;"></div>
-                    <span>Apoio Moderado (70-90%)</span>
+                    <div class="legend-color" style="background: #f87171;"></div>
+                    <span style="color: #dc2626; font-weight: 600;">⚠️ Aprovação Moderada (70-90%)</span>
                 </div>
                 <div class="legend-item">
                     <div class="legend-color" style="background: #f59e0b;"></div>
@@ -603,12 +603,12 @@
                 secret_defense: stats.secret_defense_pct
             })).filter(d => d.size > 0);
 
-            // Color scale based on approval level
+            // Color scale emphasizing concerning approval levels
             function getPartyColor(approval) {
-                if (approval > 90) return '#10b981'; // Green - Massive support
-                if (approval >= 70) return '#3b82f6'; // Blue - Moderate support
+                if (approval > 90) return '#dc2626'; // Red - Massive approval (concerning)
+                if (approval >= 70) return '#f87171'; // Light red - Moderate approval (concerning)
                 if (approval >= 30) return '#f59e0b'; // Orange - Divided
-                return '#ef4444'; // Red - Opposition
+                return '#10b981'; // Green - Opposition (good)
             }
 
             let currentSort = 'approval';

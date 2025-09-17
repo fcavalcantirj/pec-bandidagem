@@ -409,7 +409,7 @@
 
     <div class="header">
         <h1>🗺️ PEC da Bandidagem</h1>
-        <p>Análise Regional por Estados</p>
+        <p>⚠️ ALERTA: Estados que Mais Aprovaram a PEC</p>
         <nav class="nav">
             <a href="index.html">🏠 Início</a>
             <a href="deputados.html">👥 Deputados</a>
@@ -441,8 +441,8 @@
         </div>
 
         <div class="chart-container">
-            <h2 class="chart-title">🗺️ Mapa da Aprovação - 2º Turno</h2>
-            <p class="chart-subtitle">Porcentagem de aprovação por estado (clique nos estados para detalhes)</p>
+            <h2 class="chart-title" style="color: #dc2626;">🚨 Mapa dos Estados que Aprovaram a PEC</h2>
+            <p class="chart-subtitle" style="color: #7f1d1d; font-weight: 600;">⚠️ Estados em vermelho aprovaram a PEC (clique para detalhes)</p>
 
             <div class="controls">
                 <button class="control-button active" onclick="showRound(2)">2º Turno</button>
@@ -476,15 +476,15 @@
         </div>
 
         <div class="chart-container">
-            <h2 class="chart-title">📊 Ranking de Estados por Aprovação</h2>
-            <p class="chart-subtitle">Estados ordenados por porcentagem de aprovação no 2º turno</p>
+            <h2 class="chart-title" style="color: #dc2626;">🚨 Ranking dos Estados que Mais Aprovaram</h2>
+            <p class="chart-subtitle" style="color: #7f1d1d; font-weight: 600;">⚠️ Estados ordenados por maior aprovação da PEC</p>
 
             <svg id="state-ranking" width="100%" height="600"></svg>
         </div>
 
         <div class="chart-container">
-            <h2 class="chart-title">🌎 Análise por Região</h2>
-            <p class="chart-subtitle">Padrões regionais de votação</p>
+            <h2 class="chart-title" style="color: #dc2626;">🚨 Regiões que Mais Aprovaram a PEC</h2>
+            <p class="chart-subtitle" style="color: #7f1d1d; font-weight: 600;">⚠️ Padrões regionais de aprovação da PEC</p>
 
             <div class="region-analysis" id="region-analysis">
                 <!-- Regions will be populated by JavaScript -->
@@ -492,8 +492,8 @@
         </div>
 
         <div class="chart-container">
-            <h2 class="chart-title">📈 Comparação entre Turnos</h2>
-            <p class="chart-subtitle">Mudanças na aprovação entre 1º e 2º turno</p>
+            <h2 class="chart-title" style="color: #dc2626;">🚨 Aumento da Aprovação entre Turnos</h2>
+            <p class="chart-subtitle" style="color: #7f1d1d; font-weight: 600;">⚠️ Como a aprovação da PEC aumentou no 2º turno</p>
 
             <svg id="comparison-chart" width="100%" height="400"></svg>
         </div>

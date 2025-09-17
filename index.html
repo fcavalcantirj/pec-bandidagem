@@ -868,21 +868,22 @@
         <h1>🏛️ PEC da Bandidagem</h1>
         <p class="subtitle">Análise Interativa dos Padrões de Votação na Câmara dos Deputados</p>
         <p class="description">
-            Explore em detalhes como os deputados federais votaram na Proposta de Emenda Constitucional conhecida como "PEC da Bandidagem".
-            Esta análise apresenta visualizações interativas dos padrões de votação por partido, estado, e o fluxo de mudanças entre os dois turnos de votação.
+            <strong style="color: #dc2626;">⚠️ ALERTA: Mais de 70% dos deputados votaram A FAVOR da PEC da Bandidagem</strong><br>
+            Explore em detalhes quem são os 353 deputados que aprovaram esta proposta controversa.
+            Veja visualizações interativas dos padrões de votação por partido, estado, e identifique exatamente quem votou SIM.
         </p>
     </div>
 
     <div class="overview-stats">
-        <div class="overview-card">
-            <div class="overview-number" id="total-votes-1">488</div>
-            <div class="overview-label">Votos 1º Turno</div>
-            <div class="overview-detail">353 SIM (72.3%)<br>134 NÃO (27.5%)</div>
+        <div class="overview-card" style="border-left-color: #dc2626; background: linear-gradient(135deg, rgba(220,38,38,0.05), transparent);">
+            <div class="overview-number" id="total-votes-1" style="color: #dc2626;">353 SIM</div>
+            <div class="overview-label" style="color: #991b1b; font-weight: 700;">Votaram A FAVOR - 1º Turno</div>
+            <div class="overview-detail"><strong style="color: #dc2626; font-size: 1.1rem;">72.3% APROVARAM</strong><br><span style="font-size: 0.85rem;">134 contra (27.5%)</span></div>
         </div>
-        <div class="overview-card">
-            <div class="overview-number" id="total-votes-2">477</div>
-            <div class="overview-label">Votos 2º Turno</div>
-            <div class="overview-detail">344 SIM (72.1%)<br>133 NÃO (27.9%)</div>
+        <div class="overview-card" style="border-left-color: #dc2626; background: linear-gradient(135deg, rgba(220,38,38,0.05), transparent);">
+            <div class="overview-number" id="total-votes-2" style="color: #dc2626;">344 SIM</div>
+            <div class="overview-label" style="color: #991b1b; font-weight: 700;">Votaram A FAVOR - 2º Turno</div>
+            <div class="overview-detail"><strong style="color: #dc2626; font-size: 1.1rem;">72.1% APROVARAM</strong><br><span style="font-size: 0.85rem;">133 contra (27.9%)</span></div>
         </div>
         <div class="overview-card">
             <div class="overview-number">20</div>
@@ -962,21 +963,21 @@
     </div>
 
     <div class="nav-cards">
-        <a href="deputados.html" class="nav-card" onclick="trackNavigationFlow('homepage', 'deputados', 'nav_card')">
-            <span class="nav-card-icon">👥</span>
-            <h3 class="nav-card-title">Busca por Deputados</h3>
+        <a href="deputados.html" class="nav-card" onclick="trackNavigationFlow('homepage', 'deputados', 'nav_card')" style="border: 2px solid rgba(220,38,38,0.3); background: linear-gradient(135deg, rgba(220,38,38,0.02), transparent);">
+            <span class="nav-card-icon">⚠️</span>
+            <h3 class="nav-card-title" style="color: #dc2626;">Veja QUEM votou SIM</h3>
             <p class="nav-card-description">
-                Encontre deputados específicos por nome, partido ou estado. Veja padrões de votação individuais,
-                mudanças entre turnos e posições sobre voto secreto de cada parlamentar.
+                <strong>Identifique os 353 deputados que APROVARAM a PEC.</strong>
+                Busque por nome, partido ou estado. Veja exatamente quem votou a favor e quem defendeu o voto secreto.
             </p>
             <div class="nav-card-stats">
-                <div class="stat-item">
-                    <div class="stat-number">488</div>
-                    <div class="stat-label">Deputados 1º Turno</div>
+                <div class="stat-item" style="background: rgba(220,38,38,0.1);">
+                    <div class="stat-number" style="color: #dc2626;">353</div>
+                    <div class="stat-label">Votaram SIM</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">477</div>
-                    <div class="stat-label">Deputados 2º Turno</div>
+                    <div class="stat-number">134</div>
+                    <div class="stat-label">Votaram NÃO</div>
                 </div>
             </div>
         </a>
