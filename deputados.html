@@ -500,22 +500,22 @@
                 // Create a map for round 2 data
                 const round2Map = new Map();
                 round2Data.forEach(deputy => {
-                    round2Map.set(deputy.name, deputy);
+                    round2Map.set(deputy.deputado, deputy);
                 });
 
                 // Process all deputies
                 allDeputies = round1Data.map(deputy1 => {
-                    const deputy2 = round2Map.get(deputy1.name);
+                    const deputy2 = round2Map.get(deputy1.deputado);
 
                     return {
-                        name: deputy1.name,
-                        party: deputy1.party,
-                        state: deputy1.state,
-                        round1_vote: deputy1.vote,
-                        round2_vote: deputy2 ? deputy2.vote : 'Ausente',
-                        secret_defense: deputy2 ? deputy2.secret_defense : 'Não informado',
-                        changed_vote: deputy1.vote !== (deputy2 ? deputy2.vote : deputy1.vote),
-                        consistency: deputy1.vote === (deputy2 ? deputy2.vote : deputy1.vote) ? 'Consistente' : 'Mudou'
+                        name: deputy1.deputado,
+                        party: deputy1.partido,
+                        state: deputy1.estado,
+                        round1_vote: deputy1.voto,
+                        round2_vote: deputy2 ? deputy2.voto : 'Ausente',
+                        secret_defense: deputy2 ? deputy2.voto_secreto : 'Não informado',
+                        changed_vote: deputy1.voto !== (deputy2 ? deputy2.voto : deputy1.voto),
+                        consistency: deputy1.voto === (deputy2 ? deputy2.voto : deputy1.voto) ? 'Consistente' : 'Mudou'
                     };
                 });
 
