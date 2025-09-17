@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEC da Bandidagem - Análise por Estados</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/topojson@3"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-bottom: 3px solid #4f46e5;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .nav a {
+            padding: 0.75rem 1.5rem;
+            background: #4f46e5;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav a:hover, .nav a.active {
+            background: #3730a3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .chart-title {
+            font-size: 1.8rem;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .chart-subtitle {
+            font-size: 1rem;
+            color: #64748b;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(30, 41, 59, 0.95);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.4;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .state {
+            stroke: #fff;
+            stroke-width: 1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .state:hover {
+            stroke: #1e293b;
+            stroke-width: 2;
+            filter: brightness(1.1);
+        }
+
+        .map-legend {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid #fff;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid #4f46e5;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .region-analysis {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .region-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .region-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .region-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .region-stat {
+            text-align: center;
+        }
+
+        .region-stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+
+        .region-stat-label {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .state-list {
+            font-size: 0.9rem;
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .control-button {
+            padding: 0.5rem 1rem;
+            background: #e2e8f0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .control-button:hover, .control-button.active {
+            background: #4f46e5;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .nav {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .map-legend {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🗺️ PEC da Bandidagem</h1>
+        <p>Análise Regional por Estados</p>
+        <nav class="nav">
+            <a href="index.html">🏠 Início</a>
+            <a href="partidos.html">🎯 Partidos</a>
+            <a href="estados.html" class="active">🗺️ Estados</a>
+            <a href="fluxo.html">🔄 Fluxo de Votos</a>
+        </nav>
+    </div>
+
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="total-states">27</div>
+                <div class="stat-label">Estados + DF</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="unanimous-states">2</div>
+                <div class="stat-label">Estados com 100% Aprovação</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="divided-states">4</div>
+                <div class="stat-label">Estados Divididos (≤60%)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="avg-approval">73%</div>
+                <div class="stat-label">Aprovação Média Nacional</div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h2 class="chart-title">🗺️ Mapa da Aprovação - 2º Turno</h2>
+            <p class="chart-subtitle">Porcentagem de aprovação por estado (clique nos estados para detalhes)</p>
+
+            <div class="controls">
+                <button class="control-button active" onclick="showRound(2)">2º Turno</button>
+                <button class="control-button" onclick="showRound(1)">1º Turno</button>
+            </div>
+
+            <div id="brazil-map"></div>
+
+            <div class="map-legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #065f46;"></div>
+                    <span>100% Aprovação</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #10b981;"></div>
+                    <span>85-99% Aprovação</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #3b82f6;"></div>
+                    <span>70-84% Aprovação</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f59e0b;"></div>
+                    <span>60-69% Aprovação</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ef4444;"></div>
+                    <span>≤60% Aprovação</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h2 class="chart-title">📊 Ranking de Estados por Aprovação</h2>
+            <p class="chart-subtitle">Estados ordenados por porcentagem de aprovação no 2º turno</p>
+
+            <svg id="state-ranking" width="100%" height="600"></svg>
+        </div>
+
+        <div class="chart-container">
+            <h2 class="chart-title">🌎 Análise por Região</h2>
+            <p class="chart-subtitle">Padrões regionais de votação</p>
+
+            <div class="region-analysis" id="region-analysis">
+                <!-- Regions will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h2 class="chart-title">📈 Comparação entre Turnos</h2>
+            <p class="chart-subtitle">Mudanças na aprovação entre 1º e 2º turno</p>
+
+            <svg id="comparison-chart" width="100%" height="400"></svg>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script src="data.js"></script>
+    <script>
+        // Brazilian states mapping and regions
+        const stateRegions = {
+            'AC': {name: 'Acre', region: 'Norte'},
+            'AL': {name: 'Alagoas', region: 'Nordeste'},
+            'AP': {name: 'Amapá', region: 'Norte'},
+            'AM': {name: 'Amazonas', region: 'Norte'},
+            'BA': {name: 'Bahia', region: 'Nordeste'},
+            'CE': {name: 'Ceará', region: 'Nordeste'},
+            'DF': {name: 'Distrito Federal', region: 'Centro-Oeste'},
+            'ES': {name: 'Espírito Santo', region: 'Sudeste'},
+            'GO': {name: 'Goiás', region: 'Centro-Oeste'},
+            'MA': {name: 'Maranhão', region: 'Nordeste'},
+            'MT': {name: 'Mato Grosso', region: 'Centro-Oeste'},
+            'MS': {name: 'Mato Grosso do Sul', region: 'Centro-Oeste'},
+            'MG': {name: 'Minas Gerais', region: 'Sudeste'},
+            'PA': {name: 'Pará', region: 'Norte'},
+            'PB': {name: 'Paraíba', region: 'Nordeste'},
+            'PR': {name: 'Paraná', region: 'Sul'},
+            'PE': {name: 'Pernambuco', region: 'Nordeste'},
+            'PI': {name: 'Piauí', region: 'Nordeste'},
+            'RJ': {name: 'Rio de Janeiro', region: 'Sudeste'},
+            'RN': {name: 'Rio Grande do Norte', region: 'Nordeste'},
+            'RS': {name: 'Rio Grande do Sul', region: 'Sul'},
+            'RO': {name: 'Rondônia', region: 'Norte'},
+            'RR': {name: 'Roraima', region: 'Norte'},
+            'SC': {name: 'Santa Catarina', region: 'Sul'},
+            'SP': {name: 'São Paulo', region: 'Sudeste'},
+            'SE': {name: 'Sergipe', region: 'Nordeste'},
+            'TO': {name: 'Tocantins', region: 'Norte'}
+        };
+
+        let currentRound = 2;
+        let statesData = [];
+
+        // Use embedded data to avoid CORS issues
+        function loadData() {
+            const data = VISUALIZATION_DATA;
+
+            // Convert state data to array
+            statesData = Object.entries(data.states).map(([code, stats]) => ({
+                code: code,
+                name: stateRegions[code]?.name || code,
+                region: stateRegions[code]?.region || 'Unknown',
+                round1_approval: stats.round1_approval,
+                round2_approval: stats.round2_approval,
+                round1_total: stats.round1_total,
+                round2_total: stats.round2_total,
+                round1_sim: stats.round1.Sim,
+                round1_nao: stats.round1.Não,
+                round2_sim: stats.round2.Sim,
+                round2_nao: stats.round2.Não
+            })).filter(d => d.round1_total > 0 || d.round2_total > 0);
+
+            // Color scale based on approval level
+            function getStateColor(approval) {
+                if (approval === 100) return '#065f46'; // Dark green - Perfect
+                if (approval >= 85) return '#10b981'; // Green - Very high
+                if (approval >= 70) return '#3b82f6'; // Blue - High
+                if (approval >= 60) return '#f59e0b'; // Orange - Moderate
+                return '#ef4444'; // Red - Low
+            }
+
+            function showRound(round) {
+                currentRound = round;
+
+                // Update button states
+                d3.selectAll('.control-button').classed('active', false);
+                d3.select(`[onclick="showRound(${round})"]`).classed('active', true);
+
+                updateMap();
+            }
+
+            function updateMap() {
+                // Simplified Brazil map (using state rectangles as placeholder)
+                // In production, you would load actual GeoJSON/TopoJSON data
+                createSimplifiedMap();
+            }
+
+            function createSimplifiedMap() {
+                const container = d3.select('#brazil-map');
+                container.selectAll('*').remove();
+
+                const width = 800;
+                const height = 600;
+                const padding = 20;
+
+                const svg = container.append('svg')
+                    .attr('width', '100%')
+                    .attr('height', height)
+                    .attr('viewBox', `0 0 ${width} ${height}`)
+                    .style('max-width', '800px')
+                    .style('margin', '0 auto')
+                    .style('display', 'block');
+
+                // Create a grid layout for states
+                const cols = 6;
+                const rows = Math.ceil(statesData.length / cols);
+                const cellWidth = (width - 2 * padding) / cols;
+                const cellHeight = (height - 2 * padding) / rows;
+
+                // Sort states by region and name for consistent layout
+                const sortedStates = [...statesData].sort((a, b) => {
+                    if (a.region !== b.region) {
+                        const regionOrder = ['Norte', 'Nordeste', 'Centro-Oeste', 'Sudeste', 'Sul'];
+                        return regionOrder.indexOf(a.region) - regionOrder.indexOf(b.region);
+                    }
+                    return a.name.localeCompare(b.name);
+                });
+
+                svg.selectAll('.state')
+                    .data(sortedStates)
+                    .enter().append('rect')
+                    .attr('class', 'state')
+                    .attr('x', (d, i) => padding + (i % cols) * cellWidth + 5)
+                    .attr('y', (d, i) => padding + Math.floor(i / cols) * cellHeight + 5)
+                    .attr('width', cellWidth - 10)
+                    .attr('height', cellHeight - 10)
+                    .attr('rx', 8)
+                    .attr('fill', d => {
+                        const approval = currentRound === 2 ? d.round2_approval : d.round1_approval;
+                        return getStateColor(approval);
+                    })
+                    .on('mouseover', function(event, d) {
+                        const approval = currentRound === 2 ? d.round2_approval : d.round1_approval;
+                        const total = currentRound === 2 ? d.round2_total : d.round1_total;
+                        const sim = currentRound === 2 ? d.round2_sim : d.round1_sim;
+                        const nao = currentRound === 2 ? d.round2_nao : d.round1_nao;
+
+                        const tooltip = d3.select('#tooltip');
+                        tooltip.style('opacity', 1)
+                            .html(`
+                                <strong>${d.name} (${d.code})</strong><br/>
+                                Região: ${d.region}<br/>
+                                Aprovação: ${approval.toFixed(1)}%<br/>
+                                Votos SIM: ${sim}/${total}<br/>
+                                Votos NÃO: ${nao}/${total}
+                            `)
+                            .style('left', (event.pageX + 10) + 'px')
+                            .style('top', (event.pageY - 10) + 'px');
+                    })
+                    .on('mouseout', function() {
+                        d3.select('#tooltip').style('opacity', 0);
+                    })
+                    .on('click', function(event, d) {
+                        alert(`Detalhes de ${d.name}:\\n` +
+                              `1º Turno: ${d.round1_approval.toFixed(1)}% (${d.round1_sim}/${d.round1_total})\\n` +
+                              `2º Turno: ${d.round2_approval.toFixed(1)}% (${d.round2_sim}/${d.round2_total})`);
+                    });
+
+                // Add state labels
+                svg.selectAll('.state-label')
+                    .data(sortedStates)
+                    .enter().append('text')
+                    .attr('class', 'state-label')
+                    .attr('x', (d, i) => padding + (i % cols) * cellWidth + cellWidth/2)
+                    .attr('y', (d, i) => padding + Math.floor(i / cols) * cellHeight + cellHeight/2 - 5)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '12px')
+                    .style('font-weight', 'bold')
+                    .style('fill', 'white')
+                    .style('text-shadow', '1px 1px 2px rgba(0,0,0,0.5)')
+                    .text(d => d.code);
+
+                // Add approval percentage
+                svg.selectAll('.state-percentage')
+                    .data(sortedStates)
+                    .enter().append('text')
+                    .attr('class', 'state-percentage')
+                    .attr('x', (d, i) => padding + (i % cols) * cellWidth + cellWidth/2)
+                    .attr('y', (d, i) => padding + Math.floor(i / cols) * cellHeight + cellHeight/2 + 10)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '11px')
+                    .style('fill', 'white')
+                    .style('text-shadow', '1px 1px 2px rgba(0,0,0,0.5)')
+                    .text(d => {
+                        const approval = currentRound === 2 ? d.round2_approval : d.round1_approval;
+                        return approval.toFixed(1) + '%';
+                    });
+            }
+
+            function createStateRanking() {
+                const svg = d3.select('#state-ranking');
+                const container = svg.node().parentNode;
+                const containerWidth = container.clientWidth - 40;
+                const margin = {top: 20, right: 100, bottom: 60, left: 200};
+                const width = containerWidth - margin.left - margin.right;
+                const height = 600 - margin.top - margin.bottom;
+
+                svg.attr('width', containerWidth).attr('height', 600);
+                svg.selectAll('*').remove();
+
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+
+                const sortedStates = [...statesData].sort((a, b) => b.round2_approval - a.round2_approval);
+
+                // Scales
+                const x = d3.scaleLinear()
+                    .domain([0, 100])
+                    .range([0, width]);
+
+                const y = d3.scaleBand()
+                    .domain(sortedStates.map(d => d.name))
+                    .range([0, height])
+                    .padding(0.1);
+
+                // Axes
+                g.append('g')
+                    .attr('class', 'axis')
+                    .attr('transform', `translate(0,${height})`)
+                    .call(d3.axisBottom(x).tickFormat(d => d + '%'));
+
+                g.append('g')
+                    .attr('class', 'axis')
+                    .call(d3.axisLeft(y));
+
+                // Bars
+                g.selectAll('.ranking-bar')
+                    .data(sortedStates)
+                    .enter().append('rect')
+                    .attr('class', 'ranking-bar')
+                    .attr('x', 0)
+                    .attr('y', d => y(d.name))
+                    .attr('width', 0)
+                    .attr('height', y.bandwidth())
+                    .attr('fill', d => getStateColor(d.round2_approval))
+                    .attr('rx', 3)
+                    .on('mouseover', function(event, d) {
+                        const tooltip = d3.select('#tooltip');
+                        tooltip.style('opacity', 1)
+                            .html(`
+                                <strong>${d.name}</strong><br/>
+                                Aprovação: ${d.round2_approval.toFixed(1)}%<br/>
+                                Deputados: ${d.round2_sim}/${d.round2_total}<br/>
+                                Região: ${d.region}
+                            `)
+                            .style('left', (event.pageX + 10) + 'px')
+                            .style('top', (event.pageY - 10) + 'px');
+                    })
+                    .on('mouseout', function() {
+                        d3.select('#tooltip').style('opacity', 0);
+                    })
+                    .transition()
+                    .duration(1000)
+                    .delay((d, i) => i * 30)
+                    .attr('width', d => x(d.round2_approval));
+
+                // Add percentage labels
+                g.selectAll('.ranking-label')
+                    .data(sortedStates)
+                    .enter().append('text')
+                    .attr('class', 'ranking-label')
+                    .attr('x', d => x(d.round2_approval) + 5)
+                    .attr('y', d => y(d.name) + y.bandwidth()/2)
+                    .attr('dy', '0.35em')
+                    .style('font-size', '11px')
+                    .style('fill', '#1e293b')
+                    .style('font-weight', '500')
+                    .style('opacity', 0)
+                    .text(d => d.round2_approval.toFixed(1) + '%')
+                    .transition()
+                    .duration(1000)
+                    .delay((d, i) => i * 30 + 500)
+                    .style('opacity', 1);
+
+                // Add region labels
+                g.selectAll('.region-label')
+                    .data(sortedStates)
+                    .enter().append('text')
+                    .attr('class', 'region-label')
+                    .attr('x', width + 10)
+                    .attr('y', d => y(d.name) + y.bandwidth()/2)
+                    .attr('dy', '0.35em')
+                    .style('font-size', '10px')
+                    .style('fill', '#64748b')
+                    .text(d => d.region);
+            }
+
+            function createRegionAnalysis() {
+                const container = d3.select('#region-analysis');
+
+                // Group states by region
+                const regionGroups = d3.group(statesData, d => d.region);
+
+                const regionData = Array.from(regionGroups).map(([region, states]) => {
+                    const totalStates = states.length;
+                    const avgApproval = d3.mean(states, d => d.round2_approval);
+                    const bestState = states.reduce((a, b) => a.round2_approval > b.round2_approval ? a : b);
+                    const worstState = states.reduce((a, b) => a.round2_approval < b.round2_approval ? a : b);
+
+                    return {
+                        region,
+                        states,
+                        totalStates,
+                        avgApproval,
+                        bestState,
+                        worstState
+                    };
+                }).sort((a, b) => b.avgApproval - a.avgApproval);
+
+                container.selectAll('.region-card')
+                    .data(regionData)
+                    .enter().append('div')
+                    .attr('class', 'region-card')
+                    .html(d => `
+                        <div class="region-title">${d.region}</div>
+                        <div class="region-stats">
+                            <div class="region-stat">
+                                <div class="region-stat-number">${d.totalStates}</div>
+                                <div class="region-stat-label">Estados</div>
+                            </div>
+                            <div class="region-stat">
+                                <div class="region-stat-number">${d.avgApproval.toFixed(1)}%</div>
+                                <div class="region-stat-label">Aprovação Média</div>
+                            </div>
+                        </div>
+                        <div class="state-list">
+                            <strong>Maior aprovação:</strong> ${d.bestState.name} (${d.bestState.round2_approval.toFixed(1)}%)<br/>
+                            <strong>Menor aprovação:</strong> ${d.worstState.name} (${d.worstState.round2_approval.toFixed(1)}%)<br/>
+                            <strong>Estados:</strong> ${d.states.map(s => s.code).sort().join(', ')}
+                        </div>
+                    `);
+            }
+
+            function createComparisonChart() {
+                const svg = d3.select('#comparison-chart');
+                const container = svg.node().parentNode;
+                const containerWidth = container.clientWidth - 40;
+                const margin = {top: 20, right: 30, bottom: 60, left: 60};
+                const width = containerWidth - margin.left - margin.right;
+                const height = 400 - margin.top - margin.bottom;
+
+                svg.attr('width', containerWidth).attr('height', 400);
+
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+
+                // Scales
+                const x = d3.scaleLinear()
+                    .domain([0, 100])
+                    .range([0, width]);
+
+                const y = d3.scaleLinear()
+                    .domain([0, 100])
+                    .range([height, 0]);
+
+                const radius = d3.scaleSqrt()
+                    .domain([0, d3.max(statesData, d => d.round2_total)])
+                    .range([3, 15]);
+
+                // Axes
+                g.append('g')
+                    .attr('class', 'axis')
+                    .attr('transform', `translate(0,${height})`)
+                    .call(d3.axisBottom(x).tickFormat(d => d + '%'));
+
+                g.append('g')
+                    .attr('class', 'axis')
+                    .call(d3.axisLeft(y).tickFormat(d => d + '%'));
+
+                // Axis labels
+                g.append('text')
+                    .attr('class', 'axis-label')
+                    .attr('transform', `translate(${width/2},${height + 40})`)
+                    .style('text-anchor', 'middle')
+                    .text('1º Turno (%)');
+
+                g.append('text')
+                    .attr('class', 'axis-label')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('y', -40)
+                    .attr('x', -height/2)
+                    .style('text-anchor', 'middle')
+                    .text('2º Turno (%)');
+
+                // Diagonal line (no change)
+                g.append('line')
+                    .attr('x1', 0)
+                    .attr('y1', height)
+                    .attr('x2', width)
+                    .attr('y2', 0)
+                    .attr('stroke', '#94a3b8')
+                    .attr('stroke-dasharray', '5,5')
+                    .attr('opacity', 0.5);
+
+                // Circles
+                g.selectAll('.comparison-circle')
+                    .data(statesData.filter(d => d.round1_total > 0 && d.round2_total > 0))
+                    .enter().append('circle')
+                    .attr('class', 'comparison-circle')
+                    .attr('cx', d => x(d.round1_approval))
+                    .attr('cy', d => y(d.round2_approval))
+                    .attr('r', 0)
+                    .attr('fill', d => getStateColor(d.round2_approval))
+                    .attr('opacity', 0.7)
+                    .style('cursor', 'pointer')
+                    .on('mouseover', function(event, d) {
+                        const change = d.round2_approval - d.round1_approval;
+                        const tooltip = d3.select('#tooltip');
+                        tooltip.style('opacity', 1)
+                            .html(`
+                                <strong>${d.name}</strong><br/>
+                                1º Turno: ${d.round1_approval.toFixed(1)}%<br/>
+                                2º Turno: ${d.round2_approval.toFixed(1)}%<br/>
+                                Mudança: ${change > 0 ? '+' : ''}${change.toFixed(1)}pp
+                            `)
+                            .style('left', (event.pageX + 10) + 'px')
+                            .style('top', (event.pageY - 10) + 'px');
+                    })
+                    .on('mouseout', function() {
+                        d3.select('#tooltip').style('opacity', 0);
+                    })
+                    .transition()
+                    .duration(1000)
+                    .delay((d, i) => i * 100)
+                    .attr('r', d => radius(d.round2_total));
+
+                // Add state labels for notable changes
+                const notableStates = statesData.filter(d =>
+                    Math.abs(d.round2_approval - d.round1_approval) > 5 ||
+                    d.round2_approval === 100 ||
+                    d.round2_approval < 60
+                );
+
+                g.selectAll('.state-label-comparison')
+                    .data(notableStates)
+                    .enter().append('text')
+                    .attr('class', 'state-label-comparison')
+                    .attr('x', d => x(d.round1_approval) + radius(d.round2_total) + 3)
+                    .attr('y', d => y(d.round2_approval))
+                    .attr('dy', '0.35em')
+                    .style('font-size', '10px')
+                    .style('fill', '#1e293b')
+                    .style('font-weight', '500')
+                    .text(d => d.code);
+            }
+
+            // Initialize charts
+            updateMap();
+            createStateRanking();
+            createRegionAnalysis();
+            createComparisonChart();
+
+            // Make showRound function global
+            window.showRound = showRound;
+
+            // Update stats
+            document.getElementById('total-states').textContent = statesData.length;
+            document.getElementById('unanimous-states').textContent = statesData.filter(s => s.round2_approval === 100).length;
+            document.getElementById('divided-states').textContent = statesData.filter(s => s.round2_approval <= 60).length;
+            document.getElementById('avg-approval').textContent = Math.round(d3.mean(statesData, d => d.round2_approval)) + '%';
+        }
+
+        // Initialize when page loads
+        loadData();
+
+        // Responsive resize
+        window.addEventListener('resize', function() {
+            // Reload charts on resize
+            location.reload();
+        });
+    </script>
+</body>
+</html>

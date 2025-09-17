@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEC da Bandidagem - Fluxo de Votos</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/d3-sankey@0.12"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-bottom: 3px solid #4f46e5;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .nav a {
+            padding: 0.75rem 1.5rem;
+            background: #4f46e5;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav a:hover, .nav a.active {
+            background: #3730a3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .chart-title {
+            font-size: 1.8rem;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .chart-subtitle {
+            font-size: 1rem;
+            color: #64748b;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(30, 41, 59, 0.95);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.4;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid #4f46e5;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .flow-legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fef3c7, #fbbf24);
+            border-left: 4px solid #f59e0b;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .highlight-title {
+            font-weight: bold;
+            color: #92400e;
+            margin-bottom: 0.5rem;
+        }
+
+        .deputy-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .deputy-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 1rem;
+            border-left: 4px solid #ef4444;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .deputy-name {
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .deputy-info {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .vote-change {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .vote-from, .vote-to {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .vote-sim {
+            background: #10b981;
+            color: white;
+        }
+
+        .vote-nao {
+            background: #ef4444;
+            color: white;
+        }
+
+        .arrow {
+            color: #64748b;
+            font-weight: bold;
+        }
+
+        .sankey-node {
+            cursor: pointer;
+        }
+
+        .sankey-link {
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .sankey-link:hover {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .nav {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .flow-legend {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔄 PEC da Bandidagem</h1>
+        <p>Fluxo de Votos e Mudanças Entre Turnos</p>
+        <nav class="nav">
+            <a href="index.html">🏠 Início</a>
+            <a href="partidos.html">🎯 Partidos</a>
+            <a href="estados.html">🗺️ Estados</a>
+            <a href="fluxo.html" class="active">🔄 Fluxo de Votos</a>
+        </nav>
+    </div>
+
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="total-deputies">472</div>
+                <div class="stat-label">Deputados em Ambos os Turnos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="maintained-votes">469</div>
+                <div class="stat-label">Mantiveram o Voto</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="changed-votes">3</div>
+                <div class="stat-label">Mudaram de Voto</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="stability">99.4%</div>
+                <div class="stat-label">Taxa de Estabilidade</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="missing-round2">16</div>
+                <div class="stat-label">Ausentes no 2º Turno</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="new-round2">5</div>
+                <div class="stat-label">Novos no 2º Turno</div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h2 class="chart-title">📊 Fluxo de Votos: 1º → 2º Turno</h2>
+            <p class="chart-subtitle">Diagrama Sankey mostrando como os votos fluíram entre os turnos</p>
+
+            <svg id="sankey-chart" width="100%" height="400"></svg>
+
+            <div class="flow-legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #10b981;"></div>
+                    <span>Votos SIM</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ef4444;"></div>
+                    <span>Votos NÃO</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f59e0b;"></div>
+                    <span>Abstenção</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #94a3b8;"></div>
+                    <span>Ausente</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h2 class="chart-title">🎯 Comparação de Resultados</h2>
+            <p class="chart-subtitle">Aprovação geral em ambos os turnos</p>
+
+            <svg id="comparison-chart" width="100%" height="300"></svg>
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">🚨 Deputados que Mudaram de Voto</div>
+            <p>Apenas 3 deputados (0.6% do total) mudaram seu voto entre os turnos, todos de SIM para NÃO:</p>
+        </div>
+
+        <div class="deputy-list" id="changed-deputies">
+            <!-- Will be populated by JavaScript -->
+        </div>
+
+        <div class="chart-container">
+            <h2 class="chart-title">🔐 Correlação: Voto vs Defesa do Voto Secreto</h2>
+            <p class="chart-subtitle">Matriz de correlação mostrando a forte relação entre as duas votações</p>
+
+            <svg id="correlation-matrix" width="100%" height="350"></svg>
+        </div>
+
+        <div class="chart-container">
+            <h2 class="chart-title">📈 Análise de Presença</h2>
+            <p class="chart-subtitle">Diferenças de participação entre os turnos</p>
+
+            <svg id="attendance-chart" width="100%" height="300"></svg>
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">💡 Insights Principais</div>
+            <ul style="margin-left: 1.5rem; color: #92400e;">
+                <li><strong>Estabilidade Extrema:</strong> 99.4% dos deputados mantiveram suas posições</li>
+                <li><strong>Mudanças Unidirecionais:</strong> Todas as 3 mudanças foram de SIM para NÃO</li>
+                <li><strong>Correlação Forte:</strong> 83% de correlação entre voto SIM e defesa do voto secreto</li>
+                <li><strong>Presença Consistente:</strong> Taxa de participação manteve-se acima de 97%</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script src="data.js"></script>
+    <script>
+        // Use embedded data to avoid CORS issues
+        function loadData() {
+            const data = VISUALIZATION_DATA;
+
+            // Process vote flow data
+            const round1Data = data.round1;
+            const round2Data = data.round2;
+            const voteChanges = data.vote_changes;
+
+            // Create deputy mappings
+            const deps1 = new Map(round1Data.map(d => [d.deputado, d]));
+            const deps2 = new Map(round2Data.map(d => [d.deputado, d]));
+
+            // Calculate flow data
+            let flowData = {
+                'Sim→Sim': 0,
+                'Sim→Não': 0,
+                'Sim→Ausente': 0,
+                'Não→Sim': 0,
+                'Não→Não': 0,
+                'Não→Ausente': 0,
+                'Abstenção→Sim': 0,
+                'Abstenção→Não': 0,
+                'Abstenção→Ausente': 0,
+                'Novo→Sim': 0,
+                'Novo→Não': 0
+            };
+
+            // Count flows
+            for (const [name, dep1] of deps1) {
+                if (deps2.has(name)) {
+                    const dep2 = deps2.get(name);
+                    const flow = `${dep1.voto}→${dep2.voto}`;
+                    flowData[flow] = (flowData[flow] || 0) + 1;
+                } else {
+                    const flow = `${dep1.voto}→Ausente`;
+                    flowData[flow] = (flowData[flow] || 0) + 1;
+                }
+            }
+
+            // Count new deputies in round 2
+            for (const [name, dep2] of deps2) {
+                if (!deps1.has(name)) {
+                    const flow = `Novo→${dep2.voto}`;
+                    flowData[flow] = (flowData[flow] || 0) + 1;
+                }
+            }
+
+            function createSankeyChart() {
+                const svg = d3.select('#sankey-chart');
+                const container = svg.node().parentNode;
+                const containerWidth = container.clientWidth - 40;
+                const width = containerWidth;
+                const height = 400;
+                const margin = {top: 20, right: 50, bottom: 20, left: 50};
+
+                svg.attr('width', width).attr('height', height);
+                svg.selectAll('*').remove();
+
+                // Create simplified flow visualization
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+
+                const chartWidth = width - margin.left - margin.right;
+                const chartHeight = height - margin.top - margin.bottom;
+
+                // Define nodes
+                const round1Votes = {Sim: 353, Não: 134, Abstenção: 1};
+                const round2Votes = {Sim: 344, Não: 133};
+
+                // Create flow bars
+                const barHeight = chartHeight / 3;
+                const barWidth = 120;
+
+                // Round 1 bars
+                const r1Y = chartHeight / 2 - barHeight / 2;
+                const simBar1 = g.append('rect')
+                    .attr('x', 50)
+                    .attr('y', r1Y - 60)
+                    .attr('width', barWidth)
+                    .attr('height', 40)
+                    .attr('fill', '#10b981')
+                    .attr('rx', 8);
+
+                const naoBar1 = g.append('rect')
+                    .attr('x', 50)
+                    .attr('y', r1Y)
+                    .attr('width', barWidth)
+                    .attr('height', 40)
+                    .attr('fill', '#ef4444')
+                    .attr('rx', 8);
+
+                const abstBar1 = g.append('rect')
+                    .attr('x', 50)
+                    .attr('y', r1Y + 60)
+                    .attr('width', barWidth)
+                    .attr('height', 10)
+                    .attr('fill', '#f59e0b')
+                    .attr('rx', 4);
+
+                // Round 2 bars
+                const r2X = chartWidth - barWidth - 50;
+                const simBar2 = g.append('rect')
+                    .attr('x', r2X)
+                    .attr('y', r1Y - 30)
+                    .attr('width', barWidth)
+                    .attr('height', 40)
+                    .attr('fill', '#10b981')
+                    .attr('rx', 8);
+
+                const naoBar2 = g.append('rect')
+                    .attr('x', r2X)
+                    .attr('y', r1Y + 30)
+                    .attr('width', barWidth)
+                    .attr('height', 40)
+                    .attr('fill', '#ef4444')
+                    .attr('rx', 8);
+
+                // Labels
+                g.append('text')
+                    .attr('x', 50 + barWidth/2)
+                    .attr('y', 30)
+                    .attr('text-anchor', 'middle')
+                    .style('font-weight', 'bold')
+                    .style('font-size', '16px')
+                    .text('1º Turno');
+
+                g.append('text')
+                    .attr('x', r2X + barWidth/2)
+                    .attr('y', 30)
+                    .attr('text-anchor', 'middle')
+                    .style('font-weight', 'bold')
+                    .style('font-size', '16px')
+                    .text('2º Turno');
+
+                // Vote counts
+                g.append('text')
+                    .attr('x', 50 + barWidth/2)
+                    .attr('y', r1Y - 40)
+                    .attr('text-anchor', 'middle')
+                    .style('fill', 'white')
+                    .style('font-weight', 'bold')
+                    .text('353 SIM');
+
+                g.append('text')
+                    .attr('x', 50 + barWidth/2)
+                    .attr('y', r1Y + 25)
+                    .attr('text-anchor', 'middle')
+                    .style('fill', 'white')
+                    .style('font-weight', 'bold')
+                    .text('134 NÃO');
+
+                g.append('text')
+                    .attr('x', 50 + barWidth/2)
+                    .attr('y', r1Y + 70)
+                    .attr('text-anchor', 'middle')
+                    .style('fill', 'white')
+                    .style('font-weight', 'bold')
+                    .style('font-size', '12px')
+                    .text('1 ABST');
+
+                g.append('text')
+                    .attr('x', r2X + barWidth/2)
+                    .attr('y', r1Y - 5)
+                    .attr('text-anchor', 'middle')
+                    .style('fill', 'white')
+                    .style('font-weight', 'bold')
+                    .text('344 SIM');
+
+                g.append('text')
+                    .attr('x', r2X + barWidth/2)
+                    .attr('y', r1Y + 55)
+                    .attr('text-anchor', 'middle')
+                    .style('fill', 'white')
+                    .style('font-weight', 'bold')
+                    .text('133 NÃO');
+
+                // Flow lines (curved paths)
+                const startX = 50 + barWidth;
+                const endX = r2X;
+                const midX = (startX + endX) / 2;
+
+                // Most votes maintained
+                const maintainedSim = g.append('path')
+                    .attr('d', `M ${startX} ${r1Y - 40} Q ${midX} ${r1Y - 40} ${endX} ${r1Y - 10}`)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#10b981')
+                    .attr('stroke-width', 8)
+                    .attr('opacity', 0.6);
+
+                const maintainedNao = g.append('path')
+                    .attr('d', `M ${startX} ${r1Y + 20} Q ${midX} ${r1Y + 20} ${endX} ${r1Y + 50}`)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#ef4444')
+                    .attr('stroke-width', 8)
+                    .attr('opacity', 0.6);
+
+                // Changed votes (much thinner line)
+                const changedVotes = g.append('path')
+                    .attr('d', `M ${startX} ${r1Y - 20} Q ${midX + 20} ${r1Y + 10} ${endX} ${r1Y + 30}`)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#f59e0b')
+                    .attr('stroke-width', 2)
+                    .attr('opacity', 0.8)
+                    .attr('stroke-dasharray', '5,5');
+
+                // Add change annotation
+                g.append('text')
+                    .attr('x', midX)
+                    .attr('y', r1Y + 10)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '12px')
+                    .style('fill', '#f59e0b')
+                    .style('font-weight', 'bold')
+                    .text('3 mudanças: SIM→NÃO');
+            }
+
+            function createComparisonChart() {
+                const svg = d3.select('#comparison-chart');
+                const container = svg.node().parentNode;
+                const containerWidth = container.clientWidth - 40;
+                const margin = {top: 40, right: 40, bottom: 60, left: 60};
+                const width = containerWidth - margin.left - margin.right;
+                const height = 300 - margin.top - margin.bottom;
+
+                svg.attr('width', containerWidth).attr('height', 300);
+                svg.selectAll('*').remove();
+
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+
+                const comparisonData = [
+                    {round: '1º Turno', sim: 353, nao: 134, total: 488, approval: 72.3},
+                    {round: '2º Turno', sim: 344, nao: 133, total: 477, approval: 72.1}
+                ];
+
+                // Scales
+                const x = d3.scaleBand()
+                    .domain(comparisonData.map(d => d.round))
+                    .range([0, width])
+                    .padding(0.3);
+
+                const y = d3.scaleLinear()
+                    .domain([0, 500])
+                    .range([height, 0]);
+
+                // Axes
+                g.append('g')
+                    .attr('class', 'axis')
+                    .attr('transform', `translate(0,${height})`)
+                    .call(d3.axisBottom(x));
+
+                g.append('g')
+                    .attr('class', 'axis')
+                    .call(d3.axisLeft(y));
+
+                // Stacked bars
+                comparisonData.forEach(d => {
+                    // SIM bars
+                    g.append('rect')
+                        .attr('x', x(d.round))
+                        .attr('y', y(d.sim))
+                        .attr('width', x.bandwidth())
+                        .attr('height', height - y(d.sim))
+                        .attr('fill', '#10b981')
+                        .attr('rx', 4);
+
+                    // NÃO bars (stacked on top)
+                    g.append('rect')
+                        .attr('x', x(d.round))
+                        .attr('y', y(d.sim + d.nao))
+                        .attr('width', x.bandwidth())
+                        .attr('height', y(d.sim) - y(d.sim + d.nao))
+                        .attr('fill', '#ef4444')
+                        .attr('rx', 4);
+
+                    // Labels
+                    g.append('text')
+                        .attr('x', x(d.round) + x.bandwidth()/2)
+                        .attr('y', y(d.sim) - 5)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '12px')
+                        .style('font-weight', 'bold')
+                        .style('fill', 'white')
+                        .text(`${d.sim} SIM`);
+
+                    g.append('text')
+                        .attr('x', x(d.round) + x.bandwidth()/2)
+                        .attr('y', y(d.sim + d.nao) + 15)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '12px')
+                        .style('font-weight', 'bold')
+                        .style('fill', 'white')
+                        .text(`${d.nao} NÃO`);
+
+                    // Approval percentage
+                    g.append('text')
+                        .attr('x', x(d.round) + x.bandwidth()/2)
+                        .attr('y', -10)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '14px')
+                        .style('font-weight', 'bold')
+                        .style('fill', '#1e293b')
+                        .text(`${d.approval.toFixed(1)}%`);
+                });
+
+                // Legend
+                const legend = g.append('g')
+                    .attr('transform', `translate(${width - 100}, 20)`);
+
+                legend.append('rect')
+                    .attr('width', 15)
+                    .attr('height', 15)
+                    .attr('fill', '#10b981');
+
+                legend.append('text')
+                    .attr('x', 20)
+                    .attr('y', 12)
+                    .style('font-size', '12px')
+                    .text('SIM');
+
+                legend.append('rect')
+                    .attr('y', 20)
+                    .attr('width', 15)
+                    .attr('height', 15)
+                    .attr('fill', '#ef4444');
+
+                legend.append('text')
+                    .attr('x', 20)
+                    .attr('y', 32)
+                    .style('font-size', '12px')
+                    .text('NÃO');
+            }
+
+            function createCorrelationMatrix() {
+                const svg = d3.select('#correlation-matrix');
+                const container = svg.node().parentNode;
+                const containerWidth = container.clientWidth - 40;
+                const margin = {top: 60, right: 60, bottom: 60, left: 160};
+                const width = containerWidth - margin.left - margin.right;
+                const height = 350 - margin.top - margin.bottom;
+
+                svg.attr('width', containerWidth).attr('height', 350);
+                svg.selectAll('*').remove();
+
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+
+                // Correlation data from the analysis
+                const correlationData = [
+                    {vote: 'SIM', secret: 'Defendeu Voto Secreto', count: 291, percentage: 86.4},
+                    {vote: 'SIM', secret: 'Contra Voto Secreto', count: 46, percentage: 13.6},
+                    {vote: 'NÃO', secret: 'Defendeu Voto Secreto', count: 4, percentage: 3.0},
+                    {vote: 'NÃO', secret: 'Contra Voto Secreto', count: 120, percentage: 97.0}
+                ];
+
+                const cellSize = Math.min(width / 2, height / 2) - 20;
+
+                // Create matrix
+                correlationData.forEach((d, i) => {
+                    const row = Math.floor(i / 2);
+                    const col = i % 2;
+
+                    const cellX = col * (cellSize + 20);
+                    const cellY = row * (cellSize + 20);
+
+                    // Color based on percentage (stronger correlation = darker)
+                    const opacity = d.percentage / 100;
+                    const color = d.vote === 'SIM' ? '#10b981' : '#ef4444';
+
+                    g.append('rect')
+                        .attr('x', cellX)
+                        .attr('y', cellY)
+                        .attr('width', cellSize)
+                        .attr('height', cellSize)
+                        .attr('fill', color)
+                        .attr('opacity', opacity)
+                        .attr('rx', 8)
+                        .style('cursor', 'pointer')
+                        .on('mouseover', function(event) {
+                            const tooltip = d3.select('#tooltip');
+                            tooltip.style('opacity', 1)
+                                .html(`
+                                    <strong>Voto ${d.vote} + ${d.secret}</strong><br/>
+                                    Deputados: ${d.count}<br/>
+                                    Porcentagem: ${d.percentage.toFixed(1)}%
+                                `)
+                                .style('left', (event.pageX + 10) + 'px')
+                                .style('top', (event.pageY - 10) + 'px');
+                        })
+                        .on('mouseout', function() {
+                            d3.select('#tooltip').style('opacity', 0);
+                        });
+
+                    // Add count text
+                    g.append('text')
+                        .attr('x', cellX + cellSize/2)
+                        .attr('y', cellY + cellSize/2 - 10)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '18px')
+                        .style('font-weight', 'bold')
+                        .style('fill', 'white')
+                        .style('text-shadow', '1px 1px 2px rgba(0,0,0,0.5)')
+                        .text(d.count);
+
+                    // Add percentage text
+                    g.append('text')
+                        .attr('x', cellX + cellSize/2)
+                        .attr('y', cellY + cellSize/2 + 15)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '14px')
+                        .style('fill', 'white')
+                        .style('text-shadow', '1px 1px 2px rgba(0,0,0,0.5)')
+                        .text(`${d.percentage.toFixed(1)}%`);
+                });
+
+                // Add labels
+                g.append('text')
+                    .attr('x', -80)
+                    .attr('y', cellSize/2)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '14px')
+                    .style('font-weight', 'bold')
+                    .text('Votou SIM');
+
+                g.append('text')
+                    .attr('x', -80)
+                    .attr('y', cellSize + 20 + cellSize/2)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '14px')
+                    .style('font-weight', 'bold')
+                    .text('Votou NÃO');
+
+                g.append('text')
+                    .attr('x', cellSize/2)
+                    .attr('y', -20)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '14px')
+                    .style('font-weight', 'bold')
+                    .text('Defendeu\\nVoto Secreto');
+
+                g.append('text')
+                    .attr('x', cellSize + 20 + cellSize/2)
+                    .attr('y', -20)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '14px')
+                    .style('font-weight', 'bold')
+                    .text('Contra\\nVoto Secreto');
+            }
+
+            function createAttendanceChart() {
+                const svg = d3.select('#attendance-chart');
+                const container = svg.node().parentNode;
+                const containerWidth = container.clientWidth - 40;
+                const margin = {top: 20, right: 40, bottom: 60, left: 80};
+                const width = containerWidth - margin.left - margin.right;
+                const height = 300 - margin.top - margin.bottom;
+
+                svg.attr('width', containerWidth).attr('height', 300);
+                svg.selectAll('*').remove();
+
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+
+                const attendanceData = [
+                    {category: 'Votaram em Ambos', count: 472, color: '#10b981'},
+                    {category: 'Ausentes no 2º', count: 16, color: '#f59e0b'},
+                    {category: 'Novos no 2º', count: 5, color: '#3b82f6'}
+                ];
+
+                // Scales
+                const x = d3.scaleBand()
+                    .domain(attendanceData.map(d => d.category))
+                    .range([0, width])
+                    .padding(0.2);
+
+                const y = d3.scaleLinear()
+                    .domain([0, d3.max(attendanceData, d => d.count)])
+                    .range([height, 0]);
+
+                // Axes
+                g.append('g')
+                    .attr('class', 'axis')
+                    .attr('transform', `translate(0,${height})`)
+                    .call(d3.axisBottom(x));
+
+                g.append('g')
+                    .attr('class', 'axis')
+                    .call(d3.axisLeft(y));
+
+                // Bars
+                g.selectAll('.attendance-bar')
+                    .data(attendanceData)
+                    .enter().append('rect')
+                    .attr('class', 'attendance-bar')
+                    .attr('x', d => x(d.category))
+                    .attr('y', d => y(d.count))
+                    .attr('width', x.bandwidth())
+                    .attr('height', d => height - y(d.count))
+                    .attr('fill', d => d.color)
+                    .attr('rx', 4);
+
+                // Labels
+                g.selectAll('.attendance-label')
+                    .data(attendanceData)
+                    .enter().append('text')
+                    .attr('class', 'attendance-label')
+                    .attr('x', d => x(d.category) + x.bandwidth()/2)
+                    .attr('y', d => y(d.count) - 5)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '14px')
+                    .style('font-weight', 'bold')
+                    .style('fill', '#1e293b')
+                    .text(d => d.count);
+            }
+
+            function populateChangedDeputies() {
+                const container = d3.select('#changed-deputies');
+
+                const changedDeputies = [
+                    {name: 'Airton Faleiro', party: 'PT', state: 'PA', from: 'SIM', to: 'NÃO'},
+                    {name: 'Daniela Waguinho', party: 'União', state: 'RJ', from: 'SIM', to: 'NÃO'},
+                    {name: 'Leonardo Monteiro', party: 'PT', state: 'MG', from: 'SIM', to: 'NÃO'}
+                ];
+
+                container.selectAll('.deputy-card')
+                    .data(changedDeputies)
+                    .enter().append('div')
+                    .attr('class', 'deputy-card')
+                    .html(d => `
+                        <div class="deputy-name">${d.name}</div>
+                        <div class="deputy-info">${d.party}/${d.state}</div>
+                        <div class="vote-change">
+                            <span class="vote-from vote-sim">${d.from}</span>
+                            <span class="arrow">→</span>
+                            <span class="vote-to vote-nao">${d.to}</span>
+                        </div>
+                    `);
+            }
+
+            // Initialize all charts
+            createSankeyChart();
+            createComparisonChart();
+            createCorrelationMatrix();
+            createAttendanceChart();
+            populateChangedDeputies();
+
+            // Update stats
+            const matchedDeputies = new Set();
+            for (const dep1 of round1Data) {
+                if (round2Data.find(dep2 => dep2.deputado === dep1.deputado)) {
+                    matchedDeputies.add(dep1.deputado);
+                }
+            }
+
+            document.getElementById('total-deputies').textContent = matchedDeputies.size;
+            document.getElementById('maintained-votes').textContent = matchedDeputies.size - voteChanges.length;
+            document.getElementById('changed-votes').textContent = voteChanges.length;
+            document.getElementById('stability').textContent =
+                ((matchedDeputies.size - voteChanges.length) / matchedDeputies.size * 100).toFixed(1) + '%';
+            document.getElementById('missing-round2').textContent = round1Data.length - matchedDeputies.size;
+            document.getElementById('new-round2').textContent = round2Data.length - matchedDeputies.size;
+        }
+
+        // Initialize when page loads
+        loadData();
+
+        // Responsive resize
+        window.addEventListener('resize', function() {
+            // Reload charts on resize
+            location.reload();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEC da Bandidagem - Análise por Partidos</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-bottom: 3px solid #4f46e5;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .nav a {
+            padding: 0.75rem 1.5rem;
+            background: #4f46e5;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav a:hover, .nav a.active {
+            background: #3730a3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .chart-title {
+            font-size: 1.8rem;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .chart-subtitle {
+            font-size: 1rem;
+            color: #64748b;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(30, 41, 59, 0.95);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.4;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .bar {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .bar:hover {
+            stroke: #1e293b;
+            stroke-width: 2;
+        }
+
+        .axis {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .axis-label {
+            font-size: 14px;
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid #4f46e5;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .control-button {
+            padding: 0.5rem 1rem;
+            background: #e2e8f0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .control-button:hover, .control-button.active {
+            background: #4f46e5;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .nav {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .legend {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏛️ PEC da Bandidagem</h1>
+        <p>Análise Detalhada por Partidos Políticos</p>
+        <nav class="nav">
+            <a href="index.html">🏠 Início</a>
+            <a href="partidos.html" class="active">🎯 Partidos</a>
+            <a href="estados.html">🗺️ Estados</a>
+            <a href="fluxo.html">🔄 Fluxo de Votos</a>
+        </nav>
+    </div>
+
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="total-parties">20</div>
+                <div class="stat-label">Partidos Políticos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="unanimous-parties">7</div>
+                <div class="stat-label">Partidos com 100% Coesão</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="split-parties">9</div>
+                <div class="stat-label">Partidos Divididos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="avg-cohesion">76%</div>
+                <div class="stat-label">Coesão Média</div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h2 class="chart-title">📊 Aprovação por Partido - 2º Turno</h2>
+            <p class="chart-subtitle">Porcentagem de votos SIM por partido (ordenado por aprovação)</p>
+
+            <div class="controls">
+                <button class="control-button active" onclick="sortBy('approval')">Ordenar por Aprovação</button>
+                <button class="control-button" onclick="sortBy('cohesion')">Ordenar por Coesão</button>
+                <button class="control-button" onclick="sortBy('size')">Ordenar por Tamanho</button>
+            </div>
+
+            <svg id="party-chart" width="100%" height="500"></svg>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #10b981;"></div>
+                    <span>Apoio Massivo (>90%)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #3b82f6;"></div>
+                    <span>Apoio Moderado (70-90%)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f59e0b;"></div>
+                    <span>Dividido (30-70%)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ef4444;"></div>
+                    <span>Oposição (≤30%)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h2 class="chart-title">🎯 Coesão Partidária (Índice Rice)</h2>
+            <p class="chart-subtitle">Medida de disciplina interna do partido (100% = unanimidade)</p>
+
+            <svg id="cohesion-chart" width="100%" height="400"></svg>
+        </div>
+
+        <div class="chart-container">
+            <h2 class="chart-title">🔐 Correlação: Voto vs Defesa do Voto Secreto</h2>
+            <p class="chart-subtitle">Partidos que votaram SIM tendem a defender voto secreto</p>
+
+            <svg id="correlation-chart" width="100%" height="400"></svg>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script src="data.js"></script>
+    <script>
+        // Use embedded data to avoid CORS issues
+        function loadData() {
+            const data = VISUALIZATION_DATA;
+
+            // Convert party data to array and calculate metrics
+            const parties = Object.entries(data.parties).map(([name, stats]) => ({
+                name: name,
+                round1_approval: stats.round1_approval,
+                round2_approval: stats.round2_approval,
+                cohesion: stats.cohesion,
+                size: stats.round2_total,
+                sim_votes: stats.round2.Sim,
+                nao_votes: stats.round2.Não,
+                secret_defense: stats.secret_defense_pct
+            })).filter(d => d.size > 0);
+
+            // Color scale based on approval level
+            function getPartyColor(approval) {
+                if (approval > 90) return '#10b981'; // Green - Massive support
+                if (approval >= 70) return '#3b82f6'; // Blue - Moderate support
+                if (approval >= 30) return '#f59e0b'; // Orange - Divided
+                return '#ef4444'; // Red - Opposition
+            }
+
+            let currentSort = 'approval';
+
+            function sortBy(type) {
+                currentSort = type;
+
+                // Update button states
+                d3.selectAll('.control-button').classed('active', false);
+                d3.select(`[onclick="sortBy('${type}')"]`).classed('active', true);
+
+                let sortedParties;
+                switch(type) {
+                    case 'approval':
+                        sortedParties = [...parties].sort((a, b) => b.round2_approval - a.round2_approval);
+                        break;
+                    case 'cohesion':
+                        sortedParties = [...parties].sort((a, b) => b.cohesion - a.cohesion);
+                        break;
+                    case 'size':
+                        sortedParties = [...parties].sort((a, b) => b.size - a.size);
+                        break;
+                }
+
+                updatePartyChart(sortedParties);
+            }
+
+            function updatePartyChart(sortedParties) {
+                const svg = d3.select('#party-chart');
+                const container = svg.node().parentNode;
+                const containerWidth = container.clientWidth - 40;
+                const margin = {top: 20, right: 30, bottom: 80, left: 120};
+                const width = containerWidth - margin.left - margin.right;
+                const height = 500 - margin.top - margin.bottom;
+
+                svg.attr('width', containerWidth).attr('height', 500);
+                svg.selectAll('*').remove();
+
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+
+                // Scales
+                const x = d3.scaleLinear()
+                    .domain([0, 100])
+                    .range([0, width]);
+
+                const y = d3.scaleBand()
+                    .domain(sortedParties.map(d => d.name))
+                    .range([0, height])
+                    .padding(0.1);
+
+                // Axes
+                g.append('g')
+                    .attr('class', 'axis')
+                    .attr('transform', `translate(0,${height})`)
+                    .call(d3.axisBottom(x).tickFormat(d => d + '%'));
+
+                g.append('g')
+                    .attr('class', 'axis')
+                    .call(d3.axisLeft(y));
+
+                // Bars
+                g.selectAll('.bar')
+                    .data(sortedParties)
+                    .enter().append('rect')
+                    .attr('class', 'bar')
+                    .attr('x', 0)
+                    .attr('y', d => y(d.name))
+                    .attr('width', 0)
+                    .attr('height', y.bandwidth())
+                    .attr('fill', d => getPartyColor(d.round2_approval))
+                    .attr('rx', 4)
+                    .on('mouseover', function(event, d) {
+                        const tooltip = d3.select('#tooltip');
+                        tooltip.style('opacity', 1)
+                            .html(`
+                                <strong>${d.name}</strong><br/>
+                                Aprovação: ${d.round2_approval.toFixed(1)}%<br/>
+                                Votos SIM: ${d.sim_votes}/${d.size}<br/>
+                                Coesão: ${d.cohesion.toFixed(1)}%<br/>
+                                Defesa Voto Secreto: ${d.secret_defense.toFixed(1)}%
+                            `)
+                            .style('left', (event.pageX + 10) + 'px')
+                            .style('top', (event.pageY - 10) + 'px');
+                    })
+                    .on('mouseout', function() {
+                        d3.select('#tooltip').style('opacity', 0);
+                    })
+                    .transition()
+                    .duration(1000)
+                    .delay((d, i) => i * 50)
+                    .attr('width', d => x(d.round2_approval));
+
+                // Add percentage labels
+                g.selectAll('.bar-label')
+                    .data(sortedParties)
+                    .enter().append('text')
+                    .attr('class', 'bar-label')
+                    .attr('x', d => x(d.round2_approval) + 5)
+                    .attr('y', d => y(d.name) + y.bandwidth()/2)
+                    .attr('dy', '0.35em')
+                    .style('font-size', '12px')
+                    .style('fill', '#1e293b')
+                    .style('font-weight', '500')
+                    .style('opacity', 0)
+                    .text(d => d.round2_approval.toFixed(1) + '%')
+                    .transition()
+                    .duration(1000)
+                    .delay((d, i) => i * 50 + 500)
+                    .style('opacity', 1);
+            }
+
+            function createCohesionChart() {
+                const svg = d3.select('#cohesion-chart');
+                const container = svg.node().parentNode;
+                const containerWidth = container.clientWidth - 40;
+                const margin = {top: 20, right: 30, bottom: 60, left: 120};
+                const width = containerWidth - margin.left - margin.right;
+                const height = 400 - margin.top - margin.bottom;
+
+                svg.attr('width', containerWidth).attr('height', 400);
+
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+
+                const sortedByCohesion = [...parties].sort((a, b) => b.cohesion - a.cohesion);
+
+                // Scales
+                const x = d3.scaleLinear()
+                    .domain([0, 100])
+                    .range([0, width]);
+
+                const y = d3.scaleBand()
+                    .domain(sortedByCohesion.map(d => d.name))
+                    .range([0, height])
+                    .padding(0.1);
+
+                // Color scale for cohesion
+                const cohesionColor = d3.scaleLinear()
+                    .domain([0, 50, 100])
+                    .range(['#ef4444', '#f59e0b', '#10b981']);
+
+                // Axes
+                g.append('g')
+                    .attr('class', 'axis')
+                    .attr('transform', `translate(0,${height})`)
+                    .call(d3.axisBottom(x).tickFormat(d => d + '%'));
+
+                g.append('g')
+                    .attr('class', 'axis')
+                    .call(d3.axisLeft(y));
+
+                // Bars
+                g.selectAll('.cohesion-bar')
+                    .data(sortedByCohesion)
+                    .enter().append('rect')
+                    .attr('class', 'cohesion-bar')
+                    .attr('x', 0)
+                    .attr('y', d => y(d.name))
+                    .attr('width', 0)
+                    .attr('height', y.bandwidth())
+                    .attr('fill', d => cohesionColor(d.cohesion))
+                    .attr('rx', 4)
+                    .on('mouseover', function(event, d) {
+                        const tooltip = d3.select('#tooltip');
+                        tooltip.style('opacity', 1)
+                            .html(`
+                                <strong>${d.name}</strong><br/>
+                                Coesão: ${d.cohesion.toFixed(1)}%<br/>
+                                Disciplina: ${d.cohesion > 90 ? 'Muito Alta' :
+                                            d.cohesion > 70 ? 'Alta' :
+                                            d.cohesion > 50 ? 'Média' : 'Baixa'}
+                            `)
+                            .style('left', (event.pageX + 10) + 'px')
+                            .style('top', (event.pageY - 10) + 'px');
+                    })
+                    .on('mouseout', function() {
+                        d3.select('#tooltip').style('opacity', 0);
+                    })
+                    .transition()
+                    .duration(1000)
+                    .delay((d, i) => i * 50)
+                    .attr('width', d => x(d.cohesion));
+            }
+
+            function createCorrelationChart() {
+                const svg = d3.select('#correlation-chart');
+                const container = svg.node().parentNode;
+                const containerWidth = container.clientWidth - 40;
+                const margin = {top: 20, right: 30, bottom: 60, left: 60};
+                const width = containerWidth - margin.left - margin.right;
+                const height = 400 - margin.top - margin.bottom;
+
+                svg.attr('width', containerWidth).attr('height', 400);
+
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+
+                // Scales
+                const x = d3.scaleLinear()
+                    .domain([0, 100])
+                    .range([0, width]);
+
+                const y = d3.scaleLinear()
+                    .domain([0, 100])
+                    .range([height, 0]);
+
+                const radius = d3.scaleSqrt()
+                    .domain([0, d3.max(parties, d => d.size)])
+                    .range([3, 20]);
+
+                // Axes
+                g.append('g')
+                    .attr('class', 'axis')
+                    .attr('transform', `translate(0,${height})`)
+                    .call(d3.axisBottom(x).tickFormat(d => d + '%'));
+
+                g.append('g')
+                    .attr('class', 'axis')
+                    .call(d3.axisLeft(y).tickFormat(d => d + '%'));
+
+                // Axis labels
+                g.append('text')
+                    .attr('class', 'axis-label')
+                    .attr('transform', `translate(${width/2},${height + 40})`)
+                    .style('text-anchor', 'middle')
+                    .text('Aprovação da PEC (%)');
+
+                g.append('text')
+                    .attr('class', 'axis-label')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('y', -40)
+                    .attr('x', -height/2)
+                    .style('text-anchor', 'middle')
+                    .text('Defesa do Voto Secreto (%)');
+
+                // Circles
+                g.selectAll('.correlation-circle')
+                    .data(parties.filter(d => d.secret_defense !== null && !isNaN(d.secret_defense)))
+                    .enter().append('circle')
+                    .attr('class', 'correlation-circle')
+                    .attr('cx', d => x(d.round2_approval))
+                    .attr('cy', d => y(d.secret_defense))
+                    .attr('r', 0)
+                    .attr('fill', d => getPartyColor(d.round2_approval))
+                    .attr('opacity', 0.7)
+                    .style('cursor', 'pointer')
+                    .on('mouseover', function(event, d) {
+                        const tooltip = d3.select('#tooltip');
+                        tooltip.style('opacity', 1)
+                            .html(`
+                                <strong>${d.name}</strong><br/>
+                                Aprovação PEC: ${d.round2_approval.toFixed(1)}%<br/>
+                                Defesa Voto Secreto: ${d.secret_defense.toFixed(1)}%<br/>
+                                Tamanho: ${d.size} deputados
+                            `)
+                            .style('left', (event.pageX + 10) + 'px')
+                            .style('top', (event.pageY - 10) + 'px');
+                    })
+                    .on('mouseout', function() {
+                        d3.select('#tooltip').style('opacity', 0);
+                    })
+                    .transition()
+                    .duration(1000)
+                    .delay((d, i) => i * 100)
+                    .attr('r', d => radius(d.size));
+
+                // Trend line (simple linear regression)
+                const validParties = parties.filter(d => d.secret_defense !== null && !isNaN(d.secret_defense));
+                if (validParties.length > 1) {
+                    const xMean = d3.mean(validParties, d => d.round2_approval);
+                    const yMean = d3.mean(validParties, d => d.secret_defense);
+
+                    let numerator = 0, denominator = 0;
+                    validParties.forEach(d => {
+                        numerator += (d.round2_approval - xMean) * (d.secret_defense - yMean);
+                        denominator += (d.round2_approval - xMean) ** 2;
+                    });
+
+                    const slope = numerator / denominator;
+                    const intercept = yMean - slope * xMean;
+
+                    const lineData = [
+                        {x: 0, y: intercept},
+                        {x: 100, y: slope * 100 + intercept}
+                    ];
+
+                    const line = d3.line()
+                        .x(d => x(d.x))
+                        .y(d => y(d.y));
+
+                    g.append('path')
+                        .datum(lineData)
+                        .attr('fill', 'none')
+                        .attr('stroke', '#1e293b')
+                        .attr('stroke-width', 2)
+                        .attr('stroke-dasharray', '5,5')
+                        .attr('opacity', 0)
+                        .attr('d', line)
+                        .transition()
+                        .duration(1500)
+                        .delay(1000)
+                        .attr('opacity', 0.6);
+                }
+            }
+
+            // Initialize charts
+            const sortedParties = [...parties].sort((a, b) => b.round2_approval - a.round2_approval);
+            updatePartyChart(sortedParties);
+            createCohesionChart();
+            createCorrelationChart();
+
+            // Make sortBy function global
+            window.sortBy = sortBy;
+
+            // Update stats
+            document.getElementById('total-parties').textContent = parties.length;
+            document.getElementById('unanimous-parties').textContent = parties.filter(p => p.cohesion === 100).length;
+            document.getElementById('split-parties').textContent = parties.filter(p => p.cohesion < 70).length;
+            document.getElementById('avg-cohesion').textContent = Math.round(d3.mean(parties, d => d.cohesion)) + '%';
+        }
+
+        // Initialize when page loads
+        loadData();
+
+        // Responsive resize
+        window.addEventListener('resize', function() {
+            // Reload charts on resize
+            location.reload();
+        });
+    </script>
+</body>
+</html>

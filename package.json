@@ -1,0 +1,55 @@
+{
+  "name": "pec-bandidagem-visualizations",
+  "version": "1.0.0",
+  "description": "Visualizações interativas dos padrões de votação da PEC da Bandidagem na Câmara dos Deputados. Análise detalhada de 488 deputados (1º turno) e 477 deputados (2º turno) com dados validados e verificados independentemente.",
+  "main": "index.html",
+  "homepage": "https://fcavalcantirj.github.io/pec-bandidagem",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:fcavalcantirj/pec-bandidagem.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fcavalcantirj/pec-bandidagem/issues"
+  },
+  "scripts": {
+    "start": "./build.sh serve",
+    "dev": "./build.sh serve",
+    "serve": "./build.sh serve",
+    "build": "./build.sh build",
+    "deploy": "./build.sh deploy",
+    "clean": "./build.sh clean"
+  },
+  "keywords": [
+    "data-visualization",
+    "d3js",
+    "brazilian-politics",
+    "voting-analysis",
+    "pec-bandidagem",
+    "camara-deputados",
+    "congresso-nacional",
+    "visualizacao-dados",
+    "politica-brasileira"
+  ],
+  "author": {
+    "name": "fcavalcantirj",
+    "url": "https://github.com/fcavalcantirj"
+  },
+  "contributors": [
+    {
+      "name": "fcavalcantirj",
+      "url": "https://github.com/fcavalcantirj"
+    }
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "dataSources": {
+    "originalPost": "https://www.reddit.com/r/brasil/comments/1niy6g4/c%C3%A2mara_aprova_pec_da_blindagem_em_1%C2%BA_turno/",
+    "spreadsheetRound1": "https://docs.google.com/spreadsheets/d/1VjHyNtAJwXLbAx4HtXjESTcwah63JfEmFcfAnDXrGPE/edit?gid=1276687350#gid=1276687350&fvid=656345091",
+    "spreadsheetRound2": "https://docs.google.com/spreadsheets/d/1VjHyNtAJwXLbAx4HtXjESTcwah63JfEmFcfAnDXrGPE/edit?gid=1276687350#gid=1276687350&fvid=1058390158"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}

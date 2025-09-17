@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEC da Bandidagem - Análise Interativa</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .hero {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 4rem 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-bottom: 3px solid #4f46e5;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            color: #64748b;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .hero .description {
+            font-size: 1.1rem;
+            color: #374151;
+            max-width: 1000px;
+            margin: 0 auto 2rem;
+            line-height: 1.8;
+        }
+
+        .nav-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .nav-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .nav-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .nav-card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .nav-card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        .nav-card-description {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-card-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 0.75rem;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 0.25rem;
+        }
+
+        .overview-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .overview-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border-left: 4px solid #4f46e5;
+        }
+
+        .overview-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #4f46e5;
+            margin-bottom: 0.5rem;
+        }
+
+        .overview-label {
+            color: #64748b;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .overview-detail {
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .methodology {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            margin: 3rem auto;
+            max-width: 1200px;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .methodology h2 {
+            color: #1e293b;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        .methodology-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .methodology-item {
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-left: 4px solid #4f46e5;
+        }
+
+        .methodology-title {
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .methodology-text {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .footer {
+            background: rgba(30, 41, 59, 0.95);
+            color: white;
+            padding: 2rem;
+            margin-top: 4rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer h3 {
+            margin-bottom: 1rem;
+            color: #e2e8f0;
+        }
+
+        .footer p {
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        .data-sources {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .source-link {
+            color: #60a5fa;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .source-link:hover {
+            color: #93c5fd;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .nav-cards {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+
+            .overview-stats {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                padding: 0 1rem;
+            }
+
+            .methodology {
+                margin: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>🏛️ PEC da Bandidagem</h1>
+        <p class="subtitle">Análise Interativa dos Padrões de Votação na Câmara dos Deputados</p>
+        <p class="description">
+            Explore em detalhes como os deputados federais votaram na Proposta de Emenda Constitucional conhecida como "PEC da Bandidagem".
+            Esta análise apresenta visualizações interativas dos padrões de votação por partido, estado, e o fluxo de mudanças entre os dois turnos de votação.
+        </p>
+    </div>
+
+    <div class="overview-stats">
+        <div class="overview-card">
+            <div class="overview-number" id="total-votes-1">488</div>
+            <div class="overview-label">Votos 1º Turno</div>
+            <div class="overview-detail">353 SIM (72.3%)<br>134 NÃO (27.5%)</div>
+        </div>
+        <div class="overview-card">
+            <div class="overview-number" id="total-votes-2">477</div>
+            <div class="overview-label">Votos 2º Turno</div>
+            <div class="overview-detail">344 SIM (72.1%)<br>133 NÃO (27.9%)</div>
+        </div>
+        <div class="overview-card">
+            <div class="overview-number">20</div>
+            <div class="overview-label">Partidos Políticos</div>
+            <div class="overview-detail">7 com 100% coesão<br>9 divididos internamente</div>
+        </div>
+        <div class="overview-card">
+            <div class="overview-number">27</div>
+            <div class="overview-label">Estados + DF</div>
+            <div class="overview-detail">2 com 100% aprovação<br>4 com ≤60% aprovação</div>
+        </div>
+        <div class="overview-card">
+            <div class="overview-number">3</div>
+            <div class="overview-label">Mudanças de Voto</div>
+            <div class="overview-detail">Apenas 0.6% dos deputados<br>Todas SIM → NÃO</div>
+        </div>
+        <div class="overview-card">
+            <div class="overview-number">83%</div>
+            <div class="overview-label">Correlação</div>
+            <div class="overview-detail">Voto SIM × Defesa<br>do Voto Secreto</div>
+        </div>
+    </div>
+
+    <div class="nav-cards">
+        <a href="partidos.html" class="nav-card">
+            <span class="nav-card-icon">🎯</span>
+            <h3 class="nav-card-title">Análise por Partidos</h3>
+            <p class="nav-card-description">
+                Explore como cada partido político se posicionou na votação. Visualize padrões de coesão partidária,
+                dissidências internas e a correlação entre voto na PEC e defesa do voto secreto.
+            </p>
+            <div class="nav-card-stats">
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">PL & Republicanos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">0%</div>
+                    <div class="stat-label">PSDB Coesão</div>
+                </div>
+            </div>
+        </a>
+
+        <a href="estados.html" class="nav-card">
+            <span class="nav-card-icon">🗺️</span>
+            <h3 class="nav-card-title">Análise por Estados</h3>
+            <p class="nav-card-description">
+                Descubra os padrões regionais de votação. Compare como diferentes regiões do Brasil se posicionaram
+                e identifique variações geográficas na aprovação da PEC.
+            </p>
+            <div class="nav-card-stats">
+                <div class="stat-item">
+                    <div class="stat-number">TO & PI</div>
+                    <div class="stat-label">100% Aprovação</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">SE & RS</div>
+                    <div class="stat-label">Mais Divididos</div>
+                </div>
+            </div>
+        </a>
+
+        <a href="fluxo.html" class="nav-card">
+            <span class="nav-card-icon">🔄</span>
+            <h3 class="nav-card-title">Fluxo de Votos</h3>
+            <p class="nav-card-description">
+                Acompanhe as mudanças entre o primeiro e segundo turno. Veja quais deputados mudaram de posição
+                e analise a estabilidade geral dos votos ao longo do processo.
+            </p>
+            <div class="nav-card-stats">
+                <div class="stat-item">
+                    <div class="stat-number">99.4%</div>
+                    <div class="stat-label">Estabilidade</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Mudanças SIM→NÃO</div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="methodology">
+        <h2>📊 Metodologia e Dados</h2>
+        <div class="methodology-grid">
+            <div class="methodology-item">
+                <div class="methodology-title">🔍 Fonte dos Dados</div>
+                <div class="methodology-text">
+                    Dados extraídos dos registros oficiais de votação nominal da Câmara dos Deputados
+                    para os dois turnos da PEC da Bandidagem.
+                </div>
+            </div>
+            <div class="methodology-item">
+                <div class="methodology-title">⚡ Processamento</div>
+                <div class="methodology-text">
+                    Análise computacional usando Python e D3.js. Dados validados por métodos independentes
+                    para garantir precisão de 95%+ em todas as estatísticas.
+                </div>
+            </div>
+            <div class="methodology-item">
+                <div class="methodology-title">📈 Métricas</div>
+                <div class="methodology-text">
+                    Índice Rice de coesão partidária, correlação de Pearson, análise de fluxo e
+                    estatísticas descritivas para padrões regionais.
+                </div>
+            </div>
+            <div class="methodology-item">
+                <div class="methodology-title">✅ Validação</div>
+                <div class="methodology-text">
+                    Verificação cruzada independente de todos os dados. Relatório completo de validação
+                    disponível demonstrando acurácia para publicação.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-content">
+            <h3>🔬 Transparência e Reprodutibilidade</h3>
+            <p>
+                Esta análise foi desenvolvida com foco na transparência e precisão dos dados.
+                Todos os números foram verificados independentemente e estão prontos para publicação acadêmica ou jornalística.
+            </p>
+            <div class="data-sources">
+                <a href="docs/RELATORIO_PEC_BANDIDAGEM.md" class="source-link">📄 Relatório Completo</a>
+                <a href="docs/VALIDATION_REPORT.md" class="source-link">✅ Relatório de Validação</a>
+                <a href="docs/DEVELOPMENT.md" class="source-link">🛠️ Documentação Técnica</a>
+                <a href="https://www.reddit.com/r/brasil/comments/1niy6g4/c%C3%A2mara_aprova_pec_da_blindagem_em_1%C2%BA_turno/" class="source-link" target="_blank">📝 Post Original</a>
+            </div>
+            <p style="margin-top: 2rem; font-size: 0.9rem; color: #94a3b8;">
+                Criado por <a href="https://github.com/fcavalcantirj" class="source-link">fcavalcantirj</a> •
+                Análise gerada em setembro de 2025 • Dados validados para publicação pública
+            </p>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        // Use embedded data to avoid CORS issues
+        if (typeof VISUALIZATION_DATA !== 'undefined') {
+            console.log('Data loaded successfully for', VISUALIZATION_DATA.round1.length, 'deputies in round 1');
+        } else {
+            console.log('Using static values');
+        }
+
+        // Add smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add intersection observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards for animation
+        document.querySelectorAll('.nav-card, .overview-card, .methodology-item').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Add loading animation
+        window.addEventListener('load', function() {
+            document.querySelectorAll('.overview-number').forEach((number, index) => {
+                setTimeout(() => {
+                    number.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        number.style.transform = 'scale(1)';
+                    }, 200);
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
