@@ -263,6 +263,211 @@
             color: #93c5fd;
         }
 
+        /* Report Highlights Styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        .cta-link {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .cta-link:hover {
+            color: #3730a3;
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .insight-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid #4f46e5;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .insight-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .insight-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .insight-card h3 {
+            font-size: 1.2rem;
+            color: #1e293b;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+
+        .insight-card p {
+            color: #64748b;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #f0f9ff, #dbeafe);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 2.5rem;
+            border: 2px solid #3b82f6;
+        }
+
+        .cta-section h3 {
+            color: #1e40af;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .cta-section p {
+            color: #1e40af;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+            background: linear-gradient(135deg, #3730a3, #6d28d9);
+        }
+
+        /* GitHub Fork Ribbon CSS */
+        .github-fork-ribbon {
+            width: 12.1em;
+            height: 12.1em;
+            position: fixed;
+            overflow: hidden;
+            top: 0;
+            right: 0;
+            z-index: 9999;
+            pointer-events: none;
+            font-size: 13px;
+            text-decoration: none;
+            text-indent: -999999px;
+        }
+
+        .github-fork-ribbon.fixed {
+            position: fixed;
+        }
+
+        .github-fork-ribbon:hover, .github-fork-ribbon:active {
+            background-color: rgba(0, 0, 0, 0.0);
+        }
+
+        .github-fork-ribbon:before, .github-fork-ribbon:after {
+            position: absolute;
+            display: block;
+            width: 15.38em;
+            height: 1.54em;
+            top: 3.23em;
+            right: -3.23em;
+            transform: rotate(45deg);
+            box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.5);
+            pointer-events: auto;
+        }
+
+        .github-fork-ribbon:before {
+            content: "";
+            padding: 0.38em 0;
+            background-color: #a00;
+            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
+            box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.5);
+            pointer-events: auto;
+        }
+
+        .github-fork-ribbon:after {
+            content: attr(data-ribbon);
+            color: #fff;
+            font: 700 1em "Helvetica Neue", Helvetica, Arial, sans-serif;
+            line-height: 1.54em;
+            text-decoration: none;
+            text-shadow: 0 -1px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            text-indent: 0;
+            padding: 0.15em 0;
+            margin: 0.15em 0;
+            border-width: 1px 0;
+            border-style: dotted;
+            border-color: #fff;
+            border-color: rgba(255, 255, 255, 0.7);
+        }
+
+        .github-fork-ribbon.red:before {
+            background-color: #a00;
+        }
+
+        .github-fork-ribbon.blue:before {
+            background-color: #05b;
+        }
+
+        .github-fork-ribbon.green:before {
+            background-color: #090;
+        }
+
+        .github-fork-ribbon.orange:before {
+            background-color: #fa0;
+        }
+
+        .github-fork-ribbon.purple:before {
+            background-color: #c6f;
+        }
+
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.5rem;
@@ -285,10 +490,17 @@
             .methodology {
                 margin: 2rem 1rem;
             }
+
+            .github-fork-ribbon {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- GitHub Fork Ribbon -->
+    <a class="github-fork-ribbon" href="https://github.com/fcavalcantirj/pec-bandidagem" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
+
     <div class="hero">
         <h1>🏛️ PEC da Bandidagem</h1>
         <p class="subtitle">Análise Interativa dos Padrões de Votação na Câmara dos Deputados</p>
@@ -328,6 +540,61 @@
             <div class="overview-number">83%</div>
             <div class="overview-label">Correlação</div>
             <div class="overview-detail">Voto SIM × Defesa<br>do Voto Secreto</div>
+        </div>
+    </div>
+
+    <!-- Report Highlights Section -->
+    <div class="container">
+        <div class="section">
+            <h2 class="section-title">📊 Principais Descobertas do Relatório Analítico</h2>
+            <p class="section-subtitle">
+                Nossa análise profunda revelou padrões fascinantes no comportamento parlamentar.
+                <a href="relatorio.html" class="cta-link">🔍 Leia o relatório completo →</a>
+            </p>
+
+            <div class="insights-grid">
+                <div class="insight-card">
+                    <div class="insight-icon">🎯</div>
+                    <h3>Polarização Extrema</h3>
+                    <p>Partidos de direita com apoio massivo (>90%) vs. esquerda com oposição massiva (>80%). Centro profundamente dividido.</p>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-icon">🔗</div>
+                    <h3>Correlação Forte (r=0.83)</h3>
+                    <p>Voto favorável à PEC fortemente correlacionado com defesa do voto secreto. Apenas 4 contradições em 461 votos.</p>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-icon">🗺️</div>
+                    <h3>Divisões Regionais</h3>
+                    <p>Norte/Nordeste mais favorável (TO e PI: 100%). Sul/Sudeste mais resistente. Estados menores mais coesos.</p>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-icon">⚖️</div>
+                    <h3>Estabilidade Extrema</h3>
+                    <p>99.4% mantiveram o voto entre turnos. Apenas 3 mudanças, todas de SIM para NÃO. Posições consolidadas.</p>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-icon">🏛️</div>
+                    <h3>Disciplina Partidária</h3>
+                    <p>PL: 100% de disciplina. PT: 12 dissidentes. PSDB: completamente dividido (50%-50%).</p>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-icon">📈</div>
+                    <h3>Casos Extremos</h3>
+                    <p>2 estados com 100% de aprovação (TO, PI). 4 estados divididos (≤60%). Alex Santana: único abstencionista.</p>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <h3>🔬 Análise Completa Disponível</h3>
+                <p>O relatório completo inclui análise detalhada de 965 votos, índices de coesão partidária, casos contraditórios, perfis de dissidentes e muito mais.</p>
+                <a href="relatorio.html" class="cta-button">📋 Ver Relatório Completo</a>
+            </div>
         </div>
     </div>
 
@@ -385,6 +652,24 @@
                 <div class="stat-item">
                     <div class="stat-number">3</div>
                     <div class="stat-label">Mudanças SIM→NÃO</div>
+                </div>
+            </div>
+        </a>
+        <a href="relatorio.html" class="nav-card">
+            <span class="nav-card-icon">📊</span>
+            <h3 class="nav-card-title">Relatório Completo</h3>
+            <p class="nav-card-description">
+                Análise profunda e detalhada dos dados de votação. Inclui correlações, casos extremos,
+                índices de coesão partidária e insights estratégicos sobre o comportamento parlamentar.
+            </p>
+            <div class="nav-card-stats">
+                <div class="stat-item">
+                    <div class="stat-number">965</div>
+                    <div class="stat-label">Votos Analisados</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">0.83</div>
+                    <div class="stat-label">Correlação</div>
                 </div>
             </div>
         </a>
