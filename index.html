@@ -126,10 +126,11 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            color: #333;
+            color: #1a202c;
+            font-weight: 500;
             /* Mobile-first: ensure smooth scrolling and prevent horizontal scroll */
             overflow-x: hidden;
             scroll-behavior: smooth;
@@ -146,6 +147,7 @@
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(15px);
             padding: 2rem 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.5);
             box-shadow: 0 8px 40px rgba(0,0,0,0.15);
             border-bottom: 4px solid #4f46e5;
             border-radius: 0 0 24px 24px;
@@ -156,28 +158,32 @@
 
         .hero h1 {
             font-size: 2rem;
-            color: #0f172a;
+            color: #1a202c;
             margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.15);
             line-height: 1.2;
+            font-weight: 900;
+            letter-spacing: -0.025em;
             font-weight: 800;
         }
 
         .hero .subtitle {
             font-size: 1.1rem;
-            color: #334155;
+            color: #1a202c;
             margin-bottom: 1.5rem;
             line-height: 1.5;
             padding: 0 0.5rem;
+            font-weight: 600;
             font-weight: 600;
         }
 
         .hero .description {
             font-size: 0.95rem;
-            color: #374151;
+            color: #1a202c;
             margin: 0 auto 1.5rem;
             line-height: 1.6;
             padding: 0 0.5rem;
+            font-weight: 600;
         }
 
         /* Tablet and up */
@@ -258,6 +264,7 @@
             backdrop-filter: blur(15px);
             border-radius: 24px;
             padding: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.5);
             box-shadow: 0 12px 40px rgba(0,0,0,0.12);
             border: 1px solid rgba(255,255,255,0.8);
             transition: all 0.3s ease;
@@ -296,17 +303,19 @@
 
         .nav-card-title {
             font-size: 1.5rem;
-            font-weight: 700;
-            color: #0f172a;
+            font-weight: 800;
+            color: #1a202c;
             margin-bottom: 1rem;
             text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            letter-spacing: -0.025em;
         }
 
         .nav-card-description {
-            color: #475569;
+            color: #2d3748;
             line-height: 1.6;
             margin-bottom: 1.5rem;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 1rem;
         }
 
         .nav-card-stats {
@@ -325,8 +334,9 @@
 
         .stat-number {
             font-size: 1.25rem;
-            font-weight: bold;
+            font-weight: 900;
             color: #4f46e5;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
 
         .stat-label {
@@ -377,6 +387,7 @@
             backdrop-filter: blur(15px);
             border-radius: 20px;
             padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.5);
             text-align: center;
             box-shadow: 0 12px 40px rgba(0,0,0,0.12);
             border: 1px solid rgba(255,255,255,0.8);
@@ -392,25 +403,27 @@
 
         .overview-number {
             font-size: 2.5rem;
-            font-weight: 800;
+            font-weight: 900;
             color: #4f46e5;
             margin-bottom: 0.5rem;
             line-height: 1;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            letter-spacing: -0.025em;
         }
 
         .overview-label {
-            color: #334155;
+            color: #1a202c;
             font-size: 1rem;
             margin-bottom: 0.5rem;
-            font-weight: 600;
+            font-weight: 700;
+            letter-spacing: -0.025em;
         }
 
         .overview-detail {
-            color: #475569;
-            font-size: 0.9rem;
+            color: #2d3748;
+            font-size: 0.95rem;
             line-height: 1.4;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .methodology {
@@ -735,6 +748,33 @@
 
         .github-fork-ribbon.purple:before {
             background-color: #c6f;
+        }
+
+        /* Improved text contrast and readability */
+        .nav-card-description strong {
+            color: #1a202c !important;
+            font-weight: 700 !important;
+        }
+
+        .overview-detail strong {
+            color: #1a202c !important;
+            font-weight: 700 !important;
+        }
+
+        .overview-detail span {
+            color: #2d3748 !important;
+            font-weight: 600 !important;
+        }
+
+        .stat-label {
+            color: #2d3748 !important;
+            font-weight: 600 !important;
+            font-size: 0.8rem !important;
+        }
+
+        /* Better card backgrounds for contrast */
+        .nav-card, .overview-card {
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12) !important;
         }
 
         /* Landscape mobile optimization */
