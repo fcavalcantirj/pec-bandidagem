@@ -1,6 +1,6 @@
 # 🏛️ PEC da Bandidagem - Análise Interativa
 
-[![Deployment Status](https://img.shields.io/badge/deployment-ready-brightgreen)](https://github.com)
+[![Deployment Status](https://img.shields.io/badge/deployment-live-brightgreen)](https://pec-bandidagem.vercel.app/)
 [![Data Validated](https://img.shields.io/badge/data-validated-blue)](docs/VALIDATION_REPORT.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
