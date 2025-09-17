@@ -400,6 +400,95 @@
             transition: opacity 0.3s ease;
             z-index: 1000;
         }
+
+        /* Vote Filter Buttons */
+        .vote-filters {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid transparent;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+            color: #374151;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .filter-btn.active {
+            background: #4f46e5;
+            color: white;
+            border-color: #4f46e5;
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.3);
+        }
+
+        .filter-btn.filter-sim {
+            border-color: #dc2626;
+            color: #dc2626;
+        }
+
+        .filter-btn.filter-sim.active {
+            background: #dc2626;
+            color: white;
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.3);
+        }
+
+        .filter-btn.filter-nao {
+            border-color: #059669;
+            color: #059669;
+        }
+
+        .filter-btn.filter-nao.active {
+            background: #059669;
+            color: white;
+            box-shadow: 0 6px 20px rgba(5, 150, 105, 0.3);
+        }
+
+        .filter-btn.filter-changed {
+            border-color: #d97706;
+            color: #d97706;
+        }
+
+        .filter-btn.filter-changed.active {
+            background: #d97706;
+            color: white;
+            box-shadow: 0 6px 20px rgba(217, 119, 6, 0.3);
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .filter-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .filter-btn {
+                width: 100%;
+                max-width: 280px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -431,6 +520,16 @@
                 <select id="stateFilter" class="filter-select">
                     <option value="">Todos os Estados</option>
                 </select>
+            </div>
+
+            <div class="vote-filters">
+                <h3 style="text-align: center; margin-bottom: 1rem; color: #1a202c; font-size: 1.1rem; font-weight: 700;">Filtrar por Voto:</h3>
+                <div class="filter-buttons">
+                    <button id="filterAll" class="filter-btn active">📊 Todos (488)</button>
+                    <button id="filterSim" class="filter-btn filter-sim">🚨 Votaram SIM (341)</button>
+                    <button id="filterNao" class="filter-btn filter-nao">✅ Votaram NÃO (131)</button>
+                    <button id="filterChanged" class="filter-btn filter-changed">🔄 Mudaram Voto (3)</button>
+                </div>
             </div>
 
             <div class="stats-summary" id="searchStats">
@@ -563,7 +662,10 @@
                 const matchesParty = !partyFilter || deputy.party === partyFilter;
                 const matchesState = !stateFilter || deputy.state === stateFilter;
 
-                return matchesSearch && matchesParty && matchesState;
+                // Vote filtering based on active filter button
+                const matchesVoteFilter = checkVoteFilter(deputy);
+
+                return matchesSearch && matchesParty && matchesState && matchesVoteFilter;
             });
 
             currentPage = 0;
@@ -687,10 +789,48 @@ Votação:
             }
         }
 
+        // Vote filter functionality
+        let currentVoteFilter = 'all'; // 'all', 'sim', 'nao', 'changed'
+
+        function checkVoteFilter(deputy) {
+            switch(currentVoteFilter) {
+                case 'all':
+                    return true;
+                case 'sim':
+                    return deputy.round2_vote === 'Sim';
+                case 'nao':
+                    return deputy.round2_vote === 'Não';
+                case 'changed':
+                    return deputy.round1_vote !== deputy.round2_vote;
+                default:
+                    return true;
+            }
+        }
+
+        function setVoteFilter(filter) {
+            currentVoteFilter = filter;
+
+            // Update button states
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`filter${filter.charAt(0).toUpperCase() + filter.slice(1)}`).classList.add('active');
+
+            // Apply filter
+            filterDeputies();
+
+            // Track filter usage
+            trackVisualizationInteraction('deputy_search', 'vote_filter', filter);
+        }
+
         // Event listeners
         document.getElementById('searchInput').addEventListener('input', filterDeputies);
         document.getElementById('partyFilter').addEventListener('change', filterDeputies);
         document.getElementById('stateFilter').addEventListener('change', filterDeputies);
+
+        // Vote filter button listeners
+        document.getElementById('filterAll').addEventListener('click', () => setVoteFilter('all'));
+        document.getElementById('filterSim').addEventListener('click', () => setVoteFilter('sim'));
+        document.getElementById('filterNao').addEventListener('click', () => setVoteFilter('nao'));
+        document.getElementById('filterChanged').addEventListener('click', () => setVoteFilter('changed'));
 
         document.getElementById('loadMore').addEventListener('click', () => {
             currentPage++;
