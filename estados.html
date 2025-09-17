@@ -508,8 +508,8 @@
         </div>
 
         <div class="chart-container">
-            <h2 class="chart-title" style="color: #dc2626;">🚨 Aumento da Aprovação entre Turnos</h2>
-            <p class="chart-subtitle" style="color: #7f1d1d; font-weight: 600;">⚠️ Como a aprovação da PEC aumentou no 2º turno</p>
+            <h2 id="comparison-title" class="chart-title" style="color: #dc2626;">🚨 Aumento da Aprovação entre Turnos</h2>
+            <p id="comparison-subtitle" class="chart-subtitle" style="color: #7f1d1d; font-weight: 600;">⚠️ Como a aprovação da PEC aumentou no 2º turno</p>
 
             <svg id="comparison-chart" width="100%" height="400"></svg>
         </div>
@@ -614,6 +614,23 @@
                 d3.select(`[onclick="showRound(${round})"]`).classed('active', true);
 
                 updateMap();
+                createStateRanking();
+
+                // Update comparison chart title and subtitle based on selected round
+                if (round === 1) {
+                    document.getElementById('comparison-title')
+                        .textContent = '🔍 Análise do 1º Turno por Estado';
+                    document.getElementById('comparison-subtitle')
+                        .textContent = '📊 Dados de aprovação do primeiro turno da PEC';
+                } else {
+                    document.getElementById('comparison-title')
+                        .textContent = '🚨 Aumento da Aprovação entre Turnos';
+                    document.getElementById('comparison-subtitle')
+                        .textContent = '⚠️ Como a aprovação da PEC aumentou no 2º turno';
+                }
+
+                // Recreate comparison chart to update data
+                createComparisonChart();
             }
 
             function updateMap() {
@@ -871,6 +888,8 @@
 
             function createComparisonChart() {
                 const svg = d3.select('#comparison-chart');
+                svg.selectAll('*').remove(); // Clear existing chart
+
                 const container = svg.node().parentNode;
                 const containerWidth = container.clientWidth - 40;
                 const margin = isMobile() ? {top: 20, right: 20, bottom: 70, left: 50} : {top: 20, right: 30, bottom: 60, left: 60};
@@ -906,53 +925,105 @@
                     .attr('class', 'axis')
                     .call(d3.axisLeft(y).tickFormat(d => d + '%'));
 
-                // Axis labels
-                g.append('text')
-                    .attr('class', 'axis-label')
-                    .attr('transform', `translate(${width/2},${height + 40})`)
-                    .style('text-anchor', 'middle')
-                    .text('1º Turno (%)');
+                // Axis labels - adapt based on current round
+                if (currentRound === 1) {
+                    g.append('text')
+                        .attr('class', 'axis-label')
+                        .attr('transform', `translate(${width/2},${height + 40})`)
+                        .style('text-anchor', 'middle')
+                        .text('Estados (ordenados alfabeticamente)');
 
-                g.append('text')
-                    .attr('class', 'axis-label')
-                    .attr('transform', 'rotate(-90)')
-                    .attr('y', -40)
-                    .attr('x', -height/2)
-                    .style('text-anchor', 'middle')
-                    .text('2º Turno (%)');
+                    g.append('text')
+                        .attr('class', 'axis-label')
+                        .attr('transform', 'rotate(-90)')
+                        .attr('y', -40)
+                        .attr('x', -height/2)
+                        .style('text-anchor', 'middle')
+                        .text('1º Turno - Aprovação (%)');
+                } else {
+                    g.append('text')
+                        .attr('class', 'axis-label')
+                        .attr('transform', `translate(${width/2},${height + 40})`)
+                        .style('text-anchor', 'middle')
+                        .text('1º Turno (%)');
 
-                // Diagonal line (no change)
-                g.append('line')
-                    .attr('x1', 0)
-                    .attr('y1', height)
-                    .attr('x2', width)
-                    .attr('y2', 0)
-                    .attr('stroke', '#94a3b8')
-                    .attr('stroke-dasharray', '5,5')
-                    .attr('opacity', 0.5);
+                    g.append('text')
+                        .attr('class', 'axis-label')
+                        .attr('transform', 'rotate(-90)')
+                        .attr('y', -40)
+                        .attr('x', -height/2)
+                        .style('text-anchor', 'middle')
+                        .text('2º Turno (%)');
+                }
 
-                // Circles
+                // Diagonal line (only for comparison mode)
+                if (currentRound === 2) {
+                    g.append('line')
+                        .attr('x1', 0)
+                        .attr('y1', height)
+                        .attr('x2', width)
+                        .attr('y2', 0)
+                        .attr('stroke', '#94a3b8')
+                        .attr('stroke-dasharray', '5,5')
+                        .attr('opacity', 0.5);
+                }
+
+                // Circles - adapt positioning based on current round
+                if (currentRound === 1) {
+                    // Show horizontal scatter plot for round 1 only
+                    const xBand = d3.scaleBand()
+                        .domain(statesData.map(d => d.code))
+                        .range([0, width])
+                        .padding(0.1);
+
+                    g.selectAll('.comparison-circle')
+                        .data(statesData.filter(d => d.round1_total > 0))
+                        .enter().append('circle')
+                        .attr('class', 'comparison-circle')
+                        .attr('cx', d => xBand(d.code) + xBand.bandwidth()/2)
+                        .attr('cy', d => y(d.round1_approval))
+                        .attr('r', 0)
+                        .attr('fill', d => getStateColor(d.round1_approval))
+                        .attr('opacity', 0.7)
+                        .style('cursor', 'pointer');
+                } else {
+                    // Show comparison scatter plot for round 1 vs round 2
+                    g.selectAll('.comparison-circle')
+                        .data(statesData.filter(d => d.round1_total > 0 && d.round2_total > 0))
+                        .enter().append('circle')
+                        .attr('class', 'comparison-circle')
+                        .attr('cx', d => x(d.round1_approval))
+                        .attr('cy', d => y(d.round2_approval))
+                        .attr('r', 0)
+                        .attr('fill', d => getStateColor(d.round2_approval))
+                        .attr('opacity', 0.7)
+                        .style('cursor', 'pointer');
+                }
+
+                // Add event handlers and transitions
                 g.selectAll('.comparison-circle')
-                    .data(statesData.filter(d => d.round1_total > 0 && d.round2_total > 0))
-                    .enter().append('circle')
-                    .attr('class', 'comparison-circle')
-                    .attr('cx', d => x(d.round1_approval))
-                    .attr('cy', d => y(d.round2_approval))
-                    .attr('r', 0)
-                    .attr('fill', d => getStateColor(d.round2_approval))
-                    .attr('opacity', 0.7)
-                    .style('cursor', 'pointer')
                     .on('mouseover', function(event, d) {
-                        const change = d.round2_approval - d.round1_approval;
                         const tooltip = d3.select('#tooltip');
-                        tooltip.style('opacity', 1)
-                            .html(`
-                                <strong>${d.name}</strong><br/>
-                                1º Turno: ${d.round1_approval.toFixed(1)}%<br/>
-                                2º Turno: ${d.round2_approval.toFixed(1)}%<br/>
-                                Mudança: ${change > 0 ? '+' : ''}${change.toFixed(1)}pp
-                            `)
-                            .style('left', (event.pageX + 10) + 'px')
+                        if (currentRound === 1) {
+                            tooltip.style('opacity', 1)
+                                .html(`
+                                    <strong>${d.name}</strong><br/>
+                                    Código: ${d.code}<br/>
+                                    1º Turno: ${d.round1_approval.toFixed(1)}%<br/>
+                                    Deputados: ${d.round1_sim}/${d.round1_total}<br/>
+                                    Região: ${d.region}
+                                `);
+                        } else {
+                            const change = d.round2_approval - d.round1_approval;
+                            tooltip.style('opacity', 1)
+                                .html(`
+                                    <strong>${d.name}</strong><br/>
+                                    1º Turno: ${d.round1_approval.toFixed(1)}%<br/>
+                                    2º Turno: ${d.round2_approval.toFixed(1)}%<br/>
+                                    Mudança: ${change > 0 ? '+' : ''}${change.toFixed(1)}pp
+                                `);
+                        }
+                        tooltip.style('left', (event.pageX + 10) + 'px')
                             .style('top', (event.pageY - 10) + 'px');
                     })
                     .on('mouseout', function() {
@@ -961,7 +1032,7 @@
                     .transition()
                     .duration(1000)
                     .delay((d, i) => i * 100)
-                    .attr('r', d => radius(d.round2_total));
+                    .attr('r', d => radius(currentRound === 1 ? d.round1_total : d.round2_total));
 
                 // Add state labels for notable changes
                 const notableStates = statesData.filter(d =>
