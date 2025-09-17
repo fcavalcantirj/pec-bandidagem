@@ -143,28 +143,33 @@
         }
 
         .hero {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
             padding: 2rem 1rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            border-bottom: 3px solid #4f46e5;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+            border-bottom: 4px solid #4f46e5;
+            border-radius: 0 0 24px 24px;
             text-align: center;
+            border-left: 1px solid rgba(255,255,255,0.8);
+            border-right: 1px solid rgba(255,255,255,0.8);
         }
 
         .hero h1 {
             font-size: 2rem;
-            color: #1e293b;
+            color: #0f172a;
             margin-bottom: 1rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
             line-height: 1.2;
+            font-weight: 800;
         }
 
         .hero .subtitle {
             font-size: 1.1rem;
-            color: #64748b;
+            color: #334155;
             margin-bottom: 1.5rem;
             line-height: 1.5;
             padding: 0 0.5rem;
+            font-weight: 600;
         }
 
         .hero .description {
@@ -249,12 +254,12 @@
         }
 
         .nav-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+            border: 1px solid rgba(255,255,255,0.8);
             transition: all 0.3s ease;
             text-decoration: none;
             color: inherit;
@@ -279,8 +284,8 @@
         }
 
         .nav-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 24px 50px rgba(0,0,0,0.18);
         }
 
         .nav-card-icon {
@@ -291,15 +296,17 @@
 
         .nav-card-title {
             font-size: 1.5rem;
-            font-weight: bold;
-            color: #1e293b;
+            font-weight: 700;
+            color: #0f172a;
             margin-bottom: 1rem;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
 
         .nav-card-description {
-            color: #64748b;
+            color: #475569;
             line-height: 1.6;
             margin-bottom: 1.5rem;
+            font-weight: 500;
         }
 
         .nav-card-stats {
@@ -366,49 +373,64 @@
         }
 
         .overview-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
             padding: 2rem;
             text-align: center;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+            border: 1px solid rgba(255,255,255,0.8);
             border-left: 4px solid #4f46e5;
+            transition: all 0.3s ease;
+        }
+
+        .overview-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 50px rgba(0,0,0,0.15);
+            border-left-color: #6366f1;
         }
 
         .overview-number {
             font-size: 2.5rem;
-            font-weight: bold;
+            font-weight: 800;
             color: #4f46e5;
             margin-bottom: 0.5rem;
+            line-height: 1;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .overview-label {
-            color: #64748b;
+            color: #334155;
             font-size: 1rem;
             margin-bottom: 0.5rem;
+            font-weight: 600;
         }
 
         .overview-detail {
-            color: #374151;
+            color: #475569;
             font-size: 0.9rem;
             line-height: 1.4;
+            font-weight: 500;
         }
 
         .methodology {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
             margin: 3rem auto;
             max-width: 1200px;
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+            border: 1px solid rgba(255,255,255,0.8);
         }
 
         .methodology h2 {
-            color: #1e293b;
-            margin-bottom: 1rem;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
             text-align: center;
             font-size: 2rem;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
 
         .methodology-grid {
@@ -641,6 +663,12 @@
             font-size: 13px;
             text-decoration: none;
             text-indent: -999999px;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        .github-fork-ribbon:hover {
+            opacity: 1;
         }
 
         .github-fork-ribbon.fixed {
