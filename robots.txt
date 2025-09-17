@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://pec-bandidagem.vercel.app/sitemap.xml
+
+# Block access to sensitive files
+Disallow: /docs/
+Disallow: /*.json$
+Disallow: /vercel.json
+Disallow: /build.sh
+
+# Allow all major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Crawl delay to be respectful
+Crawl-delay: 1

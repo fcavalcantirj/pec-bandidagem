@@ -4,6 +4,119 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PEC da Bandidagem - Análise Interativa</title>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P47CK1TDL8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-P47CK1TDL8', {
+        // Enhanced measurement settings
+        send_page_view: true,
+        allow_google_signals: true,
+        allow_ad_personalization_signals: false, // Privacy-focused for political content
+        page_title: 'PEC da Bandidagem - Página Inicial',
+        page_location: window.location.href,
+        content_group1: 'Homepage', // Content grouping for analysis
+        content_group2: 'Political Analysis',
+        custom_map: {
+          'custom_parameter_1': 'section_viewed',
+          'custom_parameter_2': 'report_accessed'
+        }
+      });
+
+      // Enhanced event tracking functions
+      function trackVisualizationInteraction(chartType, action, details) {
+        gtag('event', 'visualization_interaction', {
+          chart_type: chartType,
+          interaction_action: action,
+          interaction_details: details,
+          event_category: 'Data Visualization',
+          event_label: `${chartType}_${action}`,
+          value: 1
+        });
+      }
+
+      function trackReportAccess(reportSection, accessMethod) {
+        gtag('event', 'report_access', {
+          report_section: reportSection,
+          access_method: accessMethod,
+          event_category: 'Content Engagement',
+          event_label: `Report_${reportSection}`,
+          value: 1
+        });
+      }
+
+      function trackNavigationFlow(fromPage, toPage, navigationMethod) {
+        gtag('event', 'navigation_flow', {
+          from_page: fromPage,
+          to_page: toPage,
+          navigation_method: navigationMethod,
+          event_category: 'User Flow',
+          event_label: `${fromPage}_to_${toPage}`,
+          value: 1
+        });
+      }
+
+      function trackContentEngagement(contentType, engagementLevel, timeSpent) {
+        gtag('event', 'content_engagement', {
+          content_type: contentType,
+          engagement_level: engagementLevel,
+          time_spent_seconds: timeSpent,
+          event_category: 'Content Performance',
+          event_label: `${contentType}_${engagementLevel}`,
+          value: timeSpent
+        });
+      }
+
+      function trackSocialShare(platform, contentShared) {
+        gtag('event', 'social_share', {
+          platform: platform,
+          content_shared: contentShared,
+          event_category: 'Social Engagement',
+          event_label: `Share_${platform}`,
+          value: 1
+        });
+      }
+
+      // Track page engagement time
+      let pageStartTime = Date.now();
+      let hasScrolled = false;
+      let deepEngagement = false;
+
+      // Scroll depth tracking
+      window.addEventListener('scroll', function() {
+        if (!hasScrolled) {
+          hasScrolled = true;
+          gtag('event', 'scroll_start', {
+            event_category: 'Page Engagement',
+            event_label: 'First Scroll',
+            value: Math.round((Date.now() - pageStartTime) / 1000)
+          });
+        }
+
+        const scrollPercentage = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+
+        if (scrollPercentage > 75 && !deepEngagement) {
+          deepEngagement = true;
+          gtag('event', 'deep_engagement', {
+            scroll_percentage: scrollPercentage,
+            event_category: 'Page Engagement',
+            event_label: 'Deep Scroll',
+            value: Math.round((Date.now() - pageStartTime) / 1000)
+          });
+        }
+      });
+
+      // Track time on page when user leaves
+      window.addEventListener('beforeunload', function() {
+        const timeSpent = Math.round((Date.now() - pageStartTime) / 1000);
+        trackContentEngagement('homepage', timeSpent > 120 ? 'high' : timeSpent > 30 ? 'medium' : 'low', timeSpent);
+      });
+    </script>
+
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         * {
@@ -549,7 +662,7 @@
             <h2 class="section-title">📊 Principais Descobertas do Relatório Analítico</h2>
             <p class="section-subtitle">
                 Nossa análise profunda revelou padrões fascinantes no comportamento parlamentar.
-                <a href="relatorio.html" class="cta-link">🔍 Leia o relatório completo →</a>
+                <a href="relatorio.html" class="cta-link" onclick="trackReportAccess('highlights_cta', 'inline_link')">🔍 Leia o relatório completo →</a>
             </p>
 
             <div class="insights-grid">
@@ -593,13 +706,13 @@
             <div class="cta-section">
                 <h3>🔬 Análise Completa Disponível</h3>
                 <p>O relatório completo inclui análise detalhada de 965 votos, índices de coesão partidária, casos contraditórios, perfis de dissidentes e muito mais.</p>
-                <a href="relatorio.html" class="cta-button">📋 Ver Relatório Completo</a>
+                <a href="relatorio.html" class="cta-button" onclick="trackReportAccess('full_report', 'cta_button')">📋 Ver Relatório Completo</a>
             </div>
         </div>
     </div>
 
     <div class="nav-cards">
-        <a href="partidos.html" class="nav-card">
+        <a href="partidos.html" class="nav-card" onclick="trackNavigationFlow('homepage', 'partidos', 'nav_card')">
             <span class="nav-card-icon">🎯</span>
             <h3 class="nav-card-title">Análise por Partidos</h3>
             <p class="nav-card-description">
@@ -618,7 +731,7 @@
             </div>
         </a>
 
-        <a href="estados.html" class="nav-card">
+        <a href="estados.html" class="nav-card" onclick="trackNavigationFlow('homepage', 'estados', 'nav_card')">
             <span class="nav-card-icon">🗺️</span>
             <h3 class="nav-card-title">Análise por Estados</h3>
             <p class="nav-card-description">
@@ -637,7 +750,7 @@
             </div>
         </a>
 
-        <a href="fluxo.html" class="nav-card">
+        <a href="fluxo.html" class="nav-card" onclick="trackNavigationFlow('homepage', 'fluxo', 'nav_card')">
             <span class="nav-card-icon">🔄</span>
             <h3 class="nav-card-title">Fluxo de Votos</h3>
             <p class="nav-card-description">
@@ -655,7 +768,7 @@
                 </div>
             </div>
         </a>
-        <a href="relatorio.html" class="nav-card">
+        <a href="relatorio.html" class="nav-card" onclick="trackNavigationFlow('homepage', 'relatorio', 'nav_card')">
             <span class="nav-card-icon">📊</span>
             <h3 class="nav-card-title">Relatório Completo</h3>
             <p class="nav-card-description">

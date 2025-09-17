@@ -4,6 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PEC da Bandidagem - Análise por Partidos</title>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P47CK1TDL8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-P47CK1TDL8', {
+        send_page_view: true,
+        page_title: 'PEC da Bandidagem - Análise por Partidos',
+        content_group1: 'Partido Analysis',
+        content_group2: 'Political Analysis'
+      });
+
+      // Visualization tracking functions
+      function trackVisualizationInteraction(chartType, action, details) {
+        gtag('event', 'visualization_interaction', {
+          chart_type: chartType,
+          interaction_action: action,
+          interaction_details: details,
+          event_category: 'Data Visualization',
+          event_label: `${chartType}_${action}`,
+          page_type: 'partidos'
+        });
+      }
+
+      function trackPartyAnalysis(partyName, analysisType) {
+        gtag('event', 'party_analysis', {
+          party_name: partyName,
+          analysis_type: analysisType,
+          event_category: 'Political Analysis',
+          event_label: `Party_${partyName}`,
+          value: 1
+        });
+      }
+
+      // Track page engagement
+      let startTime = Date.now();
+      window.addEventListener('beforeunload', function() {
+        gtag('event', 'page_engagement', {
+          time_spent: Math.round((Date.now() - startTime) / 1000),
+          page_type: 'partidos',
+          event_category: 'Content Performance'
+        });
+      });
+    </script>
+
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         * {

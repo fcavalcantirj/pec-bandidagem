@@ -57,6 +57,11 @@ build() {
     cp fluxo.html "$DIST_DIR/"
     cp relatorio.html "$DIST_DIR/"
     cp data.js "$DIST_DIR/"
+    cp analytics.js "$DIST_DIR/"
+
+    # Copy SEO files
+    cp sitemap.xml "$DIST_DIR/"
+    cp robots.txt "$DIST_DIR/"
 
     # Copy documentation for GitHub Pages
     cp -r docs "$DIST_DIR/"
@@ -66,7 +71,7 @@ build() {
 
     # Verify all files copied correctly
     log_info "Verifying build..."
-    local required_files=("index.html" "partidos.html" "estados.html" "fluxo.html" "relatorio.html" "data.js")
+    local required_files=("index.html" "partidos.html" "estados.html" "fluxo.html" "relatorio.html" "data.js" "analytics.js")
 
     for file in "${required_files[@]}"; do
         if [ -f "$DIST_DIR/$file" ]; then
