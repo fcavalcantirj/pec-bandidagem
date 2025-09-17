@@ -581,11 +581,13 @@
 
             // Color scale based on approval level
             function getStateColor(approval) {
-                if (approval === 100) return '#065f46'; // Dark green - Perfect
-                if (approval >= 85) return '#10b981'; // Green - Very high
-                if (approval >= 70) return '#3b82f6'; // Blue - High
-                if (approval >= 60) return '#f59e0b'; // Orange - Moderate
-                return '#ef4444'; // Red - Low
+                if (approval >= 90) return '#dc2626'; // Dark red - Massive approval (very concerning)
+                if (approval >= 80) return '#ef4444'; // Red - High approval (concerning)
+                if (approval >= 70) return '#f59e0b'; // Orange - Moderate-high approval (concerning)
+                if (approval >= 60) return '#eab308'; // Yellow - Moderate approval (concerning)
+                if (approval >= 40) return '#3b82f6'; // Blue - Low-moderate approval (better)
+                if (approval >= 20) return '#10b981'; // Green - Low approval (good)
+                return '#065f46'; // Dark green - Very low approval (excellent)
             }
 
             function showRound(round) {
