@@ -56,6 +56,7 @@ build() {
     # Copy essential files
     log_info "Copying files to $DIST_DIR..."
     cp index.html "$DIST_DIR/"
+    cp deputados.html "$DIST_DIR/"
     cp partidos.html "$DIST_DIR/"
     cp estados.html "$DIST_DIR/"
     cp fluxo.html "$DIST_DIR/"
@@ -76,7 +77,7 @@ build() {
 
     # Verify all files copied correctly
     log_info "Verifying build..."
-    local required_files=("index.html" "partidos.html" "estados.html" "fluxo.html" "relatorio.html" "data.js" "analytics.js" "version.js")
+    local required_files=("index.html" "deputados.html" "partidos.html" "estados.html" "fluxo.html" "relatorio.html" "data.js" "analytics.js" "version.js")
 
     for file in "${required_files[@]}"; do
         if [ -f "$DIST_DIR/$file" ]; then
