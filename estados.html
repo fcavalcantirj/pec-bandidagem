@@ -127,6 +127,22 @@
             opacity: 0;
             transition: opacity 0.3s ease;
             z-index: 1000;
+            max-width: 300px;
+        }
+
+        /* Mobile-specific tooltip improvements */
+        @media (max-width: 768px) {
+            .tooltip {
+                font-size: 16px !important;
+                padding: 16px !important;
+                min-width: 220px !important;
+                max-width: 90vw !important;
+                border: 2px solid rgba(255, 255, 255, 0.8);
+                border-radius: 12px;
+                line-height: 1.5;
+                font-weight: 500;
+                box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+            }
         }
 
         .state {
@@ -892,9 +908,9 @@
 
                 const container = svg.node().parentNode;
                 const containerWidth = container.clientWidth - 40;
-                const margin = isMobile() ? {top: 20, right: 20, bottom: 70, left: 50} : {top: 20, right: 30, bottom: 60, left: 60};
-                const width = Math.max(200, containerWidth - margin.left - margin.right);
-                const chartHeight = isMobile() ? 350 : 400;
+                const margin = isMobile() ? {top: 20, right: 25, bottom: 90, left: 70} : {top: 20, right: 30, bottom: 60, left: 60};
+                const width = Math.max(250, containerWidth - margin.left - margin.right);
+                const chartHeight = isMobile() ? 450 : 400;
                 const height = chartHeight - margin.top - margin.bottom;
 
                 svg.attr('width', containerWidth).attr('height', chartHeight);
@@ -913,46 +929,64 @@
 
                 const radius = d3.scaleSqrt()
                     .domain([0, d3.max(statesData, d => d.round2_total)])
-                    .range([3, 15]);
+                    .range(isMobile() ? [8, 25] : [3, 15]);
 
-                // Axes
+                // Axes with mobile-optimized tick count
+                const xTicks = isMobile() ? 5 : 10;
+                const yTicks = isMobile() ? 5 : 10;
+
                 g.append('g')
                     .attr('class', 'axis')
                     .attr('transform', `translate(0,${height})`)
-                    .call(d3.axisBottom(x).tickFormat(d => d + '%'));
+                    .call(d3.axisBottom(x).ticks(xTicks).tickFormat(d => d + '%'))
+                    .selectAll('text')
+                    .style('font-size', isMobile() ? '14px' : '12px');
 
                 g.append('g')
                     .attr('class', 'axis')
-                    .call(d3.axisLeft(y).tickFormat(d => d + '%'));
+                    .call(d3.axisLeft(y).ticks(yTicks).tickFormat(d => d + '%'))
+                    .selectAll('text')
+                    .style('font-size', isMobile() ? '14px' : '12px');
 
-                // Axis labels - adapt based on current round
+                // Axis labels - adapt based on current round and mobile
+                const labelFontSize = isMobile() ? '16px' : '14px';
+                const labelOffset = isMobile() ? 60 : 40;
+
                 if (currentRound === 1) {
                     g.append('text')
                         .attr('class', 'axis-label')
-                        .attr('transform', `translate(${width/2},${height + 40})`)
+                        .attr('transform', `translate(${width/2},${height + labelOffset})`)
                         .style('text-anchor', 'middle')
-                        .text('Estados (ordenados alfabeticamente)');
+                        .style('font-size', labelFontSize)
+                        .style('font-weight', '600')
+                        .text(isMobile() ? 'Estados' : 'Estados (ordenados alfabeticamente)');
 
                     g.append('text')
                         .attr('class', 'axis-label')
                         .attr('transform', 'rotate(-90)')
-                        .attr('y', -40)
+                        .attr('y', isMobile() ? -55 : -40)
                         .attr('x', -height/2)
                         .style('text-anchor', 'middle')
-                        .text('1º Turno - Aprovação (%)');
+                        .style('font-size', labelFontSize)
+                        .style('font-weight', '600')
+                        .text(isMobile() ? '1º Turno (%)' : '1º Turno - Aprovação (%)');
                 } else {
                     g.append('text')
                         .attr('class', 'axis-label')
-                        .attr('transform', `translate(${width/2},${height + 40})`)
+                        .attr('transform', `translate(${width/2},${height + labelOffset})`)
                         .style('text-anchor', 'middle')
+                        .style('font-size', labelFontSize)
+                        .style('font-weight', '600')
                         .text('1º Turno (%)');
 
                     g.append('text')
                         .attr('class', 'axis-label')
                         .attr('transform', 'rotate(-90)')
-                        .attr('y', -40)
+                        .attr('y', isMobile() ? -55 : -40)
                         .attr('x', -height/2)
                         .style('text-anchor', 'middle')
+                        .style('font-size', labelFontSize)
+                        .style('font-weight', '600')
                         .text('2º Turno (%)');
                 }
 
