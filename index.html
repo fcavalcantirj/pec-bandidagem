@@ -337,7 +337,7 @@
 
         .overview-stats {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, 1fr);
             gap: 1rem;
             margin: 2rem auto;
             padding: 0 1rem;
@@ -347,7 +347,7 @@
         /* Mobile landscape and tablet */
         @media (min-width: 480px) {
             .overview-stats {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(3, 1fr);
                 gap: 1.5rem;
             }
         }
@@ -759,14 +759,15 @@
             }
 
             .overview-stats {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(2, 1fr);
                 gap: 0.8rem;
                 margin: 1rem auto;
             }
 
             .nav-cards {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.8rem;
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                margin: 1.5rem auto;
             }
 
             .container {
@@ -776,29 +777,78 @@
 
         /* Small mobile optimizations */
         @media (max-width: 480px) {
+            .hero {
+                padding: 1.5rem 1rem;
+                margin: 1rem auto;
+            }
+
             .hero h1 {
-                font-size: 1.8rem;
+                font-size: 2rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1rem;
+                margin-bottom: 1.2rem;
+            }
+
+            .hero .description {
+                font-size: 0.9rem;
+                margin-bottom: 1rem;
+            }
+
+            .overview-stats {
+                margin: 1.5rem auto;
+                gap: 0.8rem;
             }
 
             .overview-card {
-                padding: 1rem;
+                padding: 1.2rem;
+                border-radius: 16px;
             }
 
             .overview-number {
-                font-size: 1.8rem;
+                font-size: 2rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .overview-label {
+                font-size: 0.9rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .overview-detail {
+                font-size: 0.8rem;
             }
 
             .nav-card {
-                padding: 1.2rem;
+                padding: 1.5rem;
+                border-radius: 20px;
+            }
+
+            .nav-card-title {
+                font-size: 1.3rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .nav-card-description {
+                font-size: 0.95rem;
+                margin-bottom: 1rem;
             }
 
             .insight-card {
-                padding: 1.2rem;
+                padding: 1.5rem;
             }
 
-            /* Hide GitHub fork ribbon on very small screens */
+            .methodology {
+                padding: 2rem 1.5rem;
+                margin: 2rem auto;
+            }
+
+            /* Show GitHub fork ribbon on mobile but smaller */
             .github-fork-ribbon {
-                display: none;
+                font-size: 10px;
+                opacity: 0.8;
             }
         }
 
