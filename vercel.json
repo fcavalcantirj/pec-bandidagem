@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "name": "pec-bandidagem",
+  "buildCommand": "./build.sh build",
+  "outputDirectory": "dist",
+  "cleanUrls": true,
+  "trailingSlash": false
+}
