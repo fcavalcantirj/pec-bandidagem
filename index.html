@@ -3,7 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PEC da Bandidagem - Análise Interativa</title>
+    <title>PEC da Bandidagem - Análise Interativa dos Padrões de Votação na Câmara dos Deputados</title>
+    <meta name="description" content="Análise completa dos 353 deputados que votaram SIM na PEC da Bandidagem. Visualizações interativas por partido, estado e correlação com voto secreto. Dados oficiais da Câmara dos Deputados.">
+    <meta name="keywords" content="PEC da Bandidagem, deputados, votação, análise política, Câmara dos Deputados, voto secreto, partidos políticos">
+    <meta name="author" content="fcavalcantirj">
+    <meta property="og:title" content="PEC da Bandidagem - Análise Interativa dos Padrões de Votação">
+    <meta property="og:description" content="Descubra quais dos 488 deputados votaram a favor da controversa PEC da Bandidagem. Análise completa com visualizações interativas por partido e estado.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pec-bandidagem.vercel.app/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="PEC da Bandidagem - Análise Interativa dos Padrões de Votação">
+    <meta name="twitter:description" content="353 deputados votaram SIM na PEC da Bandidagem. Veja a análise completa com dados oficiais da Câmara dos Deputados.">
+
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Dataset",
+      "name": "PEC da Bandidagem - Análise de Votação",
+      "description": "Conjunto de dados completo sobre a votação da PEC da Bandidagem na Câmara dos Deputados, incluindo análise por deputado, partido e estado.",
+      "url": "https://pec-bandidagem.vercel.app/",
+      "creator": {
+        "@type": "Person",
+        "name": "fcavalcantirj",
+        "url": "https://github.com/fcavalcantirj"
+      },
+      "datePublished": "2025-09-17",
+      "dateModified": "2025-09-17",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "keywords": ["PEC da Bandidagem", "Câmara dos Deputados", "votação", "análise política", "dados abertos"],
+      "spatialCoverage": {
+        "@type": "Place",
+        "name": "Brasil"
+      },
+      "variableMeasured": [
+        "Voto por deputado",
+        "Voto por partido",
+        "Voto por estado",
+        "Correlação com voto secreto"
+      ]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "PEC da Bandidagem - Análise Interativa",
+      "url": "https://pec-bandidagem.vercel.app/",
+      "description": "Plataforma de análise interativa dos padrões de votação na PEC da Bandidagem",
+      "publisher": {
+        "@type": "Person",
+        "name": "fcavalcantirj"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://pec-bandidagem.vercel.app/deputados.html?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- Resource preloading for performance -->
+    <link rel="preload" href="https://d3js.org/d3.v7.min.js" as="script">
+    <link rel="preload" href="data.js" as="script">
+    <link rel="dns-prefetch" href="//www.googletagmanager.com">
+    <link rel="dns-prefetch" href="//www.google-analytics.com">
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-P47CK1TDL8"></script>
@@ -117,7 +182,7 @@
       });
     </script>
 
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js" defer></script>
     <style>
         * {
             margin: 0;
@@ -1004,7 +1069,7 @@
 
     <div class="nav-cards">
         <a href="deputados.html" class="nav-card" onclick="trackNavigationFlow('homepage', 'deputados', 'nav_card')" style="border: 3px solid #dc2626; background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(255,245,245,0.95)); box-shadow: 0 8px 32px rgba(220,38,38,0.15);">
-            <span class="nav-card-icon">⚠️</span>
+            <span class="nav-card-icon" role="img" aria-label="Ícone de alerta">⚠️</span>
             <h3 class="nav-card-title" style="color: #dc2626;">Veja QUEM votou SIM</h3>
             <p class="nav-card-description">
                 <strong>Identifique os 353 deputados que APROVARAM a PEC.</strong>
@@ -1023,7 +1088,7 @@
         </a>
 
         <a href="partidos.html" class="nav-card" onclick="trackNavigationFlow('homepage', 'partidos', 'nav_card')">
-            <span class="nav-card-icon">🎯</span>
+            <span class="nav-card-icon" role="img" aria-label="Ícone de alvo representando análise">🎯</span>
             <h3 class="nav-card-title">Análise por Partidos</h3>
             <p class="nav-card-description">
                 Explore como cada partido político se posicionou na votação. Visualize padrões de coesão partidária,
@@ -1042,7 +1107,7 @@
         </a>
 
         <a href="estados.html" class="nav-card" onclick="trackNavigationFlow('homepage', 'estados', 'nav_card')">
-            <span class="nav-card-icon">🗺️</span>
+            <span class="nav-card-icon" role="img" aria-label="Ícone de mapa representando estados">🗺️</span>
             <h3 class="nav-card-title">Análise por Estados</h3>
             <p class="nav-card-description">
                 Descubra os padrões regionais de votação. Compare como diferentes regiões do Brasil se posicionaram
@@ -1061,7 +1126,7 @@
         </a>
 
         <a href="fluxo.html" class="nav-card" onclick="trackNavigationFlow('homepage', 'fluxo', 'nav_card')">
-            <span class="nav-card-icon">🔄</span>
+            <span class="nav-card-icon" role="img" aria-label="Ícone de ciclo representando fluxo">🔄</span>
             <h3 class="nav-card-title">Fluxo de Votos</h3>
             <p class="nav-card-description">
                 Acompanhe as mudanças entre o primeiro e segundo turno. Veja quais deputados mudaram de posição

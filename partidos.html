@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PEC da Bandidagem - Análise por Partidos</title>
+    <title>PEC da Bandidagem - Análise por Partidos Políticos</title>
+    <meta name="description" content="Análise detalhada dos 20 partidos que votaram na PEC da Bandidagem. Veja coesão partidária, correlação com voto secreto e rankings de aprovação por partido.">
+    <meta name="keywords" content="partidos políticos, PL, PT, PSDB, coesão partidária, voto secreto, PEC da Bandidagem">
+    <meta property="og:title" content="Análise por Partidos - PEC da Bandidagem">
+    <meta property="og:description" content="Descubra como cada partido político se posicionou na PEC da Bandidagem. Análise de coesão e padrões de votação.">
+    <meta property="og:url" content="https://pec-bandidagem.vercel.app/partidos.html">
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-P47CK1TDL8"></script>
@@ -550,7 +555,10 @@
                 <button class="control-button" onclick="sortBy('size')">Ordenar por Tamanho</button>
             </div>
 
-            <svg id="party-chart" width="100%" height="500"></svg>
+            <svg id="party-chart" width="100%" height="500" role="img" aria-labelledby="party-chart-title" aria-describedby="party-chart-desc">
+                <title id="party-chart-title">Gráfico de Aprovação por Partido Político</title>
+                <desc id="party-chart-desc">Gráfico de barras horizontais mostrando a porcentagem de aprovação da PEC da Bandidagem por partido político, ordenado por aprovação decrescente</desc>
+            </svg>
 
             <div class="legend">
                 <div class="legend-item">
@@ -588,7 +596,10 @@
             <h2 class="chart-title">🎯 Coesão Partidária (Índice Rice)</h2>
             <p class="chart-subtitle">Medida de disciplina interna do partido (100% = unanimidade)</p>
 
-            <svg id="cohesion-chart" width="100%" height="400"></svg>
+            <svg id="cohesion-chart" width="100%" height="400" role="img" aria-labelledby="cohesion-chart-title" aria-describedby="cohesion-chart-desc">
+                <title id="cohesion-chart-title">Gráfico de Coesão Partidária</title>
+                <desc id="cohesion-chart-desc">Gráfico de barras horizontais mostrando o índice Rice de coesão partidária, medindo a disciplina interna de cada partido na votação da PEC</desc>
+            </svg>
         </div>
 
         <div class="chart-container">
