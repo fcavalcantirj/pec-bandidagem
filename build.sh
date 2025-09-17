@@ -45,6 +45,10 @@ print_header() {
 build() {
     log_info "Building project for deployment..."
 
+    # Generate version file
+    log_info "Generating version information..."
+    node generate-version.js
+
     # Clean and create dist directory
     rm -rf "$DIST_DIR"
     mkdir -p "$DIST_DIR"
@@ -58,6 +62,7 @@ build() {
     cp relatorio.html "$DIST_DIR/"
     cp data.js "$DIST_DIR/"
     cp analytics.js "$DIST_DIR/"
+    cp version.js "$DIST_DIR/"
 
     # Copy SEO files
     cp sitemap.xml "$DIST_DIR/"
@@ -71,7 +76,7 @@ build() {
 
     # Verify all files copied correctly
     log_info "Verifying build..."
-    local required_files=("index.html" "partidos.html" "estados.html" "fluxo.html" "relatorio.html" "data.js" "analytics.js")
+    local required_files=("index.html" "partidos.html" "estados.html" "fluxo.html" "relatorio.html" "data.js" "analytics.js" "version.js")
 
     for file in "${required_files[@]}"; do
         if [ -f "$DIST_DIR/$file" ]; then
