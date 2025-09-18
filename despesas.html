@@ -451,20 +451,94 @@
             content: "🔗";
             font-size: 1rem;
         }
+
+        /* GitHub fork ribbon - classic style */
+        .github-fork-ribbon {
+            width: 12.1em;
+            height: 12.1em;
+            position: fixed;
+            overflow: hidden;
+            top: 0;
+            right: 0;
+            z-index: 9999;
+            pointer-events: none;
+            font-size: 13px;
+            text-decoration: none;
+            text-indent: -999999px;
+            opacity: 0.9;
+        }
+
+        .github-fork-ribbon:hover, .github-fork-ribbon:active {
+            background-color: rgba(0, 0, 0, 0.0);
+        }
+
+        .github-fork-ribbon:before, .github-fork-ribbon:after {
+            position: absolute;
+            display: block;
+            width: 15.38em;
+            height: 1.54em;
+            top: 3.23em;
+            right: -3.23em;
+            box-sizing: content-box;
+            transform: rotate(45deg);
+        }
+
+        .github-fork-ribbon:before {
+            content: "";
+            padding: .38em 0;
+            background-color: #a00;
+            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
+            box-shadow: 0 .15em .23em 0 rgba(0, 0, 0, 0.5);
+            pointer-events: auto;
+        }
+
+        .github-fork-ribbon:after {
+            content: attr(data-ribbon);
+            color: #fff;
+            font: 700 1em "Helvetica Neue", Helvetica, Arial, sans-serif;
+            line-height: 1.54em;
+            text-decoration: none;
+            text-shadow: 0 -.08em rgba(0, 0, 0, 0.5);
+            text-align: center;
+            text-indent: 0;
+            padding: .15em 0;
+            margin: .15em 0;
+            border-width: .08em 0;
+            border-style: dotted;
+            border-color: #fff;
+            border-color: rgba(255, 255, 255, 0.7);
+        }
+
+        @media (max-width: 768px) {
+            .github-fork-ribbon {
+                font-size: 11px;
+                opacity: 0.8;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .github-fork-ribbon {
+                font-size: 10px;
+                opacity: 0.8;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- GitHub Fork Ribbon -->
+    <a class="github-fork-ribbon" href="https://github.com/fcavalcantirj/pec-bandidagem" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
+
     <div class="header">
-        <h1>Despesas dos Deputados</h1>
+        <h1>💰 PEC da Bandidagem</h1>
         <p>Análise transparente dos gastos parlamentares relacionados à PEC da Bandidagem</p>
         <div class="nav">
-            <a href="index.html">Início</a>
-            <a href="relatorio.html">Relatório</a>
-            <a href="deputados.html">Deputados</a>
-            <a href="partidos.html">Partidos</a>
-            <a href="estados.html">Estados</a>
-            <a href="fluxo.html">Fluxo</a>
-            <a href="despesas.html" class="active">Despesas</a>
+            <a href="index.html">🏠 Início</a>
+            <a href="deputados.html">👥 Deputados</a>
+            <a href="partidos.html">🎯 Partidos</a>
+            <a href="estados.html">🗺️ Estados</a>
+            <a href="fluxo.html">🔄 Fluxo</a>
+            <a href="relatorio.html">📋 Relatório</a>
+            <a href="despesas.html" class="active">💰 Despesas</a>
         </div>
     </div>
 
@@ -936,5 +1010,19 @@ Voto na PEC: ${deputy.voto || 'Não registrado'}
             setupSearch();
         });
     </script>
+
+    <div class="footer" style="background: rgba(30, 41, 59, 0.95); color: white; padding: 2rem; margin-top: 3rem; text-align: center;">
+        <div class="footer-content" style="max-width: 1200px; margin: 0 auto;">
+            <div id="version-info" style="margin: 1rem 0; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                <!-- Version info will be injected here by version.js -->
+            </div>
+            <p style="margin-top: 1rem; font-size: 0.9rem; color: #94a3b8;">
+                <a href="index.html" style="color: #3b82f6; text-decoration: none;">← Voltar ao início</a> |
+                Criado por <a href="https://github.com/fcavalcantirj" style="color: #3b82f6; text-decoration: none;">fcavalcantirj</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="version.js"></script>
 </body>
 </html>
