@@ -1468,11 +1468,19 @@
 
             console.log('Top spenders:', topSpenders.map(d => ({ name: d.nome, expense: d.totalExpense })));
 
-            // FORCE clear and set visible content
-            chartContainer.innerHTML = '';
-            chartContainer.style.minHeight = '300px';
-            chartContainer.style.display = 'block';
-            chartContainer.style.visibility = 'visible';
+            // Use the same simple approach as the test chart
+            chartContainer.innerHTML = `
+                <div style="padding: 20px; background: white; border: 2px solid black; margin: 10px;">
+                    <h3 style="color: black; margin: 0 0 15px 0;">✅ REAL CHART WITH DATA!</h3>
+                    ${topSpenders.map((deputy, index) => {
+                        const percentage = (deputy.totalExpense / maxExpense) * 100;
+                        const colors = ['red', 'blue', 'green', 'orange', 'purple', 'brown', 'pink', 'gray', 'cyan', 'magenta'];
+                        return `<div style="background: ${colors[index] || 'black'}; height: 30px; width: ${percentage}%; margin: 10px 0; color: white; padding: 5px; box-sizing: border-box;">${deputy.nome} - R$ ${deputy.totalExpense.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>`;
+                    }).join('')}
+                </div>
+            `;
+
+            console.log('Real chart created with simple HTML approach!');
 
             // Create simple bar chart
             const maxExpense = topSpenders[0]?.totalExpense || 0;
