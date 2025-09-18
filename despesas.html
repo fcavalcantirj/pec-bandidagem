@@ -1287,6 +1287,16 @@
 
             console.log('Mock chart created with', mockSpenders.length, 'bars');
             console.log('Chart container now has', chartContainer.children.length, 'children');
+
+            // SCROLL TO CHART AND HIGHLIGHT IT
+            chartContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            chartContainer.style.backgroundColor = '#ffff00'; // BRIGHT YELLOW BACKGROUND
+            chartContainer.style.border = '5px solid #ff0000'; // RED BORDER
+
+            // Flash effect to make it obvious
+            setTimeout(() => {
+                chartContainer.style.backgroundColor = 'rgba(255,255,255,0.1)';
+            }, 2000);
         }
 
         function updateStatsDisplay() {
