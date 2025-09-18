@@ -1103,12 +1103,11 @@
                 return;
             }
 
-            // Sort by expense and take top 15
+            // Sort by expense - show all deputies
             const topDeputies = deputiesWithExpenses
-                .sort((a, b) => b.totalExpense - a.totalExpense)
-                .slice(0, 15);
+                .sort((a, b) => b.totalExpense - a.totalExpense);
 
-            console.log('Top 15 deputies for expense distribution:', topDeputies.map(d => ({ name: d.nome, expense: d.totalExpense })));
+            console.log(`All ${topDeputies.length} deputies for expense distribution:`, topDeputies.map(d => ({ name: d.nome, expense: d.totalExpense })));
 
             const margin = { top: 20, right: 30, bottom: 80, left: 100 };
             const width = chartEl.offsetWidth - margin.left - margin.right;
