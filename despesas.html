@@ -1264,18 +1264,27 @@
         }
 
         function updateTopSpendersChart() {
-            const deputiesWithExpenses = allExpenseData.filter(d => !d.loading && d.totalExpense > 0);
-            const chartContainer = document.getElementById('spenders-chart');
+            console.log('=== CHART DEBUG START ===');
+            console.log('All expense data length:', allExpenseData.length);
+            console.log('Sample expense data:', allExpenseData.slice(0, 3));
 
-            console.log('Updating chart with', deputiesWithExpenses.length, 'deputies');
+            const deputiesWithExpenses = allExpenseData.filter(d => !d.loading && d.totalExpense > 0);
+            console.log('Deputies with expenses:', deputiesWithExpenses.length);
+            console.log('Sample deputies with expenses:', deputiesWithExpenses.slice(0, 3));
+
+            const chartContainer = document.getElementById('spenders-chart');
+            console.log('Chart container found:', !!chartContainer);
 
             if (!chartContainer) {
                 console.error('Chart container not found!');
                 return;
             }
 
+            // ALWAYS show something
             if (deputiesWithExpenses.length === 0) {
-                chartContainer.innerHTML = '<div style="text-align: center; color: #64748b; padding: 2rem;">Carregando dados de despesas...</div>';
+                console.log('No deputies with expenses - showing loading');
+                chartContainer.innerHTML = '<div style="text-align: center; color: #64748b; padding: 2rem; background: rgba(255,255,255,0.8); border-radius: 8px;">Carregando dados de despesas...</div>';
+                chartContainer.style.minHeight = '200px';
                 return;
             }
 
@@ -1285,40 +1294,57 @@
 
             console.log('Top spenders:', topSpenders.map(d => ({ name: d.nome, expense: d.totalExpense })));
 
+            // FORCE clear and set visible content
             chartContainer.innerHTML = '';
+            chartContainer.style.minHeight = '300px';
+            chartContainer.style.display = 'block';
+            chartContainer.style.visibility = 'visible';
 
             // Create simple bar chart
             const maxExpense = topSpenders[0]?.totalExpense || 0;
+            console.log('Max expense for scaling:', maxExpense);
 
-            topSpenders.forEach((deputy, index) => {
-                const barContainer = document.createElement('div');
-                barContainer.style.cssText = `
-                    display: flex;
-                    align-items: center;
-                    margin-bottom: 12px;
-                    font-size: 0.9rem;
-                    padding: 8px;
-                    background: rgba(255, 255, 255, 0.5);
-                    border-radius: 8px;
-                `;
+            if (topSpenders.length > 0) {
+                topSpenders.forEach((deputy, index) => {
+                    console.log(`Creating bar ${index + 1} for ${deputy.nome}`);
 
-                const percentage = maxExpense > 0 ? (deputy.totalExpense / maxExpense) * 100 : 0;
+                    const barContainer = document.createElement('div');
+                    barContainer.style.cssText = `
+                        display: flex !important;
+                        align-items: center;
+                        margin-bottom: 12px;
+                        font-size: 0.9rem;
+                        padding: 8px;
+                        background: rgba(255, 255, 255, 0.8) !important;
+                        border-radius: 8px;
+                        border: 1px solid #e2e8f0;
+                        min-height: 40px;
+                    `;
 
-                barContainer.innerHTML = `
-                    <div style="width: 25%; padding-right: 12px; font-weight: 500; color: #0f172a;">${deputy.nome.split(' ').slice(0, 2).join(' ')}</div>
-                    <div style="width: 20%; padding-right: 8px; font-size: 0.8rem; color: #64748b;">${deputy.partido}</div>
-                    <div style="width: 35%; background: #e2e8f0; border-radius: 6px; height: 24px; position: relative;">
-                        <div style="width: ${percentage}%; background: linear-gradient(135deg, #ef4444, #dc2626); height: 100%; border-radius: 6px; transition: width 0.3s ease;"></div>
-                    </div>
-                    <div style="width: 20%; padding-left: 12px; text-align: right; font-weight: 600; color: #0f172a; font-size: 0.9rem;">
-                        ${formatCurrency(deputy.totalExpense)}
-                    </div>
-                `;
+                    const percentage = maxExpense > 0 ? (deputy.totalExpense / maxExpense) * 100 : 0;
+                    console.log(`Bar ${index + 1} percentage: ${percentage}%`);
 
-                chartContainer.appendChild(barContainer);
-            });
+                    barContainer.innerHTML = `
+                        <div style="width: 25%; padding-right: 12px; font-weight: 500; color: #0f172a;">${deputy.nome.split(' ').slice(0, 2).join(' ')}</div>
+                        <div style="width: 20%; padding-right: 8px; font-size: 0.8rem; color: #64748b;">${deputy.partido}</div>
+                        <div style="width: 35%; background: #e2e8f0; border-radius: 6px; height: 24px; position: relative;">
+                            <div style="width: ${percentage}%; background: linear-gradient(135deg, #ef4444, #dc2626); height: 100%; border-radius: 6px; transition: width 0.3s ease;"></div>
+                        </div>
+                        <div style="width: 20%; padding-left: 12px; text-align: right; font-weight: 600; color: #0f172a; font-size: 0.9rem;">
+                            ${formatCurrency(deputy.totalExpense)}
+                        </div>
+                    `;
 
-            console.log('Chart updated with', topSpenders.length, 'bars');
+                    chartContainer.appendChild(barContainer);
+                    console.log(`Bar ${index + 1} added to container`);
+                });
+            } else {
+                console.log('No top spenders to display');
+                chartContainer.innerHTML = '<div style="text-align: center; color: #dc2626; padding: 2rem; background: rgba(255,255,255,0.8); border-radius: 8px;">Nenhum dado de despesas disponível</div>';
+            }
+
+            console.log('Final chart container HTML:', chartContainer.innerHTML.substring(0, 200) + '...');
+            console.log('=== CHART DEBUG END ===');
         }
 
         function renderDeputyGrid(filteredData = expenseData) {
