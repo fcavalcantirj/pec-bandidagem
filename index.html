@@ -11,6 +11,7 @@
     <meta property="og:description" content="Descubra quais dos 488 deputados votaram a favor da controversa PEC da Bandidagem. Análise completa com visualizações interativas por partido e estado.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://pec-bandidagem.vercel.app/">
+    <link rel="canonical" href="https://pec-bandidagem.vercel.app/">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="PEC da Bandidagem - Análise Interativa dos Padrões de Votação">
     <meta name="twitter:description" content="353 deputados votaram SIM na PEC da Bandidagem. Veja a análise completa com dados oficiais da Câmara dos Deputados.">
@@ -60,6 +61,46 @@
         "@type": "SearchAction",
         "target": "https://pec-bandidagem.vercel.app/deputados.html?q={search_term_string}",
         "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "GovernmentOrganization",
+      "name": "Câmara dos Deputados",
+      "url": "https://www.camara.leg.br/",
+      "description": "Casa legislativa do Congresso Nacional do Brasil",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Brasília",
+        "addressRegion": "DF",
+        "addressCountry": "BR"
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      "name": "Votação da PEC da Bandidagem",
+      "description": "Proposta de Emenda à Constituição votada na Câmara dos Deputados em dois turnos",
+      "startDate": "2024",
+      "location": {
+        "@type": "Place",
+        "name": "Câmara dos Deputados",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Brasília",
+          "addressRegion": "DF",
+          "addressCountry": "BR"
+        }
+      },
+      "organizer": {
+        "@type": "GovernmentOrganization",
+        "name": "Câmara dos Deputados"
       }
     }
     </script>
@@ -1025,7 +1066,7 @@
                 <div class="insight-card">
                     <div class="insight-icon">🎯</div>
                     <h3>Polarização Extrema</h3>
-                    <p>Partidos de direita com apoio massivo (>90%) vs. esquerda com oposição massiva (>80%). Centro profundamente dividido.</p>
+                    <p>Partidos de direita com apoio massivo (>90%) vs. esquerda com oposição massiva (>80%). Centro profundamente dividido. <a href="partidos.html" style="color: #4f46e5; text-decoration: none;">Ver análise completa por partidos →</a></p>
                 </div>
 
                 <div class="insight-card">
@@ -1037,13 +1078,13 @@
                 <div class="insight-card">
                     <div class="insight-icon">🗺️</div>
                     <h3>Divisões Regionais</h3>
-                    <p>Norte/Nordeste mais favorável (TO e PI: 100%). Sul/Sudeste mais resistente. Estados menores mais coesos.</p>
+                    <p>Norte/Nordeste mais favorável (TO e PI: 100%). Sul/Sudeste mais resistente. Estados menores mais coesos. <a href="estados.html" style="color: #4f46e5; text-decoration: none;">Ver mapa interativo →</a></p>
                 </div>
 
                 <div class="insight-card">
                     <div class="insight-icon">⚖️</div>
                     <h3>Estabilidade Extrema</h3>
-                    <p>99.4% mantiveram o voto entre turnos. Apenas 3 mudanças, todas de SIM para NÃO. Posições consolidadas.</p>
+                    <p>99.4% mantiveram o voto entre turnos. Apenas 3 mudanças, todas de SIM para NÃO. Posições consolidadas. <a href="fluxo.html" style="color: #4f46e5; text-decoration: none;">Ver fluxo de votos →</a></p>
                 </div>
 
                 <div class="insight-card">
