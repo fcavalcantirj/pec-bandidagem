@@ -674,15 +674,94 @@
                         });
                     }
 
-                    updateLoadingProgress(50, 100, `${deputyData.length} deputados carregados. Buscando dados de despesas...`);
+                    updateLoadingProgress(100, 100, 'Deputados carregados! Preparando página...');
                     console.log(`Loaded ${deputyData.length} deputies`);
-                    await loadExpenseData();
+
+                    // Initialize expense data with basic deputy info - show immediately
+                    expenseData = deputyData.map(deputy => ({
+                        nome: deputy.deputado,
+                        partido: deputy.partido,
+                        uf: deputy.estado,
+                        voto: deputy.voto,
+                        totalExpense: 0,
+                        expenseCount: 0,
+                        loading: true,
+                        id: null,
+                        expenses: []
+                    }));
+
+                    // Hide main loading, show content immediately
+                    document.getElementById('loading').style.display = 'none';
+
+                    // Setup filters and render with basic data
+                    setupPartyFilters();
+                    renderDeputyGrid();
+
+                    // Start loading expense data in background for first batch
+                    loadInitialExpenseData();
                 } else {
                     throw new Error('Could not parse VISUALIZATION_DATA');
                 }
             } catch (error) {
                 console.error('Error loading deputy data:', error);
                 showError('Erro ao carregar dados dos deputados: ' + error.message);
+            }
+        }
+
+        async function loadInitialExpenseData() {
+            // Load just the first 15 deputies to show some real data quickly
+            const sampleDeputies = deputyData.slice(0, 15);
+
+            for (let i = 0; i < sampleDeputies.length; i++) {
+                const deputy = sampleDeputies[i];
+
+                try {
+                    // Search for deputy by name
+                    const searchUrl = isLocal ?
+                        `${API_BASE}/deputados?nome=${encodeURIComponent(deputy.deputado)}&ordem=ASC&ordenarPor=nome` :
+                        `${API_BASE}deputados?nome=${encodeURIComponent(deputy.deputado)}&ordem=ASC&ordenarPor=nome`;
+
+                    const searchResponse = await fetch(searchUrl);
+                    if (searchResponse.ok) {
+                        const searchData = await searchResponse.json();
+
+                        if (searchData.dados && searchData.dados.length > 0) {
+                            const deputyInfo = searchData.dados[0];
+
+                            // Get expenses
+                            const expenseUrl = isLocal ?
+                                `${API_BASE}/deputados/${deputyInfo.id}/despesas?ano=${currentYear}&ordem=ASC&ordenarPor=dataDocumento` :
+                                `${API_BASE}deputados/${deputyInfo.id}/despesas?ano=${currentYear}&ordem=ASC&ordenarPor=dataDocumento`;
+
+                            const expenseResponse = await fetch(expenseUrl);
+                            if (expenseResponse.ok) {
+                                const expenseDataResponse = await expenseResponse.json();
+
+                                const totalExpense = expenseDataResponse.dados.reduce((sum, expense) => {
+                                    return sum + (expense.valorLiquido || 0);
+                                }, 0);
+
+                                // Update the deputy data
+                                expenseData[i] = {
+                                    ...expenseData[i],
+                                    totalExpense: totalExpense,
+                                    expenseCount: expenseDataResponse.dados.length,
+                                    id: deputyInfo.id,
+                                    expenses: expenseDataResponse.dados,
+                                    loading: false
+                                };
+
+                                // Re-render to show updated data
+                                renderDeputyGrid();
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error(`Error loading ${deputy.deputado}:`, error);
+                }
+
+                // Small delay to avoid overwhelming API
+                await new Promise(resolve => setTimeout(resolve, 200));
             }
         }
 
@@ -961,22 +1040,35 @@
             filteredData.forEach(deputy => {
                 const card = document.createElement('div');
                 card.className = 'deputy-card';
+
+                // Show loading indicator or actual data
+                const expenseDisplay = deputy.loading ?
+                    '<div style="color: #94a3b8;">Carregando...</div>' :
+                    formatCurrency(deputy.totalExpense);
+
+                const detailsDisplay = deputy.loading ?
+                    'Buscando dados de despesas...' :
+                    `${deputy.expenseCount} despesas em ${currentYear}<br>Estado: ${deputy.uf || 'N/A'}`;
+
                 card.innerHTML = `
                     <div class="deputy-header">
                         <div class="deputy-name">${deputy.nome}</div>
                         <div class="deputy-party">${deputy.partido}</div>
                     </div>
-                    <div class="expense-total">${formatCurrency(deputy.totalExpense)}</div>
+                    <div class="expense-total">${expenseDisplay}</div>
                     <div class="expense-details">
-                        ${deputy.expenseCount} despesas em ${currentYear}<br>
-                        Estado: ${deputy.uf}
+                        ${detailsDisplay}
                     </div>
                 `;
 
-                card.addEventListener('click', () => {
-                    trackExpenseInteraction('deputy_click', deputy.nome);
-                    showDeputyDetails(deputy);
-                });
+                if (!deputy.loading) {
+                    card.addEventListener('click', () => {
+                        trackExpenseInteraction('deputy_click', deputy.nome);
+                        showDeputyDetails(deputy);
+                    });
+                } else {
+                    card.style.opacity = '0.7';
+                }
 
                 gridEl.appendChild(card);
             });
