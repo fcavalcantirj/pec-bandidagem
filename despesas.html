@@ -333,11 +333,20 @@
         }
 
         .loading-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             gap: 1rem;
-            padding: 3rem 2rem;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
         }
 
         .spinner {
@@ -593,19 +602,21 @@
                 <button class="filter-btn active" data-party="all">Todos</button>
             </div>
 
-            <div id="loading" class="loading-container">
-                <div class="spinner"></div>
-                <div class="loading-text">Carregando Dados das Despesas</div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progress-fill"></div>
-                </div>
-                <div class="loading-details" id="loading-details">
-                    Iniciando carregamento dos dados...
-                </div>
-            </div>
             <div id="error" class="error" style="display: none;"></div>
 
             <div class="deputy-grid" id="deputy-grid"></div>
+        </div>
+
+        <!-- Full-page loading overlay -->
+        <div id="loading" class="loading-container">
+            <div class="spinner"></div>
+            <div class="loading-text">Carregando Dados das Despesas</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="loading-details" id="loading-details">
+                Iniciando carregamento dos dados...
+            </div>
         </div>
     </div>
 
