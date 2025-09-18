@@ -69,6 +69,7 @@ build() {
     # Copy SEO files
     cp sitemap.xml "$DIST_DIR/"
     cp robots.txt "$DIST_DIR/"
+    cp manifest.json "$DIST_DIR/"
 
     # Copy documentation for GitHub Pages
     cp -r docs "$DIST_DIR/"
