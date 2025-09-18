@@ -578,32 +578,32 @@
 
             <div class="legend">
                 <div class="legend-item">
-                    <div class="legend-color" style="background: #dc2626;"></div>
-                    <span style="color: #dc2626; font-weight: 600;">🚨 Aprovação Massiva (≥90%)</span>
+                    <div class="legend-color" style="background: #7c2d12;"></div>
+                    <span style="color: #7c2d12; font-weight: 600;">🚨 Aprovação Massiva (≥90%)</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background: #ef4444;"></div>
+                    <div class="legend-color" style="background: #dc2626;"></div>
                     <span style="color: #dc2626; font-weight: 600;">⚠️ Aprovação Alta (80-89%)</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background: #f59e0b;"></div>
-                    <span style="color: #f59e0b; font-weight: 600;">⚠️ Aprovação Moderada-Alta (70-79%)</span>
+                    <div class="legend-color" style="background: #ea580c;"></div>
+                    <span style="color: #ea580c; font-weight: 600;">⚠️ Aprovação Moderada-Alta (70-79%)</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background: #eab308;"></div>
-                    <span style="color: #eab308;">Aprovação Moderada (50-69%)</span>
+                    <div class="legend-color" style="background: #d97706;"></div>
+                    <span style="color: #d97706;">Aprovação Moderada (50-69%)</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background: #3b82f6;"></div>
-                    <span style="color: #3b82f6;">Baixa Aprovação (30-49%)</span>
+                    <div class="legend-color" style="background: #ca8a04;"></div>
+                    <span style="color: #ca8a04;">Baixa Aprovação (30-49%)</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background: #10b981;"></div>
-                    <span style="color: #10b981; font-weight: 600;">✅ Oposição (10-29%)</span>
+                    <div class="legend-color" style="background: #2563eb;"></div>
+                    <span style="color: #2563eb; font-weight: 600;">✅ Oposição (10-29%)</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background: #065f46;"></div>
-                    <span style="color: #065f46; font-weight: 600;">✅ Oposição Forte (<10%)</span>
+                    <div class="legend-color" style="background: #1e40af;"></div>
+                    <span style="color: #1e40af; font-weight: 600;">✅ Oposição Forte (<10%)</span>
                 </div>
             </div>
         </div>
@@ -648,13 +648,13 @@
 
             // Color scale: Green/Blue for low approval (good), Yellow/Red for high approval (concerning)
             function getPartyColor(approval) {
-                if (approval >= 90) return '#dc2626'; // Dark red - Massive approval (very concerning)
-                if (approval >= 80) return '#ef4444'; // Red - High approval (concerning)
-                if (approval >= 70) return '#f59e0b'; // Orange/Yellow - Moderate-high approval (concerning)
-                if (approval >= 50) return '#eab308'; // Yellow - Moderate approval (concerning)
-                if (approval >= 30) return '#3b82f6'; // Blue - Low-moderate approval (better)
-                if (approval >= 10) return '#10b981'; // Green - Low approval (good)
-                return '#065f46'; // Dark green - Very low approval (excellent)
+                if (approval >= 90) return '#7c2d12'; // Dark brown - Massive approval (very concerning)
+                if (approval >= 80) return '#dc2626'; // Dark red - High approval (concerning)
+                if (approval >= 70) return '#ea580c'; // Orange - Moderate-high approval (concerning)
+                if (approval >= 50) return '#d97706'; // Amber - Moderate approval (concerning)
+                if (approval >= 30) return '#ca8a04'; // Yellow - Low-moderate approval (better)
+                if (approval >= 10) return '#2563eb'; // Blue - Low approval (good)
+                return '#1e40af'; // Dark blue - Very low approval (excellent)
             }
 
             let currentSort = 'approval';
