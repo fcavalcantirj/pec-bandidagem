@@ -774,6 +774,9 @@
                     // Initialize stats with basic counts
                     updateStatsDisplay();
 
+                    // Initialize chart with loading message
+                    updateTopSpendersChart();
+
                     // Start loading expense data in background for first batch
                     loadInitialExpenseData();
                 } else {
@@ -1229,13 +1232,24 @@
 
             const maxExpense = topSpender ? topSpender.totalExpense : 0;
 
-            // Update main stats section
-            document.getElementById('total-deputies').textContent = totalDeputies.toLocaleString('pt-BR');
-            document.getElementById('total-expenses').textContent = formatCurrency(totalExpenses);
-            document.getElementById('avg-expense').textContent = formatCurrency(avgExpense);
-            document.getElementById('top-spender').textContent = topSpender ? topSpender.nome.split(' ')[0] : 'Carregando...';
+            // Update ALL elements with these IDs (handle duplicates)
+            document.querySelectorAll('#total-deputies').forEach(el => {
+                el.textContent = totalDeputies.toLocaleString('pt-BR');
+            });
 
-            // Update duplicate stats if they exist
+            document.querySelectorAll('#total-expenses').forEach(el => {
+                el.textContent = formatCurrency(totalExpenses);
+            });
+
+            document.querySelectorAll('#avg-expense').forEach(el => {
+                el.textContent = formatCurrency(avgExpense);
+            });
+
+            document.querySelectorAll('#top-spender').forEach(el => {
+                el.textContent = topSpender ? topSpender.nome.split(' ')[0] : 'Carregando...';
+            });
+
+            // Update other unique stats if they exist
             const maxExpenseEl = document.getElementById('max-expense');
             if (maxExpenseEl) {
                 maxExpenseEl.textContent = formatCurrency(maxExpense);
