@@ -789,8 +789,8 @@
         }
 
         async function loadInitialExpenseData() {
-            // Load just the first 15 deputies to show some real data quickly
-            const sampleDeputies = deputyData.slice(0, 15);
+            // Load just the first 5 deputies to avoid timeouts
+            const sampleDeputies = deputyData.slice(0, 5);
 
             for (let i = 0; i < sampleDeputies.length; i++) {
                 const deputy = sampleDeputies[i];
@@ -801,7 +801,12 @@
                         `${API_BASE}/deputados?nome=${encodeURIComponent(deputy.deputado)}&ordem=ASC&ordenarPor=nome` :
                         `${API_BASE}deputados?nome=${encodeURIComponent(deputy.deputado)}&ordem=ASC&ordenarPor=nome`;
 
-                    const searchResponse = await fetch(searchUrl);
+                    console.log(`Attempting to fetch: ${searchUrl}`);
+
+                    const searchResponse = await fetch(searchUrl, {
+                        signal: AbortSignal.timeout(10000) // 10 second timeout
+                    });
+
                     if (searchResponse.ok) {
                         const searchData = await searchResponse.json();
 
@@ -852,8 +857,8 @@
                     console.error(`Error loading ${deputy.deputado}:`, error);
                 }
 
-                // Small delay to avoid overwhelming API
-                await new Promise(resolve => setTimeout(resolve, 200));
+                // Longer delay to avoid API timeouts
+                await new Promise(resolve => setTimeout(resolve, 500));
             }
         }
 
