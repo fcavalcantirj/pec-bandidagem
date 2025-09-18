@@ -558,6 +558,41 @@
                 font-size: 0.8rem;
             }
         }
+
+        .footer {
+            background: rgba(30, 41, 59, 0.95);
+            color: white;
+            padding: 2rem;
+            margin-top: 4rem;
+            text-align: center;
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .footer h3 {
+            margin-bottom: 1rem;
+            color: #e2e8f0;
+        }
+        .footer p {
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+        .data-sources {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .source-link {
+            color: #60a5fa;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .source-link:hover {
+            color: #93c5fd;
+        }
     </style>
 </head>
 <body>
@@ -1259,6 +1294,31 @@ Baixa Coesão (<70%)
             <p style="margin-top: 1rem; font-size: 0.9rem; color: #94a3b8;">
                 <a href="index.html" style="color: #3b82f6; text-decoration: none;">← Voltar ao início</a> |
                 Criado por <a href="https://github.com/fcavalcantirj" style="color: #3b82f6; text-decoration: none;">fcavalcantirj</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="version.js"></script>
+
+    <div class="footer">
+        <div class="footer-content">
+            <h3>🔬 Transparência e Reprodutibilidade</h3>
+            <p>
+                Esta análise foi desenvolvida com foco na transparência e precisão dos dados.
+                Todos os números foram verificados independentemente e estão prontos para publicação acadêmica ou jornalística.
+            </p>
+            <div class="data-sources">
+                <a href="docs/RELATORIO_PEC_BANDIDAGEM.md" class="source-link">📄 Relatório Completo</a>
+                <a href="docs/VALIDATION_REPORT.md" class="source-link">✅ Relatório de Validação</a>
+                <a href="docs/DEVELOPMENT.md" class="source-link">🛠️ Documentação Técnica</a>
+                <a href="https://www.reddit.com/r/brasil/comments/1niy6g4/c%C3%A2mara_aprova_pec_da_blindagem_em_1%C2%BA_turno/" class="source-link" target="_blank">📝 Post Original</a>
+            </div>
+            <div id="version-info" style="margin-top: 2rem; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                <!-- Version info will be injected here by version.js -->
+            </div>
+            <p style="margin-top: 1rem; font-size: 0.9rem; color: #94a3b8;">
+                <a href="index.html" class="source-link">← Voltar ao Início</a> | Criado por <a href="https://github.com/fcavalcantirj" class="source-link">fcavalcantirj</a> •
+                Análise gerada em setembro de 2025 • Dados validados para publicação pública
             </p>
         </div>
     </div>

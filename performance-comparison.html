@@ -232,16 +232,10 @@
         .source-link {
             color: #60a5fa;
             text-decoration: none;
-            padding: 0.5rem 1rem;
-            border: 1px solid #60a5fa;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            font-weight: 500;
+            transition: color 0.3s ease;
         }
         .source-link:hover {
-            background: #60a5fa;
-            color: white;
-            transform: translateY(-2px);
+            color: #93c5fd;
         }
 
         @media (max-width: 768px) {
@@ -397,7 +391,16 @@
                 <a href="docs/DEVELOPMENT.md" class="source-link">🛠️ Documentação Técnica</a>
                 <a href="https://www.reddit.com/r/brasil/comments/1niy6g4/c%C3%A2mara_aprova_pec_da_blindagem_em_1%C2%BA_turno/" class="source-link" target="_blank">📝 Post Original</a>
             </div>
+            <div id="version-info" style="margin-top: 2rem; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                <!-- Version info will be injected here by version.js -->
+            </div>
+            <p style="margin-top: 1rem; font-size: 0.9rem; color: #94a3b8;">
+                <a href="index.html" class="source-link">← Voltar ao Início</a> | Criado por <a href="https://github.com/fcavalcantirj" class="source-link">fcavalcantirj</a> •
+                Análise gerada em setembro de 2025 • Dados validados para publicação pública
+            </p>
         </div>
     </div>
+
+    <script src="version.js"></script>
 </body>
 </html>
