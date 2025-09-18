@@ -1373,10 +1373,9 @@
             console.log('Mock chart created with', mockSpenders.length, 'bars');
             console.log('Chart container now has', chartContainer.children.length, 'children');
 
-            // SCROLL TO CHART AND HIGHLIGHT IT
-            chartContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            chartContainer.style.backgroundColor = '#ffff00'; // BRIGHT YELLOW BACKGROUND
-            chartContainer.style.border = '5px solid #ff0000'; // RED BORDER
+            // Clean styling for chart
+            chartContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+            chartContainer.style.border = '1px solid #e2e8f0';
 
             // Flash effect to make it obvious
             setTimeout(() => {
@@ -1509,24 +1508,10 @@
                 chartContainer.innerHTML = '<div style="text-align: center; color: #dc2626; padding: 2rem; background: rgba(255,255,255,0.8); border-radius: 8px;">Nenhum dado de despesas disponível</div>';
             }
 
-            // FORCE CHART VISIBILITY - Make it impossible to miss!
-            chartContainer.style.backgroundColor = '#ffff00'; // BRIGHT YELLOW BACKGROUND
-            chartContainer.style.border = '5px solid #ff0000'; // RED BORDER
-            chartContainer.style.padding = '20px';
-            chartContainer.style.borderRadius = '12px';
-            chartContainer.style.boxShadow = '0 0 20px rgba(255, 0, 0, 0.5)';
-            chartContainer.style.position = 'relative';
-            chartContainer.style.zIndex = '9999';
-
-            // SCROLL TO CHART IMMEDIATELY
-            setTimeout(() => {
-                chartContainer.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center',
-                    inline: 'center'
-                });
-                console.log('🎯 AUTO-SCROLLED TO CHART');
-            }, 200);
+            // Clean chart styling
+            chartContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+            chartContainer.style.border = '1px solid #e2e8f0';
+            chartContainer.style.borderRadius = '8px';
 
             console.log('Final chart container HTML:', chartContainer.innerHTML.substring(0, 200) + '...');
             console.log('Final container children count:', chartContainer.children.length);
