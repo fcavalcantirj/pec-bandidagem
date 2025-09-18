@@ -1036,13 +1036,24 @@
             if (deputy) {
                 trackVisualizationInteraction('deputy_search', 'deputy_selected', deputyName);
 
-                // Fetch additional deputy info from API
+                // First search for the deputy by name to get their ID
                 let deputyDetails = null;
                 try {
-                    const response = await fetch(`https://dadosabertos.camara.leg.br/api/v2/deputados/${deputy.id}`);
-                    if (response.ok) {
-                        const data = await response.json();
-                        deputyDetails = data.dados;
+                    const searchResponse = await fetch(`https://dadosabertos.camara.leg.br/api/v2/deputados?nome=${encodeURIComponent(deputyName)}&ordem=ASC&ordenarPor=nome`);
+                    if (searchResponse.ok) {
+                        const searchData = await searchResponse.json();
+
+                        if (searchData.dados && searchData.dados.length > 0) {
+                            const deputyInfo = searchData.dados[0]; // Take the first match
+
+                            // Now get their detailed info
+                            const detailResponse = await fetch(`https://dadosabertos.camara.leg.br/api/v2/deputados/${deputyInfo.id}`);
+                            if (detailResponse.ok) {
+                                const detailData = await detailResponse.json();
+                                deputyDetails = detailData.dados;
+                                deputyDetails.id = deputyInfo.id; // Add the ID for consistency
+                            }
+                        }
                     }
                 } catch (error) {
                     console.log('Error fetching deputy details:', error);
@@ -1073,9 +1084,12 @@
                         <div class="modal-body">
                             <div class="deputy-main-info">
                                 <div class="deputy-photo-section">
-                                    <img src="https://www.camara.leg.br/internet/deputado/bandep/${deputy.id}.jpg"
+                                    <img src="${details && details.id ? `https://www.camara.leg.br/internet/deputado/bandep/${details.id}.jpg` : ''}"
                                          alt="${deputy.name}" class="deputy-modal-photo"
-                                         onerror="this.src='https://via.placeholder.com/150x180/e5e7eb/64748b?text=${deputy.name.charAt(0)}'">
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                                    <div class="deputy-photo-fallback" style="display: none; width: 150px; height: 180px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; align-items: center; justify-content: center; color: white; font-size: 3rem; font-weight: bold;">
+                                        ${deputy.name.charAt(0)}
+                                    </div>
                                 </div>
 
                                 <div class="deputy-info-section">
