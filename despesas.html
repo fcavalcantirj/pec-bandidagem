@@ -435,6 +435,10 @@
             box-shadow: none;
         }
 
+        .stats-section {
+            margin-bottom: 2rem;
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -628,6 +632,35 @@
                 <input type="text" class="search-input" id="deputy-search" placeholder="Digite o nome do deputado...">
             </div>
 
+            <!-- Summary Stats Section -->
+            <div class="stats-section" id="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-deputies">-</div>
+                        <div class="stat-label">Deputados Analisados</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-expenses">-</div>
+                        <div class="stat-label">Gasto Total em 2025</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="avg-expense">-</div>
+                        <div class="stat-label">Média por Deputado</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="top-spender">-</div>
+                        <div class="stat-label">Maior Gastador</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Spenders Chart -->
+            <div class="chart-container" id="top-spenders-chart">
+                <div class="chart-title">Top 10 Deputados - Maiores Gastos em 2025</div>
+                <div class="chart-description">Ranking dos deputados com maiores despesas do ano</div>
+                <div id="spenders-chart"></div>
+            </div>
+
             <div class="filters" id="party-filters">
                 <button class="filter-btn active" data-party="all">Todos</button>
             </div>
@@ -738,6 +771,9 @@
                     renderCurrentPage();
                     setupLoadMoreButton();
 
+                    // Initialize stats with basic counts
+                    updateStatsDisplay();
+
                     // Start loading expense data in background for first batch
                     loadInitialExpenseData();
                 } else {
@@ -794,6 +830,8 @@
 
                                 // Re-render to show updated data
                                 renderDeputyGrid();
+                                updateStatsDisplay();
+                                updateTopSpendersChart();
                             }
                         }
                     }
@@ -1167,6 +1205,62 @@
             } else {
                 loadMoreContainer.style.display = 'none';
             }
+        }
+
+        function updateStatsDisplay() {
+            const totalDeputies = allExpenseData.length;
+            const deputiesWithExpenses = allExpenseData.filter(d => !d.loading && d.totalExpense > 0);
+
+            const totalExpenses = deputiesWithExpenses.reduce((sum, d) => sum + d.totalExpense, 0);
+            const avgExpense = deputiesWithExpenses.length > 0 ? totalExpenses / deputiesWithExpenses.length : 0;
+
+            const topSpender = deputiesWithExpenses.reduce((max, d) =>
+                d.totalExpense > (max?.totalExpense || 0) ? d : max, null);
+
+            // Update DOM elements
+            document.getElementById('total-deputies').textContent = totalDeputies.toLocaleString('pt-BR');
+            document.getElementById('total-expenses').textContent = formatCurrency(totalExpenses);
+            document.getElementById('avg-expense').textContent = formatCurrency(avgExpense);
+            document.getElementById('top-spender').textContent = topSpender ? topSpender.nome.split(' ')[0] : 'Carregando...';
+        }
+
+        function updateTopSpendersChart() {
+            const deputiesWithExpenses = allExpenseData.filter(d => !d.loading && d.totalExpense > 0);
+            if (deputiesWithExpenses.length === 0) return;
+
+            const topSpenders = deputiesWithExpenses
+                .sort((a, b) => b.totalExpense - a.totalExpense)
+                .slice(0, 10);
+
+            const chartContainer = document.getElementById('spenders-chart');
+            chartContainer.innerHTML = '';
+
+            // Create simple bar chart
+            const maxExpense = topSpenders[0]?.totalExpense || 0;
+
+            topSpenders.forEach((deputy, index) => {
+                const barContainer = document.createElement('div');
+                barContainer.style.cssText = `
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 8px;
+                    font-size: 0.9rem;
+                `;
+
+                const percentage = (deputy.totalExpense / maxExpense) * 100;
+
+                barContainer.innerHTML = `
+                    <div style="width: 30%; padding-right: 8px; font-weight: 500;">${deputy.nome.split(' ')[0]}</div>
+                    <div style="width: 50%; background: #e2e8f0; border-radius: 4px; height: 20px; position: relative;">
+                        <div style="width: ${percentage}%; background: linear-gradient(135deg, #ef4444, #dc2626); height: 100%; border-radius: 4px;"></div>
+                    </div>
+                    <div style="width: 20%; padding-left: 8px; text-align: right; font-weight: 600; color: #0f172a;">
+                        ${formatCurrency(deputy.totalExpense)}
+                    </div>
+                `;
+
+                chartContainer.appendChild(barContainer);
+            });
         }
 
         function renderDeputyGrid(filteredData = expenseData) {
