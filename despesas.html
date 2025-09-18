@@ -1093,9 +1093,16 @@
             const chartEl = document.getElementById('expense-chart');
             chartEl.innerHTML = '';
 
-            if (!allExpenseData || allExpenseData.length === 0) {
-                console.log('❌ No expense data available for pie chart');
-                chartEl.innerHTML = '<p style="text-align: center; padding: 2rem;">Dados não disponíveis</p>';
+            // Check if we have any deputies with actual expense data loaded
+            const deputiesWithExpenseDetails = allExpenseData.filter(d =>
+                !d.loading && d.expenses && d.expenses.length > 0
+            );
+
+            console.log('Deputies with expense details:', deputiesWithExpenseDetails.length);
+
+            if (deputiesWithExpenseDetails.length === 0) {
+                console.log('❌ No detailed expense data available for pie chart yet');
+                chartEl.innerHTML = '<p style="text-align: center; padding: 2rem; color: #64748b;">Carregando dados de despesas...</p>';
                 return;
             }
 
@@ -1103,19 +1110,17 @@
             const categoryData = {};
             let totalAmount = 0;
 
-            allExpenseData.forEach(deputy => {
-                if (deputy.expenses && deputy.expenses.length > 0) {
-                    deputy.expenses.forEach(expense => {
-                        const category = expense.tipoDespesa || 'Outros';
-                        const value = parseFloat(expense.valorLiquido) || 0;
+            deputiesWithExpenseDetails.forEach(deputy => {
+                deputy.expenses.forEach(expense => {
+                    const category = expense.tipoDespesa || 'Outros';
+                    const value = parseFloat(expense.valorLiquido) || 0;
 
-                        if (!categoryData[category]) {
-                            categoryData[category] = 0;
-                        }
-                        categoryData[category] += value;
-                        totalAmount += value;
-                    });
-                }
+                    if (!categoryData[category]) {
+                        categoryData[category] = 0;
+                    }
+                    categoryData[category] += value;
+                    totalAmount += value;
+                });
             });
 
             // Convert to array and sort by value
@@ -1451,17 +1456,12 @@
             const maxExpense = topSpenders[0]?.totalExpense || 0;
             console.log('Max expense for scaling:', maxExpense);
 
-            // Use the same simple approach as the test chart
-            chartContainer.innerHTML = `
-                <div style="padding: 20px; background: white; border: 2px solid black; margin: 10px;">
-                    <h3 style="color: black; margin: 0 0 15px 0;">✅ REAL CHART WITH DATA!</h3>
-                    ${topSpenders.map((deputy, index) => {
-                        const percentage = (deputy.totalExpense / maxExpense) * 100;
-                        const colors = ['red', 'blue', 'green', 'orange', 'purple', 'brown', 'pink', 'gray', 'cyan', 'magenta'];
-                        return `<div style="background: ${colors[index] || 'black'}; height: 30px; width: ${percentage}%; margin: 10px 0; color: white; padding: 5px; box-sizing: border-box;">${deputy.nome} - R$ ${deputy.totalExpense.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>`;
-                    }).join('')}
-                </div>
-            `;
+            chartContainer.innerHTML = '';
+
+            // Create clean chart container
+            const chartDiv = document.createElement('div');
+            chartDiv.style.cssText = 'padding: 20px; background: rgba(255,255,255,0.9); border-radius: 12px; margin: 10px 0;';
+            chartContainer.appendChild(chartDiv);
 
             console.log('Real chart created with simple HTML approach!');
 
@@ -1496,7 +1496,7 @@
                         </div>
                     `;
 
-                    chartContainer.appendChild(barContainer);
+                    chartDiv.appendChild(barContainer);
                     console.log(`Bar ${index + 1} added to container`);
                     console.log('Current container children count:', chartContainer.children.length);
                     console.log('Container innerHTML length:', chartContainer.innerHTML.length);
