@@ -405,6 +405,36 @@
             margin: 1rem 0;
         }
 
+        .load-more-container {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .load-more-btn {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+        }
+
+        .load-more-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4);
+        }
+
+        .load-more-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -605,6 +635,12 @@
             <div id="error" class="error" style="display: none;"></div>
 
             <div class="deputy-grid" id="deputy-grid"></div>
+
+            <div class="load-more-container" id="load-more-container" style="display: none;">
+                <button class="load-more-btn" id="load-more-btn">
+                    Carregar Mais Deputados
+                </button>
+            </div>
         </div>
 
         <!-- Full-page loading overlay -->
@@ -624,6 +660,9 @@
         // Load deputy data from existing file
         let deputyData = [];
         let expenseData = [];
+        let allExpenseData = []; // Keep original unfiltered data
+        let currentPage = 0;
+        const PAGE_SIZE = 24; // Show 24 deputies per page
 
         // API configuration
         const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -678,7 +717,7 @@
                     console.log(`Loaded ${deputyData.length} deputies`);
 
                     // Initialize expense data with basic deputy info - show immediately
-                    expenseData = deputyData.map(deputy => ({
+                    allExpenseData = deputyData.map(deputy => ({
                         nome: deputy.deputado,
                         partido: deputy.partido,
                         uf: deputy.estado,
@@ -689,13 +728,15 @@
                         id: null,
                         expenses: []
                     }));
+                    expenseData = [...allExpenseData]; // Start with all data
 
                     // Hide main loading, show content immediately
                     document.getElementById('loading').style.display = 'none';
 
-                    // Setup filters and render with basic data
+                    // Setup filters and render with paginated data
                     renderPartyFilters();
-                    renderDeputyGrid();
+                    renderCurrentPage();
+                    setupLoadMoreButton();
 
                     // Start loading expense data in background for first batch
                     loadInitialExpenseData();
@@ -1014,7 +1055,7 @@
         }
 
         function renderPartyFilters() {
-            const parties = [...new Set(expenseData.map(d => d.partido))].sort();
+            const parties = [...new Set(allExpenseData.map(d => d.partido))].sort();
             const filtersEl = document.getElementById('party-filters');
 
             // Clear existing filters except "Todos"
@@ -1033,11 +1074,24 @@
             filtersEl.querySelector('[data-party="all"]').addEventListener('click', () => filterByParty('all'));
         }
 
-        function renderDeputyGrid(filteredData = expenseData) {
-            const gridEl = document.getElementById('deputy-grid');
-            gridEl.innerHTML = '';
+        function renderCurrentPage() {
+            const startIndex = currentPage * PAGE_SIZE;
+            const endIndex = startIndex + PAGE_SIZE;
+            const currentPageData = expenseData.slice(startIndex, endIndex);
 
-            filteredData.forEach(deputy => {
+            if (currentPage === 0) {
+                // First page - clear grid
+                document.getElementById('deputy-grid').innerHTML = '';
+            }
+
+            renderDeputiesOnPage(currentPageData);
+            updateLoadMoreButton();
+        }
+
+        function renderDeputiesOnPage(deputiesToRender) {
+            const gridEl = document.getElementById('deputy-grid');
+
+            deputiesToRender.forEach(deputy => {
                 const card = document.createElement('div');
                 card.className = 'deputy-card';
 
@@ -1074,6 +1128,43 @@
             });
         }
 
+        function setupLoadMoreButton() {
+            const loadMoreBtn = document.getElementById('load-more-btn');
+            const loadMoreContainer = document.getElementById('load-more-container');
+
+            loadMoreBtn.addEventListener('click', () => {
+                currentPage++;
+                renderCurrentPage();
+            });
+
+            // Show the button initially
+            loadMoreContainer.style.display = 'block';
+            updateLoadMoreButton();
+        }
+
+        function updateLoadMoreButton() {
+            const loadMoreBtn = document.getElementById('load-more-btn');
+            const loadMoreContainer = document.getElementById('load-more-container');
+
+            const totalShown = (currentPage + 1) * PAGE_SIZE;
+            const hasMore = totalShown < expenseData.length;
+
+            if (hasMore) {
+                loadMoreBtn.textContent = `Carregar Mais Deputados (${Math.min(PAGE_SIZE, expenseData.length - totalShown)} restantes)`;
+                loadMoreBtn.disabled = false;
+                loadMoreContainer.style.display = 'block';
+            } else {
+                loadMoreContainer.style.display = 'none';
+            }
+        }
+
+        function renderDeputyGrid(filteredData = expenseData) {
+            // Legacy function for backwards compatibility - now just resets pagination
+            expenseData = filteredData;
+            currentPage = 0;
+            renderCurrentPage();
+        }
+
         function filterByParty(party) {
             // Update active filter button
             document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -1081,12 +1172,14 @@
             });
             document.querySelector(`[data-party="${party}"]`).classList.add('active');
 
-            // Filter data
-            const filteredData = party === 'all' ?
-                expenseData :
-                expenseData.filter(d => d.partido === party);
+            // Filter data from original dataset
+            expenseData = party === 'all' ?
+                [...allExpenseData] :
+                allExpenseData.filter(d => d.partido === party);
 
-            renderDeputyGrid(filteredData);
+            // Reset pagination and show filtered results
+            currentPage = 0;
+            renderCurrentPage();
             trackExpenseInteraction('filter_party', party);
         }
 
