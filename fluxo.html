@@ -859,11 +859,15 @@
                 const svg = d3.select('#correlation-matrix');
                 const container = svg.node().parentNode;
                 const containerWidth = container.clientWidth - 40;
-                const margin = {top: 60, right: 60, bottom: 60, left: 160};
+                const isMobile = window.innerWidth <= 768;
+                const margin = isMobile ?
+                    {top: 40, right: 20, bottom: 80, left: 20} :
+                    {top: 60, right: 60, bottom: 60, left: 160};
                 const width = containerWidth - margin.left - margin.right;
-                const height = 350 - margin.top - margin.bottom;
+                const chartHeight = isMobile ? 400 : 350;
+                const height = chartHeight - margin.top - margin.bottom;
 
-                svg.attr('width', containerWidth).attr('height', 350);
+                svg.attr('width', containerWidth).attr('height', chartHeight);
                 svg.selectAll('*').remove();
 
                 const g = svg.append('g')
@@ -918,9 +922,9 @@
                     // Add count text
                     g.append('text')
                         .attr('x', cellX + cellSize/2)
-                        .attr('y', cellY + cellSize/2 - 10)
+                        .attr('y', cellY + cellSize/2 - (isMobile ? 5 : 10))
                         .attr('text-anchor', 'middle')
-                        .style('font-size', '18px')
+                        .style('font-size', isMobile ? '16px' : '18px')
                         .style('font-weight', 'bold')
                         .style('fill', 'white')
                         .style('text-shadow', '1px 1px 2px rgba(0,0,0,0.5)')
@@ -929,46 +933,88 @@
                     // Add percentage text
                     g.append('text')
                         .attr('x', cellX + cellSize/2)
-                        .attr('y', cellY + cellSize/2 + 15)
+                        .attr('y', cellY + cellSize/2 + (isMobile ? 12 : 15))
                         .attr('text-anchor', 'middle')
-                        .style('font-size', '14px')
+                        .style('font-size', isMobile ? '12px' : '14px')
                         .style('fill', 'white')
                         .style('text-shadow', '1px 1px 2px rgba(0,0,0,0.5)')
                         .text(`${d.percentage.toFixed(1)}%`);
                 });
 
-                // Add labels
-                g.append('text')
-                    .attr('x', -80)
-                    .attr('y', cellSize/2)
-                    .attr('text-anchor', 'middle')
-                    .style('font-size', '14px')
-                    .style('font-weight', 'bold')
-                    .text('Votou SIM');
+                // Add labels - mobile responsive positioning
+                if (!isMobile) {
+                    // Desktop labels
+                    g.append('text')
+                        .attr('x', -80)
+                        .attr('y', cellSize/2)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '14px')
+                        .style('font-weight', 'bold')
+                        .text('Votou SIM');
 
-                g.append('text')
-                    .attr('x', -80)
-                    .attr('y', cellSize + 20 + cellSize/2)
-                    .attr('text-anchor', 'middle')
-                    .style('font-size', '14px')
-                    .style('font-weight', 'bold')
-                    .text('Votou NÃO');
+                    g.append('text')
+                        .attr('x', -80)
+                        .attr('y', cellSize + 20 + cellSize/2)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '14px')
+                        .style('font-weight', 'bold')
+                        .text('Votou NÃO');
 
-                g.append('text')
-                    .attr('x', cellSize/2)
-                    .attr('y', -20)
-                    .attr('text-anchor', 'middle')
-                    .style('font-size', '14px')
-                    .style('font-weight', 'bold')
-                    .text('Defendeu\\nVoto Secreto');
+                    g.append('text')
+                        .attr('x', cellSize/2)
+                        .attr('y', -20)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '14px')
+                        .style('font-weight', 'bold')
+                        .text('Defendeu Voto Secreto');
 
-                g.append('text')
-                    .attr('x', cellSize + 20 + cellSize/2)
-                    .attr('y', -20)
-                    .attr('text-anchor', 'middle')
-                    .style('font-size', '14px')
-                    .style('font-weight', 'bold')
-                    .text('Contra\\nVoto Secreto');
+                    g.append('text')
+                        .attr('x', cellSize + 20 + cellSize/2)
+                        .attr('y', -20)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '14px')
+                        .style('font-weight', 'bold')
+                        .text('Contra Voto Secreto');
+                } else {
+                    // Mobile labels - positioned below chart
+                    const labelY = height + 20;
+
+                    g.append('text')
+                        .attr('x', cellSize/2)
+                        .attr('y', labelY)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '12px')
+                        .style('font-weight', 'bold')
+                        .style('fill', '#1e293b')
+                        .text('Defendeu Voto Secreto');
+
+                    g.append('text')
+                        .attr('x', cellSize + 20 + cellSize/2)
+                        .attr('y', labelY)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '12px')
+                        .style('font-weight', 'bold')
+                        .style('fill', '#1e293b')
+                        .text('Contra Voto Secreto');
+
+                    g.append('text')
+                        .attr('x', cellSize/2)
+                        .attr('y', labelY + 20)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '11px')
+                        .style('fill', '#10b981')
+                        .style('font-weight', 'bold')
+                        .text('↑ Votou SIM');
+
+                    g.append('text')
+                        .attr('x', cellSize/2)
+                        .attr('y', cellSize + 20 + cellSize/2 + 30)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '11px')
+                        .style('fill', '#ef4444')
+                        .style('font-weight', 'bold')
+                        .text('↓ Votou NÃO');
+                }
             }
 
             function createAttendanceChart() {
