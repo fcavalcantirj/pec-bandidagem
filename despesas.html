@@ -1312,7 +1312,7 @@
 
         function showMockChart() {
             const chartContainer = document.getElementById('spenders-chart');
-            console.log('=== SHOWING MOCK CHART ===');
+            console.log('=== SIMPLE TEST CHART ===');
 
             if (!chartContainer) {
                 console.error('Chart container not found for mock data!');
@@ -1333,12 +1333,20 @@
                 { nome: 'Adriano do Baldy', partido: 'PP', totalExpense: 6491.08 }
             ];
 
-            chartContainer.innerHTML = '';
-            chartContainer.style.minHeight = '300px';
-            chartContainer.style.display = 'block';
-            chartContainer.style.visibility = 'visible';
+            // SUPER SIMPLE TEST - just plain HTML
+            chartContainer.innerHTML = `
+                <div style="padding: 20px; background: white; border: 2px solid black; margin: 10px;">
+                    <h3 style="color: black; margin: 0 0 15px 0;">✅ CHART IS WORKING!</h3>
+                    <div style="background: red; height: 30px; width: 100%; margin: 10px 0; color: white; padding: 5px; box-sizing: border-box;">Aécio Neves - R$ 67,909.02</div>
+                    <div style="background: blue; height: 30px; width: 80%; margin: 10px 0; color: white; padding: 5px; box-sizing: border-box;">Adilson Barroso - R$ 44,307.60</div>
+                    <div style="background: green; height: 30px; width: 60%; margin: 10px 0; color: white; padding: 5px; box-sizing: border-box;">Adriana Ventura - R$ 18,287.27</div>
+                    <div style="background: orange; height: 30px; width: 40%; margin: 10px 0; color: white; padding: 5px; box-sizing: border-box;">Adolfo Viana - R$ 16,140.03</div>
+                    <div style="background: purple; height: 30px; width: 20%; margin: 10px 0; color: white; padding: 5px; box-sizing: border-box;">Afonso Hamm - R$ 9,082.88</div>
+                </div>
+            `;
 
-            const maxExpense = mockSpenders[0].totalExpense;
+            console.log('Simple test chart created - should be visible now!');
+            return; // Skip the complex chart logic for now
 
             mockSpenders.forEach((deputy, index) => {
                 const barContainer = document.createElement('div');
