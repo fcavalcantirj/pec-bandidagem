@@ -774,8 +774,6 @@
                     // Initialize stats with basic counts
                     updateStatsDisplay();
 
-                    // Show chart immediately with mock data to demonstrate functionality
-                    showMockChart();
 
                     // Initialize expense loading queue without blocking UI
                     initializeExpenseLoader();
@@ -1096,94 +1094,160 @@
         }
 
         function renderExpenseChart() {
+            console.log('📊 Starting renderExpenseChart (PIE CHART)');
             const chartEl = document.getElementById('expense-chart');
             chartEl.innerHTML = '';
 
-            const margin = { top: 20, right: 30, bottom: 80, left: 100 };
-            const width = chartEl.offsetWidth - margin.left - margin.right;
-            const height = 400 - margin.top - margin.bottom;
+            if (!allExpenseData || allExpenseData.length === 0) {
+                console.log('❌ No expense data available for pie chart');
+                chartEl.innerHTML = '<p style="text-align: center; padding: 2rem;">Dados não disponíveis</p>';
+                return;
+            }
 
+            // Calculate expense distribution by category
+            const categoryData = {};
+            let totalAmount = 0;
+
+            allExpenseData.forEach(deputy => {
+                if (deputy.expenses && deputy.expenses.length > 0) {
+                    deputy.expenses.forEach(expense => {
+                        const category = expense.tipoDespesa || 'Outros';
+                        const value = parseFloat(expense.valorLiquido) || 0;
+
+                        if (!categoryData[category]) {
+                            categoryData[category] = 0;
+                        }
+                        categoryData[category] += value;
+                        totalAmount += value;
+                    });
+                }
+            });
+
+            // Convert to array and sort by value
+            const pieData = Object.entries(categoryData)
+                .map(([category, value]) => ({
+                    category,
+                    value,
+                    percentage: (value / totalAmount * 100).toFixed(1)
+                }))
+                .sort((a, b) => b.value - a.value)
+                .slice(0, 8); // Top 8 categories
+
+            console.log('📊 Pie chart data:', pieData);
+
+            // Chart dimensions
+            const width = chartEl.offsetWidth;
+            const height = 400;
+            const margin = 40;
+            const radius = Math.min(width, height) / 2 - margin;
+
+            // Create SVG
             const svg = d3.select(chartEl)
                 .append('svg')
-                .attr('width', width + margin.left + margin.right)
-                .attr('height', height + margin.top + margin.bottom);
+                .attr('width', width)
+                .attr('height', height);
 
             const g = svg.append('g')
-                .attr('transform', `translate(${margin.left},${margin.top})`);
+                .attr('transform', `translate(${width/2}, ${height/2})`);
 
-            // Sort data by expense amount
-            const sortedData = [...expenseData].sort((a, b) => b.totalExpense - a.totalExpense);
+            // Color scale
+            const color = d3.scaleOrdinal()
+                .domain(pieData.map(d => d.category))
+                .range(['#4f46e5', '#7c3aed', '#ec4899', '#ef4444', '#f97316', '#eab308', '#22c55e', '#06b6d4']);
 
-            // Scales
-            const xScale = d3.scaleBand()
-                .domain(sortedData.map(d => d.nome.split(' ')[0]))
-                .range([0, width])
-                .padding(0.1);
+            // Create pie layout
+            const pie = d3.pie()
+                .value(d => d.value)
+                .sort(null);
 
-            const yScale = d3.scaleLinear()
-                .domain([0, d3.max(sortedData, d => d.totalExpense)])
-                .range([height, 0]);
+            // Create arc generator
+            const arc = d3.arc()
+                .innerRadius(0)
+                .outerRadius(radius);
 
-            // Bars
-            g.selectAll('.bar')
-                .data(sortedData)
-                .enter().append('rect')
-                .attr('class', 'bar')
-                .attr('x', d => xScale(d.nome.split(' ')[0]))
-                .attr('width', xScale.bandwidth())
-                .attr('y', d => yScale(d.totalExpense))
-                .attr('height', d => height - yScale(d.totalExpense))
-                .attr('fill', '#4f46e5')
-                .attr('opacity', 0.8)
+            // Create pie slices
+            const slices = g.selectAll('.slice')
+                .data(pie(pieData))
+                .enter()
+                .append('g')
+                .attr('class', 'slice');
+
+            // Add pie segments
+            slices.append('path')
+                .attr('d', arc)
+                .attr('fill', d => color(d.data.category))
+                .attr('stroke', 'white')
+                .attr('stroke-width', 2)
+                .style('opacity', 0.9)
                 .on('mouseover', function(event, d) {
-                    d3.select(this).attr('opacity', 1);
+                    d3.select(this).style('opacity', 1);
 
                     // Show tooltip
                     const tooltip = d3.select('body').append('div')
                         .attr('class', 'tooltip')
                         .style('position', 'absolute')
-                        .style('background', 'rgba(0,0,0,0.8)')
+                        .style('background', 'rgba(0,0,0,0.9)')
                         .style('color', 'white')
-                        .style('padding', '10px')
-                        .style('border-radius', '5px')
+                        .style('padding', '12px')
+                        .style('border-radius', '8px')
                         .style('pointer-events', 'none')
-                        .style('font-size', '12px')
+                        .style('font-size', '14px')
+                        .style('box-shadow', '0 4px 12px rgba(0,0,0,0.3)')
                         .html(`
-                            <strong>${d.nome}</strong><br>
-                            ${d.partido} - ${d.uf}<br>
-                            Gasto: ${formatCurrency(d.totalExpense)}<br>
-                            Despesas: ${d.expenseCount}
+                            <strong>${d.data.category}</strong><br>
+                            Valor: ${formatCurrency(d.data.value)}<br>
+                            Porcentagem: ${d.data.percentage}%
                         `);
 
                     tooltip.style('left', (event.pageX + 10) + 'px')
                            .style('top', (event.pageY - 10) + 'px');
                 })
                 .on('mouseout', function() {
-                    d3.select(this).attr('opacity', 0.8);
+                    d3.select(this).style('opacity', 0.9);
                     d3.selectAll('.tooltip').remove();
                 });
 
-            // Axes
-            g.append('g')
-                .attr('transform', `translate(0,${height})`)
-                .call(d3.axisBottom(xScale))
-                .selectAll('text')
-                .style('text-anchor', 'end')
-                .attr('dx', '-.8em')
-                .attr('dy', '.15em')
-                .attr('transform', 'rotate(-45)');
+            // Add labels
+            slices.append('text')
+                .attr('transform', d => `translate(${arc.centroid(d)})`)
+                .attr('text-anchor', 'middle')
+                .style('font-size', '12px')
+                .style('font-weight', 'bold')
+                .style('fill', 'white')
+                .style('text-shadow', '1px 1px 2px rgba(0,0,0,0.7)')
+                .text(d => d.data.percentage + '%');
 
-            g.append('g')
-                .call(d3.axisLeft(yScale).tickFormat(d => formatCurrency(d)));
+            // Add legend
+            const legend = svg.append('g')
+                .attr('class', 'legend')
+                .attr('transform', `translate(20, 20)`);
 
-            // Labels
-            g.append('text')
-                .attr('transform', 'rotate(-90)')
-                .attr('y', 0 - margin.left)
-                .attr('x', 0 - (height / 2))
-                .attr('dy', '1em')
-                .style('text-anchor', 'middle')
-                .text('Valor Gasto (R$)');
+            const legendItems = legend.selectAll('.legend-item')
+                .data(pieData.slice(0, 6)) // Show top 6 in legend
+                .enter()
+                .append('g')
+                .attr('class', 'legend-item')
+                .attr('transform', (d, i) => `translate(0, ${i * 25})`);
+
+            legendItems.append('rect')
+                .attr('width', 18)
+                .attr('height', 18)
+                .attr('fill', d => color(d.category));
+
+            legendItems.append('text')
+                .attr('x', 25)
+                .attr('y', 9)
+                .attr('dy', '0.35em')
+                .style('font-size', '12px')
+                .style('font-weight', '500')
+                .text(d => {
+                    const maxLength = 25;
+                    return d.category.length > maxLength ?
+                           d.category.substring(0, maxLength) + '...' :
+                           d.category;
+                });
+
+            console.log('✅ Pie chart created successfully');
         }
 
         function renderPartyFilters() {
@@ -1310,86 +1374,6 @@
             }
         }
 
-        function showMockChart() {
-            const chartContainer = document.getElementById('spenders-chart');
-            console.log('=== SIMPLE TEST CHART ===');
-
-            if (!chartContainer) {
-                console.error('Chart container not found for mock data!');
-                return;
-            }
-
-            // Mock data based on realistic Brazilian deputy expenses
-            const mockSpenders = [
-                { nome: 'Aécio Neves', partido: 'PSDB', totalExpense: 67909.02 },
-                { nome: 'Adilson Barroso', partido: 'PL', totalExpense: 44307.60 },
-                { nome: 'Adriana Ventura', partido: 'Novo', totalExpense: 18287.27 },
-                { nome: 'Adolfo Viana', partido: 'PSDB', totalExpense: 16140.03 },
-                { nome: 'Afonso Hamm', partido: 'PP', totalExpense: 9082.88 },
-                { nome: 'Afonso Motta', partido: 'PDT', totalExpense: 8592.66 },
-                { nome: 'Acácio Favacho', partido: 'MDB', totalExpense: 8390.83 },
-                { nome: 'AJ Albuquerque', partido: 'PP', totalExpense: 8380.54 },
-                { nome: 'Aguinaldo Ribeiro', partido: 'PP', totalExpense: 6856.05 },
-                { nome: 'Adriano do Baldy', partido: 'PP', totalExpense: 6491.08 }
-            ];
-
-            // SUPER SIMPLE TEST - just plain HTML
-            chartContainer.innerHTML = `
-                <div style="padding: 20px; background: white; border: 2px solid black; margin: 10px;">
-                    <h3 style="color: black; margin: 0 0 15px 0;">✅ CHART IS WORKING!</h3>
-                    <div style="background: red; height: 30px; width: 100%; margin: 10px 0; color: white; padding: 5px; box-sizing: border-box;">Aécio Neves - R$ 67,909.02</div>
-                    <div style="background: blue; height: 30px; width: 80%; margin: 10px 0; color: white; padding: 5px; box-sizing: border-box;">Adilson Barroso - R$ 44,307.60</div>
-                    <div style="background: green; height: 30px; width: 60%; margin: 10px 0; color: white; padding: 5px; box-sizing: border-box;">Adriana Ventura - R$ 18,287.27</div>
-                    <div style="background: orange; height: 30px; width: 40%; margin: 10px 0; color: white; padding: 5px; box-sizing: border-box;">Adolfo Viana - R$ 16,140.03</div>
-                    <div style="background: purple; height: 30px; width: 20%; margin: 10px 0; color: white; padding: 5px; box-sizing: border-box;">Afonso Hamm - R$ 9,082.88</div>
-                </div>
-            `;
-
-            console.log('Simple test chart created - should be visible now!');
-            return; // Skip the complex chart logic for now
-
-            mockSpenders.forEach((deputy, index) => {
-                const barContainer = document.createElement('div');
-                barContainer.style.cssText = `
-                    display: flex !important;
-                    align-items: center;
-                    margin-bottom: 12px;
-                    font-size: 0.9rem;
-                    padding: 8px;
-                    background: rgba(255, 255, 255, 0.8) !important;
-                    border-radius: 8px;
-                    border: 1px solid #e2e8f0;
-                    min-height: 40px;
-                `;
-
-                const percentage = (deputy.totalExpense / maxExpense) * 100;
-
-                barContainer.innerHTML = `
-                    <div style="width: 25%; padding-right: 12px; font-weight: 500; color: #0f172a;">${deputy.nome.split(' ').slice(0, 2).join(' ')}</div>
-                    <div style="width: 20%; padding-right: 8px; font-size: 0.8rem; color: #64748b;">${deputy.partido}</div>
-                    <div style="width: 35%; background: #e2e8f0; border-radius: 6px; height: 24px; position: relative;">
-                        <div style="width: ${percentage}%; background: linear-gradient(135deg, #ef4444, #dc2626); height: 100%; border-radius: 6px; transition: width 0.3s ease;"></div>
-                    </div>
-                    <div style="width: 20%; padding-left: 12px; text-align: right; font-weight: 600; color: #0f172a; font-size: 0.9rem;">
-                        R$ ${deputy.totalExpense.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </div>
-                `;
-
-                chartContainer.appendChild(barContainer);
-            });
-
-            console.log('Mock chart created with', mockSpenders.length, 'bars');
-            console.log('Chart container now has', chartContainer.children.length, 'children');
-
-            // Clean styling for chart
-            chartContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
-            chartContainer.style.border = '1px solid #e2e8f0';
-
-            // Flash effect to make it obvious
-            setTimeout(() => {
-                chartContainer.style.backgroundColor = 'rgba(255,255,255,0.1)';
-            }, 2000);
-        }
 
         function updateStatsDisplay() {
             const totalDeputies = allExpenseData.length;
@@ -1527,10 +1511,6 @@
                 chartContainer.innerHTML = '<div style="text-align: center; color: #dc2626; padding: 2rem; background: rgba(255,255,255,0.8); border-radius: 8px;">Nenhum dado de despesas disponível</div>';
             }
 
-            // Clean chart styling
-            chartContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
-            chartContainer.style.border = '1px solid #e2e8f0';
-            chartContainer.style.borderRadius = '8px';
 
             console.log('Final chart container HTML:', chartContainer.innerHTML.substring(0, 200) + '...');
             console.log('Final container children count:', chartContainer.children.length);
