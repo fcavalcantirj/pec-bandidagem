@@ -332,6 +332,60 @@
             font-size: 1.1rem;
         }
 
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 3rem 2rem;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid #4f46e5;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .progress-bar {
+            width: 100%;
+            max-width: 400px;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .loading-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #4f46e5;
+            margin-bottom: 0.5rem;
+        }
+
+        .loading-details {
+            font-size: 0.9rem;
+            color: #64748b;
+            text-align: center;
+            line-height: 1.5;
+        }
+
         .error {
             text-align: center;
             padding: 2rem;
@@ -465,7 +519,16 @@
                 <button class="filter-btn active" data-party="all">Todos</button>
             </div>
 
-            <div id="loading" class="loading">Carregando dados das despesas...</div>
+            <div id="loading" class="loading-container">
+                <div class="spinner"></div>
+                <div class="loading-text">Carregando Dados das Despesas</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="loading-details" id="loading-details">
+                    Iniciando carregamento dos dados...
+                </div>
+            </div>
             <div id="error" class="error" style="display: none;"></div>
 
             <div class="deputy-grid" id="deputy-grid"></div>
@@ -481,10 +544,28 @@
         const API_BASE = 'https://dadosabertos.camara.leg.br/api/v2';
         const currentYear = new Date().getFullYear();
 
+        function updateLoadingProgress(current, total, message) {
+            const progressFill = document.getElementById('progress-fill');
+            const loadingDetails = document.getElementById('loading-details');
+
+            if (progressFill) {
+                const percentage = (current / total) * 100;
+                progressFill.style.width = `${percentage}%`;
+            }
+
+            if (loadingDetails) {
+                loadingDetails.textContent = message;
+            }
+        }
+
         async function loadDeputyData() {
             try {
+                updateLoadingProgress(0, 100, 'Carregando dados dos deputados...');
+
                 const response = await fetch('data.js');
                 const text = await response.text();
+
+                updateLoadingProgress(25, 100, 'Processando dados dos deputados...');
 
                 // Extract VISUALIZATION_DATA from the JavaScript file
                 const dataMatch = text.match(/const\s+VISUALIZATION_DATA\s*=\s*(\{[\s\S]*?\});/);
@@ -505,6 +586,7 @@
                         });
                     }
 
+                    updateLoadingProgress(50, 100, `${deputyData.length} deputados carregados. Buscando dados de despesas...`);
                     console.log(`Loaded ${deputyData.length} deputies`);
                     await loadExpenseData();
                 } else {
@@ -524,7 +606,12 @@
                 // Load expenses for a sample of deputies (to avoid rate limiting)
                 const sampleDeputies = deputyData.slice(0, 15);
 
-                for (const deputy of sampleDeputies) {
+                for (let i = 0; i < sampleDeputies.length; i++) {
+                    const deputy = sampleDeputies[i];
+                    const progress = 50 + ((i / sampleDeputies.length) * 50);
+
+                    updateLoadingProgress(progress, 100, `Processando ${deputy.deputado} (${i + 1}/${sampleDeputies.length})...`);
+
                     try {
                         // First, search for the deputy by name to get their ID
                         const searchResponse = await fetch(`${API_BASE}/deputados?nome=${encodeURIComponent(deputy.deputado)}&ordem=ASC&ordenarPor=nome`);
@@ -580,6 +667,18 @@
                                     expenseCount: 0
                                 });
                             }
+                        } else {
+                            // Add deputy with zero expenses if search API fails
+                            expenseData.push({
+                                nome: deputy.deputado,
+                                partido: deputy.partido,
+                                uf: deputy.estado,
+                                voto: deputy.voto,
+                                id: null,
+                                expenses: [],
+                                totalExpense: 0,
+                                expenseCount: 0
+                            });
                         }
 
                         // Small delay to avoid rate limiting
@@ -599,6 +698,11 @@
                         });
                     }
                 }
+
+                updateLoadingProgress(100, 100, 'Finalizando carregamento...');
+
+                // Small delay to show completion
+                await new Promise(resolve => setTimeout(resolve, 500));
 
                 loadingEl.style.display = 'none';
                 renderExpenseData();
