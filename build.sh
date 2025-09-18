@@ -61,6 +61,7 @@ build() {
     cp estados.html "$DIST_DIR/"
     cp fluxo.html "$DIST_DIR/"
     cp relatorio.html "$DIST_DIR/"
+    cp despesas.html "$DIST_DIR/"
     cp data.js "$DIST_DIR/"
     cp analytics.js "$DIST_DIR/"
     cp version.js "$DIST_DIR/"
@@ -77,7 +78,7 @@ build() {
 
     # Verify all files copied correctly
     log_info "Verifying build..."
-    local required_files=("index.html" "deputados.html" "partidos.html" "estados.html" "fluxo.html" "relatorio.html" "data.js" "analytics.js" "version.js")
+    local required_files=("index.html" "deputados.html" "partidos.html" "estados.html" "fluxo.html" "relatorio.html" "despesas.html" "data.js" "analytics.js" "version.js")
 
     for file in "${required_files[@]}"; do
         if [ -f "$DIST_DIR/$file" ]; then

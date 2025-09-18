@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Despesas dos Deputados - PEC da Bandidagem</title>
+    <meta name="description" content="Análise completa das despesas parlamentares dos deputados que votaram na PEC da Bandidagem. Transparência total dos gastos públicos com dados oficiais da Câmara dos Deputados.">
+    <meta name="keywords" content="despesas parlamentares, gastos deputados, transparência, PEC bandidagem, cota parlamentar, gastos públicos">
+
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Despesas dos Deputados - PEC da Bandidagem">
+    <meta property="og:description" content="Análise completa das despesas parlamentares dos deputados que votaram na PEC da Bandidagem.">
+    <meta property="og:image" content="https://pec-bandidagem.vercel.app/og-despesas.jpg">
+    <meta property="og:url" content="https://pec-bandidagem.vercel.app/despesas.html">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Despesas dos Deputados - PEC da Bandidagem">
+    <meta name="twitter:description" content="Análise completa das despesas parlamentares dos deputados que votaram na PEC da Bandidagem.">
+    <meta name="twitter:image" content="https://pec-bandidagem.vercel.app/og-despesas.jpg">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P47CK1TDL8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-P47CK1TDL8');
+    </script>
+    <script src="analytics.js"></script>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #1a202c;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: -0.025em;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 600;
+        }
+
+        .navigation {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 255, 255, 0.9);
+            color: #4f46e5;
+            transform: translateY(-2px);
+        }
+
+        .content-wrapper {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .filters-section {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+
+        .filter-input {
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: #4f46e5;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .filter-btn {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover {
+            background: #4338ca;
+            transform: translateY(-1px);
+        }
+
+        .filter-btn.active {
+            background: #dc2626;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid #4f46e5;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #4f46e5;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .chart-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .deputy-expenses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .deputy-expense-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid #10b981;
+            transition: all 0.3s ease;
+        }
+
+        .deputy-expense-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .deputy-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .deputy-photo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #e5e7eb;
+        }
+
+        .deputy-info h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.25rem;
+        }
+
+        .deputy-meta {
+            color: #64748b;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .expense-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .expense-item {
+            background: #f8fafc;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border-left: 3px solid #4f46e5;
+        }
+
+        .expense-amount {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .expense-category {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 0.25rem;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            max-width: 300px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .error-message {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 3rem 2rem 2rem;
+            margin-top: 4rem;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #f59e0b;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section p, .footer-section a {
+            color: #d1d5db;
+            text-decoration: none;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .footer-section a:hover {
+            color: #f59e0b;
+            text-decoration: underline;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #374151;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .deputy-expenses-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .expense-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-container {
+                padding: 1rem;
+            }
+
+            .chart-title {
+                font-size: 1.25rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav-link {
+                width: 200px;
+                text-align: center;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+
+        /* GitHub ribbon styles */
+        .github-corner {
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .github-corner:hover .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
+        }
+
+        @keyframes octocat-wave {
+            0%, 100% { transform: rotate(0); }
+            20%, 60% { transform: rotate(-25deg); }
+            40%, 80% { transform: rotate(10deg); }
+        }
+
+        @media (max-width: 500px) {
+            .github-corner:hover .octo-arm {
+                animation: none;
+            }
+            .github-corner .octo-arm {
+                animation: octocat-wave 560ms ease-in-out;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- GitHub Corner -->
+    <a href="https://github.com/fcavalcantirj/pec-bandidagem" class="github-corner" aria-label="View source on GitHub" target="_blank">
+        <svg width="80" height="80" viewBox="0 0 250 250" style="fill:#fff; color:#4f46e5; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
+            <path d="m0,0 0,250 250,0 0,-250z" fill="currentColor"/>
+            <path d="m0,0 115,115 0,0 142,-142z" fill="#fff"/>
+            <path d="m128.3,109.0 c113.8,99.7 119.0,89.6 119.0,89.6 0,0 7.9,-14.3 2.1,-21.0 0,0 -12.2,-11.0 -9.7,-24.0 0,0 4.9,-24.0 -10.5,-24.0 0,0 -11.0,-7.0 -23.0,-7.0 0,0 -15.9,-1.4 -25.0,11.0 0,0 -6.2,11.0 -10.8,21.0" fill="#4f46e5" style="transform-origin: 130px 106px;" class="octo-arm"/>
+            <path d="m115.0,115.0 c114.9,99.7 119.0,89.6 119.0,89.6 0,0 7.9,-14.3 2.1,-21.0 0,0 -12.2,-11.0 -9.7,-24.0 0,0 4.9,-24.0 -10.5,-24.0 0,0 -11.0,-7.0 -23.0,-7.0 0,0 -15.9,-1.4 -25.0,11.0 0,0 -5.2,10.0 -10.8,21.0" fill="#4f46e5" style="transform-origin: 130px 106px;" class="octo-body"/>
+        </svg>
+    </a>
+
+    <div class="container">
+        <div class="header">
+            <h1>💰 Despesas dos Deputados</h1>
+            <p>Transparência total dos gastos parlamentares na PEC da Bandidagem</p>
+        </div>
+
+        <div class="navigation">
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">🏠 Início</a>
+                <a href="deputados.html" class="nav-link">👥 Deputados</a>
+                <a href="partidos.html" class="nav-link">🏛️ Partidos</a>
+                <a href="estados.html" class="nav-link">🗺️ Estados</a>
+                <a href="fluxo.html" class="nav-link">🔄 Fluxo</a>
+                <a href="despesas.html" class="nav-link active">💰 Despesas</a>
+                <a href="relatorio.html" class="nav-link">📊 Relatório</a>
+            </div>
+        </div>
+
+        <div class="content-wrapper">
+            <!-- Filters Section -->
+            <div class="filters-section">
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label for="yearFilter">Ano</label>
+                        <select id="yearFilter" class="filter-input">
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="monthFilter">Mês</label>
+                        <select id="monthFilter" class="filter-input">
+                            <option value="">Todos os meses</option>
+                            <option value="1">Janeiro</option>
+                            <option value="2">Fevereiro</option>
+                            <option value="3">Março</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Maio</option>
+                            <option value="6">Junho</option>
+                            <option value="7">Julho</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Setembro</option>
+                            <option value="10">Outubro</option>
+                            <option value="11">Novembro</option>
+                            <option value="12">Dezembro</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="partyFilter">Partido</label>
+                        <select id="partyFilter" class="filter-input">
+                            <option value="">Todos os partidos</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="stateFilter">Estado</label>
+                        <select id="stateFilter" class="filter-input">
+                            <option value="">Todos os estados</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-vote="all">Todos os Deputados</button>
+                    <button class="filter-btn" data-vote="sim">Votaram SIM</button>
+                    <button class="filter-btn" data-vote="nao">Votaram NÃO</button>
+                    <button class="filter-btn" data-vote="mudaram">Mudaram Voto</button>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div class="loading" id="loadingState">
+                <div>🔄 Carregando dados de despesas...</div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid" id="statsGrid" style="display: none;">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalDeputies">-</div>
+                    <div class="stat-label">Deputados Analisados</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalExpenses">-</div>
+                    <div class="stat-label">Gasto Total</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="avgExpenses">-</div>
+                    <div class="stat-label">Média por Deputado</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="topCategory">-</div>
+                    <div class="stat-label">Categoria Mais Cara</div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="chart-container" id="categoryChart" style="display: none;">
+                <div class="chart-title">💼 Gastos por Categoria</div>
+                <div id="categoryChartSvg"></div>
+            </div>
+
+            <div class="chart-container" id="partyChart" style="display: none;">
+                <div class="chart-title">🏛️ Gastos por Partido vs Voto na PEC</div>
+                <div id="partyChartSvg"></div>
+            </div>
+
+            <!-- Deputy Expenses Grid -->
+            <div class="deputy-expenses-grid" id="deputyExpensesGrid" style="display: none;"></div>
+
+            <!-- Error Message -->
+            <div class="error-message" id="errorMessage" style="display: none;">
+                ❌ Erro ao carregar dados de despesas. Tente novamente em alguns momentos.
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>📊 Sobre o Projeto</h3>
+                <p>
+                    Análise transparente das despesas parlamentares dos deputados que votaram na PEC da Bandidagem.
+                    Dados oficiais em tempo real da API da Câmara dos Deputados.
+                </p>
+            </div>
+            <div class="footer-section">
+                <h3>🔗 Links Úteis</h3>
+                <div class="footer-links">
+                    <a href="index.html">Página Inicial</a>
+                    <a href="deputados.html">Lista de Deputados</a>
+                    <a href="partidos.html">Análise por Partidos</a>
+                    <a href="estados.html">Análise por Estados</a>
+                    <a href="relatorio.html">Relatório Completo</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>📊 Fontes de Dados</h3>
+                <div class="footer-links">
+                    <a href="https://dadosabertos.camara.leg.br" target="_blank">API Dados Abertos da Câmara</a>
+                    <a href="https://www2.camara.leg.br" target="_blank">Portal da Câmara dos Deputados</a>
+                    <a href="https://github.com/fcavalcantirj/pec-bandidagem" target="_blank">Código Fonte no GitHub</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>⚖️ Transparência</h3>
+                <p>
+                    Este projeto promove transparência no gasto público e accountability democrática.
+                    Todos os dados são de fontes oficiais e públicas.
+                </p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>
+                💰 Despesas dos Deputados - PEC da Bandidagem |
+                Desenvolvido com 🔍 para transparência política |
+                📅 Dados atualizados em tempo real
+            </p>
+        </div>
+    </div>
+
+    <!-- Tooltip -->
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        // Global variables
+        let allDeputiesData = [];
+        let expensesData = new Map();
+        let currentFilters = {
+            year: '2024',
+            month: '',
+            party: '',
+            state: '',
+            vote: 'all'
+        };
+
+        // Deputy data from existing site
+        const deputyVotingData = [];
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeFilters();
+            loadDeputyData();
+        });
+
+        function initializeFilters() {
+            // Add event listeners to filters
+            document.getElementById('yearFilter').addEventListener('change', (e) => {
+                currentFilters.year = e.target.value;
+                refreshData();
+            });
+
+            document.getElementById('monthFilter').addEventListener('change', (e) => {
+                currentFilters.month = e.target.value;
+                refreshData();
+            });
+
+            document.getElementById('partyFilter').addEventListener('change', (e) => {
+                currentFilters.party = e.target.value;
+                filterDeputyGrid();
+            });
+
+            document.getElementById('stateFilter').addEventListener('change', (e) => {
+                currentFilters.state = e.target.value;
+                filterDeputyGrid();
+            });
+
+            // Vote filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    currentFilters.vote = e.target.dataset.vote;
+                    filterDeputyGrid();
+                });
+            });
+        }
+
+        async function loadDeputyData() {
+            try {
+                // Load deputy data from existing data.js file
+                const response = await fetch('data.js');
+                const text = await response.text();
+
+                // Extract data from the JavaScript file
+                const dataMatch = text.match(/const deputiesData = (\[.*?\]);/s);
+                if (dataMatch) {
+                    allDeputiesData = JSON.parse(dataMatch[1]);
+                    populateFilterOptions();
+                    await loadExpensesData();
+                } else {
+                    throw new Error('Could not parse deputy data');
+                }
+            } catch (error) {
+                console.error('Error loading deputy data:', error);
+                showError();
+            }
+        }
+
+        function populateFilterOptions() {
+            // Populate party filter
+            const parties = [...new Set(allDeputiesData.map(d => d.party))].sort();
+            const partyFilter = document.getElementById('partyFilter');
+            parties.forEach(party => {
+                const option = document.createElement('option');
+                option.value = party;
+                option.textContent = party;
+                partyFilter.appendChild(option);
+            });
+
+            // Populate state filter
+            const states = [...new Set(allDeputiesData.map(d => d.state))].sort();
+            const stateFilter = document.getElementById('stateFilter');
+            states.forEach(state => {
+                const option = document.createElement('option');
+                option.value = state;
+                option.textContent = state;
+                stateFilter.appendChild(option);
+            });
+        }
+
+        async function loadExpensesData() {
+            document.getElementById('loadingState').style.display = 'flex';
+
+            try {
+                // Sample with first 20 deputies for demo (in production, you'd batch this)
+                const sampleDeputies = allDeputiesData.slice(0, 20);
+
+                for (const deputy of sampleDeputies) {
+                    try {
+                        const expenses = await fetchDeputyExpenses(deputy.id, currentFilters.year, currentFilters.month);
+                        expensesData.set(deputy.id, expenses);
+                    } catch (error) {
+                        console.log(`Failed to load expenses for ${deputy.name}:`, error);
+                        expensesData.set(deputy.id, []);
+                    }
+                }
+
+                renderDashboard();
+                trackVisualizationInteraction('expenses_dashboard', 'data_loaded', `${sampleDeputies.length} deputies`);
+            } catch (error) {
+                console.error('Error loading expenses:', error);
+                showError();
+            } finally {
+                document.getElementById('loadingState').style.display = 'none';
+            }
+        }
+
+        async function fetchDeputyExpenses(deputyId, year, month = '') {
+            const monthParam = month ? `&mes=${month}` : '';
+            const url = `https://dadosabertos.camara.leg.br/api/v2/deputados/${deputyId}/despesas?ano=${year}${monthParam}&itens=100`;
+
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data.dados || [];
+        }
+
+        function renderDashboard() {
+            calculateAndDisplayStats();
+            renderCategoryChart();
+            renderPartyChart();
+            renderDeputyGrid();
+
+            // Show all sections
+            document.getElementById('statsGrid').style.display = 'grid';
+            document.getElementById('categoryChart').style.display = 'block';
+            document.getElementById('partyChart').style.display = 'block';
+            document.getElementById('deputyExpensesGrid').style.display = 'grid';
+        }
+
+        function calculateAndDisplayStats() {
+            const filteredDeputies = getFilteredDeputies();
+            let totalExpenses = 0;
+            let categoryTotals = new Map();
+
+            filteredDeputies.forEach(deputy => {
+                const expenses = expensesData.get(deputy.id) || [];
+                expenses.forEach(expense => {
+                    totalExpenses += expense.valorLiquido || 0;
+                    const category = expense.tipoDespesa;
+                    categoryTotals.set(category, (categoryTotals.get(category) || 0) + expense.valorLiquido);
+                });
+            });
+
+            const avgExpenses = filteredDeputies.length > 0 ? totalExpenses / filteredDeputies.length : 0;
+            const topCategory = categoryTotals.size > 0 ?
+                [...categoryTotals.entries()].sort((a, b) => b[1] - a[1])[0][0] : 'N/A';
+
+            document.getElementById('totalDeputies').textContent = filteredDeputies.length;
+            document.getElementById('totalExpenses').textContent = formatCurrency(totalExpenses);
+            document.getElementById('avgExpenses').textContent = formatCurrency(avgExpenses);
+            document.getElementById('topCategory').textContent = getShortCategoryName(topCategory);
+        }
+
+        function renderCategoryChart() {
+            const container = document.getElementById('categoryChartSvg');
+            container.innerHTML = '';
+
+            const filteredDeputies = getFilteredDeputies();
+            let categoryTotals = new Map();
+
+            filteredDeputies.forEach(deputy => {
+                const expenses = expensesData.get(deputy.id) || [];
+                expenses.forEach(expense => {
+                    const category = getShortCategoryName(expense.tipoDespesa);
+                    categoryTotals.set(category, (categoryTotals.get(category) || 0) + expense.valorLiquido);
+                });
+            });
+
+            if (categoryTotals.size === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #64748b; padding: 2rem;">Nenhum dado de despesas disponível para os filtros selecionados.</p>';
+                return;
+            }
+
+            const data = [...categoryTotals.entries()]
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10); // Top 10 categories
+
+            const margin = {top: 20, right: 30, bottom: 120, left: 80};
+            const width = Math.min(800, window.innerWidth - 100) - margin.left - margin.right;
+            const height = 400 - margin.bottom - margin.top;
+
+            const svg = d3.select(container)
+                .append('svg')
+                .attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom);
+
+            const g = svg.append('g')
+                .attr('transform', `translate(${margin.left},${margin.top})`);
+
+            const x = d3.scaleBand()
+                .domain(data.map(d => d[0]))
+                .range([0, width])
+                .padding(0.1);
+
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(data, d => d[1])])
+                .range([height, 0]);
+
+            // Add bars
+            g.selectAll('.bar')
+                .data(data)
+                .enter().append('rect')
+                .attr('class', 'bar')
+                .attr('x', d => x(d[0]))
+                .attr('width', x.bandwidth())
+                .attr('y', height)
+                .attr('height', 0)
+                .attr('fill', '#4f46e5')
+                .attr('opacity', 0.8)
+                .on('mouseover', function(event, d) {
+                    const tooltip = document.getElementById('tooltip');
+                    tooltip.innerHTML = `
+                        <strong>${d[0]}</strong><br/>
+                        Total: ${formatCurrency(d[1])}
+                    `;
+                    tooltip.style.opacity = '1';
+                    tooltip.style.left = (event.pageX + 10) + 'px';
+                    tooltip.style.top = (event.pageY - 10) + 'px';
+                })
+                .on('mouseout', function() {
+                    document.getElementById('tooltip').style.opacity = '0';
+                })
+                .transition()
+                .duration(800)
+                .attr('y', d => y(d[1]))
+                .attr('height', d => height - y(d[1]));
+
+            // Add x axis
+            g.append('g')
+                .attr('transform', `translate(0,${height})`)
+                .call(d3.axisBottom(x))
+                .selectAll('text')
+                .style('text-anchor', 'end')
+                .attr('dx', '-.8em')
+                .attr('dy', '.15em')
+                .attr('transform', 'rotate(-45)')
+                .style('font-size', '12px');
+
+            // Add y axis
+            g.append('g')
+                .call(d3.axisLeft(y).tickFormat(d => formatCurrency(d)));
+        }
+
+        function renderPartyChart() {
+            const container = document.getElementById('partyChartSvg');
+            container.innerHTML = '';
+
+            // Group by party and vote
+            const partyData = new Map();
+
+            allDeputiesData.forEach(deputy => {
+                const expenses = expensesData.get(deputy.id) || [];
+                const totalExpenses = expenses.reduce((sum, exp) => sum + (exp.valorLiquido || 0), 0);
+
+                if (!partyData.has(deputy.party)) {
+                    partyData.set(deputy.party, {
+                        sim: { count: 0, totalExpenses: 0 },
+                        nao: { count: 0, totalExpenses: 0 }
+                    });
+                }
+
+                const voteType = deputy.round2_vote === 'Sim' ? 'sim' : 'nao';
+                partyData.get(deputy.party)[voteType].count++;
+                partyData.get(deputy.party)[voteType].totalExpenses += totalExpenses;
+            });
+
+            const data = [...partyData.entries()]
+                .map(([party, votes]) => ({
+                    party,
+                    simAvg: votes.sim.count > 0 ? votes.sim.totalExpenses / votes.sim.count : 0,
+                    naoAvg: votes.nao.count > 0 ? votes.nao.totalExpenses / votes.nao.count : 0,
+                    simCount: votes.sim.count,
+                    naoCount: votes.nao.count
+                }))
+                .filter(d => d.simCount > 0 || d.naoCount > 0)
+                .sort((a, b) => (b.simAvg + b.naoAvg) - (a.simAvg + a.naoAvg))
+                .slice(0, 15); // Top 15 parties
+
+            if (data.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #64748b; padding: 2rem;">Nenhum dado disponível para comparação por partido.</p>';
+                return;
+            }
+
+            const margin = {top: 20, right: 120, bottom: 60, left: 80};
+            const width = Math.min(900, window.innerWidth - 100) - margin.left - margin.right;
+            const height = 500 - margin.bottom - margin.top;
+
+            const svg = d3.select(container)
+                .append('svg')
+                .attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom);
+
+            const g = svg.append('g')
+                .attr('transform', `translate(${margin.left},${margin.top})`);
+
+            const x = d3.scaleBand()
+                .domain(data.map(d => d.party))
+                .range([0, width])
+                .padding(0.1);
+
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(data, d => Math.max(d.simAvg, d.naoAvg))])
+                .range([height, 0]);
+
+            // Add grouped bars
+            const barWidth = x.bandwidth() / 2;
+
+            // SIM bars
+            g.selectAll('.bar-sim')
+                .data(data)
+                .enter().append('rect')
+                .attr('class', 'bar-sim')
+                .attr('x', d => x(d.party))
+                .attr('width', barWidth)
+                .attr('y', height)
+                .attr('height', 0)
+                .attr('fill', '#dc2626')
+                .attr('opacity', 0.8)
+                .on('mouseover', function(event, d) {
+                    const tooltip = document.getElementById('tooltip');
+                    tooltip.innerHTML = `
+                        <strong>${d.party} - Votaram SIM</strong><br/>
+                        Deputados: ${d.simCount}<br/>
+                        Gasto médio: ${formatCurrency(d.simAvg)}
+                    `;
+                    tooltip.style.opacity = '1';
+                    tooltip.style.left = (event.pageX + 10) + 'px';
+                    tooltip.style.top = (event.pageY - 10) + 'px';
+                })
+                .on('mouseout', function() {
+                    document.getElementById('tooltip').style.opacity = '0';
+                })
+                .transition()
+                .duration(800)
+                .attr('y', d => y(d.simAvg))
+                .attr('height', d => height - y(d.simAvg));
+
+            // NÃO bars
+            g.selectAll('.bar-nao')
+                .data(data)
+                .enter().append('rect')
+                .attr('class', 'bar-nao')
+                .attr('x', d => x(d.party) + barWidth)
+                .attr('width', barWidth)
+                .attr('y', height)
+                .attr('height', 0)
+                .attr('fill', '#10b981')
+                .attr('opacity', 0.8)
+                .on('mouseover', function(event, d) {
+                    const tooltip = document.getElementById('tooltip');
+                    tooltip.innerHTML = `
+                        <strong>${d.party} - Votaram NÃO</strong><br/>
+                        Deputados: ${d.naoCount}<br/>
+                        Gasto médio: ${formatCurrency(d.naoAvg)}
+                    `;
+                    tooltip.style.opacity = '1';
+                    tooltip.style.left = (event.pageX + 10) + 'px';
+                    tooltip.style.top = (event.pageY - 10) + 'px';
+                })
+                .on('mouseout', function() {
+                    document.getElementById('tooltip').style.opacity = '0';
+                })
+                .transition()
+                .duration(800)
+                .attr('y', d => y(d.naoAvg))
+                .attr('height', d => height - y(d.naoAvg));
+
+            // Add axes
+            g.append('g')
+                .attr('transform', `translate(0,${height})`)
+                .call(d3.axisBottom(x))
+                .selectAll('text')
+                .style('text-anchor', 'end')
+                .attr('dx', '-.8em')
+                .attr('dy', '.15em')
+                .attr('transform', 'rotate(-45)')
+                .style('font-size', '11px');
+
+            g.append('g')
+                .call(d3.axisLeft(y).tickFormat(d => formatCurrency(d)));
+
+            // Add legend
+            const legend = svg.append('g')
+                .attr('transform', `translate(${width + margin.left + 10}, ${margin.top + 20})`);
+
+            legend.append('rect')
+                .attr('x', 0)
+                .attr('y', 0)
+                .attr('width', 15)
+                .attr('height', 15)
+                .attr('fill', '#dc2626');
+
+            legend.append('text')
+                .attr('x', 20)
+                .attr('y', 12)
+                .text('Votaram SIM')
+                .style('font-size', '12px');
+
+            legend.append('rect')
+                .attr('x', 0)
+                .attr('y', 25)
+                .attr('width', 15)
+                .attr('height', 15)
+                .attr('fill', '#10b981');
+
+            legend.append('text')
+                .attr('x', 20)
+                .attr('y', 37)
+                .text('Votaram NÃO')
+                .style('font-size', '12px');
+        }
+
+        function renderDeputyGrid() {
+            const container = document.getElementById('deputyExpensesGrid');
+            const filteredDeputies = getFilteredDeputies().slice(0, 50); // Limit for performance
+
+            container.innerHTML = filteredDeputies.map(deputy => {
+                const expenses = expensesData.get(deputy.id) || [];
+                const totalExpenses = expenses.reduce((sum, exp) => sum + (exp.valorLiquido || 0), 0);
+
+                // Get top categories
+                const categoryTotals = new Map();
+                expenses.forEach(exp => {
+                    const category = getShortCategoryName(exp.tipoDespesa);
+                    categoryTotals.set(category, (categoryTotals.get(category) || 0) + exp.valorLiquido);
+                });
+
+                const topCategories = [...categoryTotals.entries()]
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 4);
+
+                const voteColor = deputy.round2_vote === 'Sim' ? '#dc2626' : '#10b981';
+
+                return `
+                    <div class="deputy-expense-card" style="border-left-color: ${voteColor};">
+                        <div class="deputy-header">
+                            <img src="https://www.camara.leg.br/internet/deputado/bandep/${deputy.id}.jpg"
+                                 alt="${deputy.name}" class="deputy-photo"
+                                 onerror="this.src='https://via.placeholder.com/60x60/e5e7eb/64748b?text=${deputy.name.charAt(0)}'">
+                            <div class="deputy-info">
+                                <h3>${deputy.name}</h3>
+                                <div class="deputy-meta">${deputy.party} - ${deputy.state} | Voto: ${deputy.round2_vote}</div>
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin: 1rem 0;">
+                            <div class="stat-number" style="font-size: 1.5rem; color: ${voteColor};">
+                                ${formatCurrency(totalExpenses)}
+                            </div>
+                            <div style="color: #64748b; font-size: 0.9rem;">Total de Gastos ${currentFilters.year}</div>
+                        </div>
+                        <div class="expense-summary">
+                            ${topCategories.map(([category, amount]) => `
+                                <div class="expense-item">
+                                    <div class="expense-amount">${formatCurrency(amount)}</div>
+                                    <div class="expense-category">${category}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getFilteredDeputies() {
+            return allDeputiesData.filter(deputy => {
+                // Vote filter
+                if (currentFilters.vote === 'sim' && deputy.round2_vote !== 'Sim') return false;
+                if (currentFilters.vote === 'nao' && deputy.round2_vote !== 'Não') return false;
+                if (currentFilters.vote === 'mudaram' && deputy.round1_vote === deputy.round2_vote) return false;
+
+                // Party filter
+                if (currentFilters.party && deputy.party !== currentFilters.party) return false;
+
+                // State filter
+                if (currentFilters.state && deputy.state !== currentFilters.state) return false;
+
+                // Only include deputies we have expense data for
+                return expensesData.has(deputy.id);
+            });
+        }
+
+        function filterDeputyGrid() {
+            calculateAndDisplayStats();
+            renderCategoryChart();
+            renderPartyChart();
+            renderDeputyGrid();
+
+            trackVisualizationInteraction('expenses_dashboard', 'filter_applied',
+                `vote:${currentFilters.vote}, party:${currentFilters.party}, state:${currentFilters.state}`);
+        }
+
+        async function refreshData() {
+            await loadExpensesData();
+            trackVisualizationInteraction('expenses_dashboard', 'data_refreshed',
+                `year:${currentFilters.year}, month:${currentFilters.month}`);
+        }
+
+        function getShortCategoryName(fullName) {
+            const shortNames = {
+                'MANUTENÇÃO DE ESCRITÓRIO DE APOIO À ATIVIDADE PARLAMENTAR': 'Escritório',
+                'LOCOMOÇÃO, ALIMENTAÇÃO E  HOSPEDAGEM': 'Viagens',
+                'COMBUSTÍVEIS E LUBRIFICANTES.': 'Combustível',
+                'CONSULTORIAS, PESQUISAS E TRABALHOS TÉCNICOS.': 'Consultorias',
+                'DIVULGAÇÃO DA ATIVIDADE PARLAMENTAR.': 'Divulgação',
+                'AQUISIÇÃO DE MATERIAL DE ESCRITÓRIO.': 'Material',
+                'AQUISIÇÃO OU LOC. DE SOFTWARE; SERV. POSTAIS; ASS.': 'Software/Correios',
+                'SERVIÇO DE SEGURANÇA PRESTADO POR EMPRESA ESPECIALIZADA.': 'Segurança',
+                'PASSAGEM AÉREA - REEMBOLSO': 'Passagens',
+                'TELEFONIA': 'Telefonia'
+            };
+            return shortNames[fullName] || fullName;
+        }
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(value);
+        }
+
+        function showError() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'block';
+        }
+
+        // Analytics function
+        function trackVisualizationInteraction(chartType, action, details, value = 1) {
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'visualization_interaction', {
+                    chart_type: chartType,
+                    action: action,
+                    details: details,
+                    value: value,
+                    event_category: 'Data Visualization',
+                    event_label: `${chartType}_${action}`,
+                    custom_parameter_1: details
+                });
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,13 +1,13 @@
 // Auto-generated version file from package.json
 // This file is updated during the build process
-// Build date: 2025-09-18T00:01:51.982Z
+// Build date: 2025-09-18T01:24:24.270Z
 
 window.PROJECT_VERSION = {
   version: "1.1.0",
   name: "pec-bandidagem-visualizations",
   buildDate: "2025-09-18",
-  buildTime: "2025-09-18T00:01:51.982Z",
-  gitCommit: "6c10faf",
+  buildTime: "2025-09-18T01:24:24.270Z",
+  gitCommit: "5bdce60",
   deploymentUrl: typeof window !== 'undefined' ? window.location.origin : 'localhost'
 };
 
