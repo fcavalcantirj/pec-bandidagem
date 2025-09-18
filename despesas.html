@@ -894,7 +894,6 @@
                 if (this.isProcessing || this.queue.length === 0) return;
 
                 this.isProcessing = true;
-                console.log(`🔄 Processing ${this.queue.length} deputies in expense queue`);
 
                 const batch = this.queue.splice(0, this.maxConcurrent);
                 const promises = batch.map(({deputy, index}) =>
@@ -1415,29 +1414,15 @@
                 deputyCountEl.textContent = totalDeputies.toLocaleString('pt-BR');
             }
 
-            console.log('Stats updated:', { totalDeputies, totalExpenses, avgExpense, maxExpense, topSpender: topSpender?.nome });
         }
 
         function updateTopSpendersChart() {
-            console.log('=== CHART DEBUG START ===');
-            console.log('All expense data length:', allExpenseData.length);
-            console.log('Sample expense data:', allExpenseData.slice(0, 3));
-
             const deputiesWithExpenses = allExpenseData.filter(d => !d.loading && d.totalExpense > 0);
-            console.log('Deputies with expenses:', deputiesWithExpenses.length);
-            console.log('Sample deputies with expenses:', deputiesWithExpenses.slice(0, 3));
-
             const chartContainer = document.getElementById('spenders-chart');
-            console.log('Chart container found:', !!chartContainer);
 
-            if (!chartContainer) {
-                console.error('Chart container not found!');
-                return;
-            }
+            if (!chartContainer) return;
 
-            // ALWAYS show something
             if (deputiesWithExpenses.length === 0) {
-                console.log('No deputies with expenses - keeping mock chart or showing loading');
                 // Don't clear the container if it already has content (mock chart)
                 if (chartContainer.children.length === 0) {
                     chartContainer.innerHTML = '<div style="text-align: center; color: #64748b; padding: 2rem; background: rgba(255,255,255,0.8); border-radius: 8px;">Carregando dados de despesas...</div>';
@@ -1450,11 +1435,7 @@
                 .sort((a, b) => b.totalExpense - a.totalExpense)
                 .slice(0, 10);
 
-            console.log('Top spenders:', topSpenders.map(d => ({ name: d.nome, expense: d.totalExpense })));
-
-            // Define maxExpense first
             const maxExpense = topSpenders[0]?.totalExpense || 0;
-            console.log('Max expense for scaling:', maxExpense);
 
             chartContainer.innerHTML = '';
 
@@ -1463,12 +1444,9 @@
             chartDiv.style.cssText = 'padding: 20px; background: rgba(255,255,255,0.9); border-radius: 12px; margin: 10px 0;';
             chartContainer.appendChild(chartDiv);
 
-            console.log('Real chart created with simple HTML approach!');
 
             if (topSpenders.length > 0) {
                 topSpenders.forEach((deputy, index) => {
-                    console.log(`Creating bar ${index + 1} for ${deputy.nome}`);
-
                     const barContainer = document.createElement('div');
                     barContainer.style.cssText = `
                         display: flex !important;
@@ -1497,20 +1475,10 @@
                     `;
 
                     chartDiv.appendChild(barContainer);
-                    console.log(`Bar ${index + 1} added to container`);
-                    console.log('Current container children count:', chartContainer.children.length);
-                    console.log('Container innerHTML length:', chartContainer.innerHTML.length);
                 });
             } else {
-                console.log('No top spenders to display');
                 chartContainer.innerHTML = '<div style="text-align: center; color: #dc2626; padding: 2rem; background: rgba(255,255,255,0.8); border-radius: 8px;">Nenhum dado de despesas disponível</div>';
             }
-
-
-            console.log('Final chart container HTML:', chartContainer.innerHTML.substring(0, 200) + '...');
-            console.log('Final container children count:', chartContainer.children.length);
-            console.log('Container scroll height:', chartContainer.scrollHeight);
-            console.log('Container computed styles:', window.getComputedStyle(chartContainer));
             console.log('Container bounding rect:', chartContainer.getBoundingClientRect());
 
             // Check again in 1 second to see if something clears it
