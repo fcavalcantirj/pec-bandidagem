@@ -1036,7 +1036,17 @@
         async function showDeputyDetails(deputyName) {
             const deputy = allDeputies.find(d => d.name === deputyName);
             if (deputy) {
+                // Track deputy click with consistent naming across pages
                 trackVisualizationInteraction('deputy_search', 'deputy_selected', deputyName);
+
+                // Also track with same event name as despesas page for consistency
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'deputy_click', {
+                        event_category: 'deputados_interaction',
+                        event_label: deputyName,
+                        page_type: 'deputados'
+                    });
+                }
 
                 // First search for the deputy by name to get their ID
                 let deputyDetails = null;
