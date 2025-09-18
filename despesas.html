@@ -1452,6 +1452,10 @@
 
             console.log('Top spenders:', topSpenders.map(d => ({ name: d.nome, expense: d.totalExpense })));
 
+            // Define maxExpense first
+            const maxExpense = topSpenders[0]?.totalExpense || 0;
+            console.log('Max expense for scaling:', maxExpense);
+
             // Use the same simple approach as the test chart
             chartContainer.innerHTML = `
                 <div style="padding: 20px; background: white; border: 2px solid black; margin: 10px;">
@@ -1465,10 +1469,6 @@
             `;
 
             console.log('Real chart created with simple HTML approach!');
-
-            // Create simple bar chart
-            const maxExpense = topSpenders[0]?.totalExpense || 0;
-            console.log('Max expense for scaling:', maxExpense);
 
             if (topSpenders.length > 0) {
                 topSpenders.forEach((deputy, index) => {
