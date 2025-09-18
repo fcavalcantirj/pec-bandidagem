@@ -791,22 +791,17 @@
             constructor() {
                 this.queue = [];
                 this.isProcessing = false;
-                this.maxConcurrent = 2;
-                this.retryAttempts = 3;
-                this.baseDelay = 1000;
+                this.maxConcurrent = 1;
+                this.retryAttempts = 2;
+                this.baseDelay = 2000;
             }
 
             async fetchWithRetry(url, options = {}, attempts = this.retryAttempts) {
                 try {
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 8000);
-
                     const response = await fetch(url, {
                         ...options,
-                        signal: controller.signal
+                        timeout: 10000
                     });
-
-                    clearTimeout(timeoutId);
 
                     if (!response.ok) {
                         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -814,7 +809,7 @@
 
                     return await response.json();
                 } catch (error) {
-                    if (attempts > 1 && !error.name === 'AbortError') {
+                    if (attempts > 1) {
                         console.log(`Retrying ${url}, ${attempts - 1} attempts left`);
                         await this.delay(this.baseDelay * (this.retryAttempts - attempts + 1));
                         return this.fetchWithRetry(url, options, attempts - 1);
@@ -907,7 +902,7 @@
                 );
 
                 await Promise.allSettled(promises);
-                await this.delay(500); // Rate limiting
+                await this.delay(3000); // Rate limiting
 
                 this.isProcessing = false;
 
