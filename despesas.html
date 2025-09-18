@@ -662,7 +662,7 @@
         let expenseData = [];
         let allExpenseData = []; // Keep original unfiltered data
         let currentPage = 0;
-        const PAGE_SIZE = 24; // Show 24 deputies per page
+        const PAGE_SIZE = 12; // Show 12 deputies per page
 
         // API configuration
         const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -1133,6 +1133,15 @@
             const loadMoreContainer = document.getElementById('load-more-container');
 
             loadMoreBtn.addEventListener('click', () => {
+                // Track GA event for load more interaction
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'load_more_deputies', {
+                        event_category: 'despesas_interaction',
+                        event_label: 'page_' + (currentPage + 1),
+                        value: PAGE_SIZE
+                    });
+                }
+
                 currentPage++;
                 renderCurrentPage();
             });
@@ -1150,7 +1159,9 @@
             const hasMore = totalShown < expenseData.length;
 
             if (hasMore) {
-                loadMoreBtn.textContent = `Carregar Mais Deputados (${Math.min(PAGE_SIZE, expenseData.length - totalShown)} restantes)`;
+                const remaining = expenseData.length - totalShown;
+                const nextBatch = Math.min(PAGE_SIZE, remaining);
+                loadMoreBtn.textContent = `Carregar Mais ${nextBatch} Deputados (${remaining} restantes)`;
                 loadMoreBtn.disabled = false;
                 loadMoreContainer.style.display = 'block';
             } else {
