@@ -202,7 +202,7 @@
             background: rgba(255, 255, 255, 0.9);
             border-radius: 8px;
             padding: 1rem;
-            border-left: 4px solid #ef4444;
+            border-left: 4px solid #e11d48;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
@@ -232,12 +232,12 @@
         }
 
         .vote-sim {
-            background: #ef4444;
+            background: #e11d48;
             color: white;
         }
 
         .vote-nao {
-            background: #ef4444;
+            background: #2563eb;
             color: white;
         }
 
@@ -459,11 +459,11 @@
 
             <div class="flow-legend">
                 <div class="legend-item">
-                    <div class="legend-color" style="background: #ef4444;"></div>
+                    <div class="legend-color" style="background: #e11d48;"></div>
                     <span>Votos SIM</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background: #ef4444;"></div>
+                    <div class="legend-color" style="background: #2563eb;"></div>
                     <span>Votos NÃO</span>
                 </div>
                 <div class="legend-item">
@@ -603,7 +603,7 @@
                     .attr('y', r1Y - 60)
                     .attr('width', barWidth)
                     .attr('height', 40)
-                    .attr('fill', '#ef4444')
+                    .attr('fill', '#e11d48')
                     .attr('rx', 8);
 
                 const naoBar1 = g.append('rect')
@@ -611,7 +611,7 @@
                     .attr('y', r1Y)
                     .attr('width', barWidth)
                     .attr('height', 40)
-                    .attr('fill', '#ef4444')
+                    .attr('fill', '#2563eb')
                     .attr('rx', 8);
 
                 const abstBar1 = g.append('rect')
@@ -629,7 +629,7 @@
                     .attr('y', r1Y - 30)
                     .attr('width', barWidth)
                     .attr('height', 40)
-                    .attr('fill', '#ef4444')
+                    .attr('fill', '#e11d48')
                     .attr('rx', 8);
 
                 const naoBar2 = g.append('rect')
@@ -637,7 +637,7 @@
                     .attr('y', r1Y + 30)
                     .attr('width', barWidth)
                     .attr('height', 40)
-                    .attr('fill', '#ef4444')
+                    .attr('fill', '#2563eb')
                     .attr('rx', 8);
 
                 // Labels
@@ -708,14 +708,14 @@
                 const maintainedSim = g.append('path')
                     .attr('d', `M ${startX} ${r1Y - 40} Q ${midX} ${r1Y - 40} ${endX} ${r1Y - 10}`)
                     .attr('fill', 'none')
-                    .attr('stroke', '#ef4444')
+                    .attr('stroke', '#e11d48')
                     .attr('stroke-width', 8)
                     .attr('opacity', 0.6);
 
                 const maintainedNao = g.append('path')
                     .attr('d', `M ${startX} ${r1Y + 20} Q ${midX} ${r1Y + 20} ${endX} ${r1Y + 50}`)
                     .attr('fill', 'none')
-                    .attr('stroke', '#ef4444')
+                    .attr('stroke', '#2563eb')
                     .attr('stroke-width', 8)
                     .attr('opacity', 0.6);
 
@@ -786,7 +786,7 @@
                         .attr('y', y(d.sim))
                         .attr('width', x.bandwidth())
                         .attr('height', height - y(d.sim))
-                        .attr('fill', '#ef4444')
+                        .attr('fill', '#e11d48')
                         .attr('rx', 4);
 
                     // NÃO bars (stacked on top)
@@ -795,7 +795,7 @@
                         .attr('y', y(d.sim + d.nao))
                         .attr('width', x.bandwidth())
                         .attr('height', y(d.sim) - y(d.sim + d.nao))
-                        .attr('fill', '#ef4444')
+                        .attr('fill', '#2563eb')
                         .attr('rx', 4);
 
                     // Labels
@@ -835,7 +835,7 @@
                 legend.append('rect')
                     .attr('width', 15)
                     .attr('height', 15)
-                    .attr('fill', '#ef4444');
+                    .attr('fill', '#e11d48');
 
                 legend.append('text')
                     .attr('x', 20)
@@ -847,7 +847,7 @@
                     .attr('y', 20)
                     .attr('width', 15)
                     .attr('height', 15)
-                    .attr('fill', '#ef4444');
+                    .attr('fill', '#2563eb');
 
                 legend.append('text')
                     .attr('x', 20)
@@ -894,7 +894,7 @@
 
                     // Color based on percentage (stronger correlation = darker)
                     const opacity = d.percentage / 100;
-                    const color = d.vote === 'SIM' ? '#ef4444' : '#ef4444';
+                    const color = d.vote === 'SIM' ? '#e11d48' : '#2563eb';
 
                     g.append('rect')
                         .attr('x', cellX)
@@ -1003,7 +1003,7 @@
                         .attr('y', labelY + 20)
                         .attr('text-anchor', 'middle')
                         .style('font-size', '11px')
-                        .style('fill', '#ef4444')
+                        .style('fill', '#e11d48')
                         .style('font-weight', 'bold')
                         .text('↑ Votou SIM');
 
@@ -1012,7 +1012,7 @@
                         .attr('y', cellSize + 20 + cellSize/2 + 30)
                         .attr('text-anchor', 'middle')
                         .style('font-size', '11px')
-                        .style('fill', '#ef4444')
+                        .style('fill', '#e11d48')
                         .style('font-weight', 'bold')
                         .text('↓ Votou NÃO');
                 }
@@ -1033,7 +1033,7 @@
                     .attr('transform', `translate(${margin.left},${margin.top})`);
 
                 const attendanceData = [
-                    {category: 'Votaram em Ambos', count: 472, color: '#ef4444'},
+                    {category: 'Votaram em Ambos', count: 472, color: '#e11d48'},
                     {category: 'Ausentes no 2º', count: 16, color: '#f59e0b'},
                     {category: 'Novos no 2º', count: 5, color: '#3b82f6'}
                 ];
