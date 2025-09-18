@@ -1337,6 +1337,8 @@
 
                     chartContainer.appendChild(barContainer);
                     console.log(`Bar ${index + 1} added to container`);
+                    console.log('Current container children count:', chartContainer.children.length);
+                    console.log('Container innerHTML length:', chartContainer.innerHTML.length);
                 });
             } else {
                 console.log('No top spenders to display');
@@ -1344,6 +1346,19 @@
             }
 
             console.log('Final chart container HTML:', chartContainer.innerHTML.substring(0, 200) + '...');
+            console.log('Final container children count:', chartContainer.children.length);
+            console.log('Container scroll height:', chartContainer.scrollHeight);
+            console.log('Container computed styles:', window.getComputedStyle(chartContainer));
+            console.log('Container bounding rect:', chartContainer.getBoundingClientRect());
+
+            // Check again in 1 second to see if something clears it
+            setTimeout(() => {
+                console.log('=== 1 SECOND LATER CHECK ===');
+                console.log('Container still has children?', chartContainer.children.length);
+                console.log('Container innerHTML still populated?', chartContainer.innerHTML.length > 0);
+                console.log('Container visible?', chartContainer.getBoundingClientRect().height > 0);
+            }, 1000);
+
             console.log('=== CHART DEBUG END ===');
         }
 
