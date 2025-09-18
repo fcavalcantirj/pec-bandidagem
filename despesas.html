@@ -1227,16 +1227,38 @@
             const topSpender = deputiesWithExpenses.reduce((max, d) =>
                 d.totalExpense > (max?.totalExpense || 0) ? d : max, null);
 
-            // Update DOM elements
+            const maxExpense = topSpender ? topSpender.totalExpense : 0;
+
+            // Update main stats section
             document.getElementById('total-deputies').textContent = totalDeputies.toLocaleString('pt-BR');
             document.getElementById('total-expenses').textContent = formatCurrency(totalExpenses);
             document.getElementById('avg-expense').textContent = formatCurrency(avgExpense);
             document.getElementById('top-spender').textContent = topSpender ? topSpender.nome.split(' ')[0] : 'Carregando...';
+
+            // Update duplicate stats if they exist
+            const maxExpenseEl = document.getElementById('max-expense');
+            if (maxExpenseEl) {
+                maxExpenseEl.textContent = formatCurrency(maxExpense);
+            }
+
+            const deputyCountEl = document.getElementById('deputy-count');
+            if (deputyCountEl) {
+                deputyCountEl.textContent = totalDeputies.toLocaleString('pt-BR');
+            }
+
+            console.log('Stats updated:', { totalDeputies, totalExpenses, avgExpense, maxExpense, topSpender: topSpender?.nome });
         }
 
         function updateTopSpendersChart() {
             const deputiesWithExpenses = allExpenseData.filter(d => !d.loading && d.totalExpense > 0);
             const chartContainer = document.getElementById('spenders-chart');
+
+            console.log('Updating chart with', deputiesWithExpenses.length, 'deputies');
+
+            if (!chartContainer) {
+                console.error('Chart container not found!');
+                return;
+            }
 
             if (deputiesWithExpenses.length === 0) {
                 chartContainer.innerHTML = '<div style="text-align: center; color: #64748b; padding: 2rem;">Carregando dados de despesas...</div>';
@@ -1246,6 +1268,8 @@
             const topSpenders = deputiesWithExpenses
                 .sort((a, b) => b.totalExpense - a.totalExpense)
                 .slice(0, 10);
+
+            console.log('Top spenders:', topSpenders.map(d => ({ name: d.nome, expense: d.totalExpense })));
 
             chartContainer.innerHTML = '';
 
@@ -1279,6 +1303,8 @@
 
                 chartContainer.appendChild(barContainer);
             });
+
+            console.log('Chart updated with', topSpenders.length, 'bars');
         }
 
         function renderDeputyGrid(filteredData = expenseData) {
