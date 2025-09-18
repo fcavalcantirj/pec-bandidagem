@@ -615,7 +615,10 @@
         let expenseData = [];
 
         // API configuration
-        const API_BASE = 'https://dadosabertos.camara.leg.br/api/v2';
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const API_BASE = isLocal ?
+            'https://dadosabertos.camara.leg.br/api/v2' :
+            '/api/proxy?endpoint=';
         const currentYear = new Date().getFullYear();
 
         function updateLoadingProgress(current, total, message) {
@@ -688,7 +691,11 @@
 
                     try {
                         // First, search for the deputy by name to get their ID
-                        const searchResponse = await fetch(`${API_BASE}/deputados?nome=${encodeURIComponent(deputy.deputado)}&ordem=ASC&ordenarPor=nome`);
+                        const searchUrl = isLocal ?
+                            `${API_BASE}/deputados?nome=${encodeURIComponent(deputy.deputado)}&ordem=ASC&ordenarPor=nome` :
+                            `${API_BASE}deputados?nome=${encodeURIComponent(deputy.deputado)}&ordem=ASC&ordenarPor=nome`;
+
+                        const searchResponse = await fetch(searchUrl);
                         if (searchResponse.ok) {
                             const searchData = await searchResponse.json();
 
@@ -696,7 +703,11 @@
                                 const deputyInfo = searchData.dados[0]; // Take the first match
 
                                 // Now get their expenses
-                                const expenseResponse = await fetch(`${API_BASE}/deputados/${deputyInfo.id}/despesas?ano=${currentYear}&ordem=ASC&ordenarPor=dataDocumento`);
+                                const expenseUrl = isLocal ?
+                                    `${API_BASE}/deputados/${deputyInfo.id}/despesas?ano=${currentYear}&ordem=ASC&ordenarPor=dataDocumento` :
+                                    `${API_BASE}deputados/${deputyInfo.id}/despesas?ano=${currentYear}&ordem=ASC&ordenarPor=dataDocumento`;
+
+                                const expenseResponse = await fetch(expenseUrl);
                                 if (expenseResponse.ok) {
                                     const expenseData_response = await expenseResponse.json();
 

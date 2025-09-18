@@ -1039,7 +1039,17 @@
                 // First search for the deputy by name to get their ID
                 let deputyDetails = null;
                 try {
-                    const searchResponse = await fetch(`https://dadosabertos.camara.leg.br/api/v2/deputados?nome=${encodeURIComponent(deputyName)}&ordem=ASC&ordenarPor=nome`);
+                    // Use proxy for Vercel deployment, direct API for local development
+                    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                    const apiBase = isLocal ?
+                        'https://dadosabertos.camara.leg.br/api/v2' :
+                        '/api/proxy?endpoint=';
+
+                    const searchUrl = isLocal ?
+                        `${apiBase}/deputados?nome=${encodeURIComponent(deputyName)}&ordem=ASC&ordenarPor=nome` :
+                        `${apiBase}deputados?nome=${encodeURIComponent(deputyName)}&ordem=ASC&ordenarPor=nome`;
+
+                    const searchResponse = await fetch(searchUrl);
                     if (searchResponse.ok) {
                         const searchData = await searchResponse.json();
 
@@ -1047,7 +1057,11 @@
                             const deputyInfo = searchData.dados[0]; // Take the first match
 
                             // Now get their detailed info
-                            const detailResponse = await fetch(`https://dadosabertos.camara.leg.br/api/v2/deputados/${deputyInfo.id}`);
+                            const detailUrl = isLocal ?
+                                `${apiBase}/deputados/${deputyInfo.id}` :
+                                `${apiBase}deputados/${deputyInfo.id}`;
+
+                            const detailResponse = await fetch(detailUrl);
                             if (detailResponse.ok) {
                                 const detailData = await detailResponse.json();
                                 deputyDetails = detailData.dados;
