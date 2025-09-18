@@ -658,7 +658,7 @@
             <div class="chart-container" id="top-spenders-chart" style="display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important; z-index: 1 !important;">
                 <div class="chart-title">Top 10 Deputados - Maiores Gastos em 2025</div>
                 <div class="chart-description">Ranking dos deputados com maiores despesas do ano</div>
-                <div id="spenders-chart" style="display: block !important; visibility: visible !important; opacity: 1 !important; min-height: 300px !important; background: rgba(255,255,255,0.1) !important; border: 2px solid #ff0000 !important;"></div>
+                <div id="spenders-chart" style="min-height: 300px; background: rgba(255,255,255,0.9); border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem;"></div>
             </div>
 
             <div class="filters" id="party-filters">
@@ -1445,9 +1445,12 @@
 
             // ALWAYS show something
             if (deputiesWithExpenses.length === 0) {
-                console.log('No deputies with expenses - showing loading');
-                chartContainer.innerHTML = '<div style="text-align: center; color: #64748b; padding: 2rem; background: rgba(255,255,255,0.8); border-radius: 8px;">Carregando dados de despesas...</div>';
-                chartContainer.style.minHeight = '200px';
+                console.log('No deputies with expenses - keeping mock chart or showing loading');
+                // Don't clear the container if it already has content (mock chart)
+                if (chartContainer.children.length === 0) {
+                    chartContainer.innerHTML = '<div style="text-align: center; color: #64748b; padding: 2rem; background: rgba(255,255,255,0.8); border-radius: 8px;">Carregando dados de despesas...</div>';
+                    chartContainer.style.minHeight = '200px';
+                }
                 return;
             }
 
