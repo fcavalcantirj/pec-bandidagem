@@ -1089,165 +1089,109 @@
         }
 
         function renderExpenseChart() {
-            console.log('📊 Starting renderExpenseChart (PIE CHART)');
+            console.log('📊 Starting renderExpenseChart (BAR CHART)');
             const chartEl = document.getElementById('expense-chart');
             chartEl.innerHTML = '';
 
-            // Check if we have any deputies with actual expense data loaded
-            const deputiesWithExpenseDetails = allExpenseData.filter(d =>
-                !d.loading && d.expenses && d.expenses.length > 0
-            );
+            // Get deputies with expenses for the bar chart
+            const deputiesWithExpenses = allExpenseData.filter(d => !d.loading && d.totalExpense > 0);
+            console.log('Deputies with expenses for bar chart:', deputiesWithExpenses.length);
 
-            console.log('Deputies with expense details:', deputiesWithExpenseDetails.length);
-
-            if (deputiesWithExpenseDetails.length === 0) {
-                console.log('❌ No detailed expense data available for pie chart yet');
+            if (deputiesWithExpenses.length === 0) {
+                console.log('❌ No deputies with expenses for bar chart yet');
                 chartEl.innerHTML = '<p style="text-align: center; padding: 2rem; color: #64748b;">Carregando dados de despesas...</p>';
                 return;
             }
 
-            // Calculate expense distribution by category
-            const categoryData = {};
-            let totalAmount = 0;
+            // Sort by expense and take top 15
+            const topDeputies = deputiesWithExpenses
+                .sort((a, b) => b.totalExpense - a.totalExpense)
+                .slice(0, 15);
 
-            deputiesWithExpenseDetails.forEach(deputy => {
-                deputy.expenses.forEach(expense => {
-                    const category = expense.tipoDespesa || 'Outros';
-                    const value = parseFloat(expense.valorLiquido) || 0;
+            console.log('Top 15 deputies for expense distribution:', topDeputies.map(d => ({ name: d.nome, expense: d.totalExpense })));
 
-                    if (!categoryData[category]) {
-                        categoryData[category] = 0;
-                    }
-                    categoryData[category] += value;
-                    totalAmount += value;
-                });
-            });
+            const margin = { top: 20, right: 30, bottom: 80, left: 100 };
+            const width = chartEl.offsetWidth - margin.left - margin.right;
+            const height = 400 - margin.top - margin.bottom;
 
-            // Convert to array and sort by value
-            const pieData = Object.entries(categoryData)
-                .map(([category, value]) => ({
-                    category,
-                    value,
-                    percentage: (value / totalAmount * 100).toFixed(1)
-                }))
-                .sort((a, b) => b.value - a.value)
-                .slice(0, 8); // Top 8 categories
-
-            console.log('📊 Pie chart data:', pieData);
-
-            // Chart dimensions
-            const width = chartEl.offsetWidth;
-            const height = 400;
-            const margin = 40;
-            const radius = Math.min(width, height) / 2 - margin;
-
-            // Create SVG
             const svg = d3.select(chartEl)
                 .append('svg')
-                .attr('width', width)
-                .attr('height', height);
+                .attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom);
 
             const g = svg.append('g')
-                .attr('transform', `translate(${width/2}, ${height/2})`);
+                .attr('transform', `translate(${margin.left},${margin.top})`);
 
-            // Color scale
-            const color = d3.scaleOrdinal()
-                .domain(pieData.map(d => d.category))
-                .range(['#4f46e5', '#7c3aed', '#ec4899', '#ef4444', '#f97316', '#eab308', '#22c55e', '#06b6d4']);
+            // Scales
+            const xScale = d3.scaleBand()
+                .domain(topDeputies.map(d => d.nome.split(' ')[0]))
+                .range([0, width])
+                .padding(0.1);
 
-            // Create pie layout
-            const pie = d3.pie()
-                .value(d => d.value)
-                .sort(null);
+            const yScale = d3.scaleLinear()
+                .domain([0, d3.max(topDeputies, d => d.totalExpense)])
+                .range([height, 0]);
 
-            // Create arc generator
-            const arc = d3.arc()
-                .innerRadius(0)
-                .outerRadius(radius);
-
-            // Create pie slices
-            const slices = g.selectAll('.slice')
-                .data(pie(pieData))
-                .enter()
-                .append('g')
-                .attr('class', 'slice');
-
-            // Add pie segments
-            slices.append('path')
-                .attr('d', arc)
-                .attr('fill', d => color(d.data.category))
-                .attr('stroke', 'white')
-                .attr('stroke-width', 2)
-                .style('opacity', 0.9)
+            // Bars
+            g.selectAll('.bar')
+                .data(topDeputies)
+                .enter().append('rect')
+                .attr('class', 'bar')
+                .attr('x', d => xScale(d.nome.split(' ')[0]))
+                .attr('width', xScale.bandwidth())
+                .attr('y', d => yScale(d.totalExpense))
+                .attr('height', d => height - yScale(d.totalExpense))
+                .attr('fill', '#4f46e5')
+                .attr('opacity', 0.8)
                 .on('mouseover', function(event, d) {
-                    d3.select(this).style('opacity', 1);
+                    d3.select(this).attr('opacity', 1);
 
-                    // Show tooltip
                     const tooltip = d3.select('body').append('div')
                         .attr('class', 'tooltip')
                         .style('position', 'absolute')
-                        .style('background', 'rgba(0,0,0,0.9)')
+                        .style('background', 'rgba(0,0,0,0.8)')
                         .style('color', 'white')
-                        .style('padding', '12px')
-                        .style('border-radius', '8px')
+                        .style('padding', '10px')
+                        .style('border-radius', '5px')
                         .style('pointer-events', 'none')
-                        .style('font-size', '14px')
-                        .style('box-shadow', '0 4px 12px rgba(0,0,0,0.3)')
+                        .style('font-size', '12px')
                         .html(`
-                            <strong>${d.data.category}</strong><br>
-                            Valor: ${formatCurrency(d.data.value)}<br>
-                            Porcentagem: ${d.data.percentage}%
+                            <strong>${d.nome}</strong><br>
+                            ${d.partido} - ${d.uf}<br>
+                            Gasto: ${formatCurrency(d.totalExpense)}
                         `);
 
                     tooltip.style('left', (event.pageX + 10) + 'px')
                            .style('top', (event.pageY - 10) + 'px');
                 })
                 .on('mouseout', function() {
-                    d3.select(this).style('opacity', 0.9);
+                    d3.select(this).attr('opacity', 0.8);
                     d3.selectAll('.tooltip').remove();
                 });
 
-            // Add labels
-            slices.append('text')
-                .attr('transform', d => `translate(${arc.centroid(d)})`)
-                .attr('text-anchor', 'middle')
-                .style('font-size', '12px')
-                .style('font-weight', 'bold')
-                .style('fill', 'white')
-                .style('text-shadow', '1px 1px 2px rgba(0,0,0,0.7)')
-                .text(d => d.data.percentage + '%');
+            // Axes
+            g.append('g')
+                .attr('transform', `translate(0,${height})`)
+                .call(d3.axisBottom(xScale))
+                .selectAll('text')
+                .style('text-anchor', 'end')
+                .attr('dx', '-.8em')
+                .attr('dy', '.15em')
+                .attr('transform', 'rotate(-45)');
 
-            // Add legend
-            const legend = svg.append('g')
-                .attr('class', 'legend')
-                .attr('transform', `translate(20, 20)`);
+            g.append('g')
+                .call(d3.axisLeft(yScale).tickFormat(d => formatCurrency(d)));
 
-            const legendItems = legend.selectAll('.legend-item')
-                .data(pieData.slice(0, 6)) // Show top 6 in legend
-                .enter()
-                .append('g')
-                .attr('class', 'legend-item')
-                .attr('transform', (d, i) => `translate(0, ${i * 25})`);
+            // Labels
+            g.append('text')
+                .attr('transform', 'rotate(-90)')
+                .attr('y', 0 - margin.left)
+                .attr('x', 0 - (height / 2))
+                .attr('dy', '1em')
+                .style('text-anchor', 'middle')
+                .text('Valor Gasto (R$)');
 
-            legendItems.append('rect')
-                .attr('width', 18)
-                .attr('height', 18)
-                .attr('fill', d => color(d.category));
-
-            legendItems.append('text')
-                .attr('x', 25)
-                .attr('y', 9)
-                .attr('dy', '0.35em')
-                .style('font-size', '12px')
-                .style('font-weight', '500')
-                .text(d => {
-                    const maxLength = 25;
-                    return d.category.length > maxLength ?
-                           d.category.substring(0, maxLength) + '...' :
-                           d.category;
-                });
-
-            console.log('✅ Pie chart created successfully');
+            console.log('✅ Expense distribution bar chart created successfully');
         }
 
         function renderPartyFilters() {
