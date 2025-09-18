@@ -777,8 +777,8 @@
                     // Show chart immediately with mock data to demonstrate functionality
                     showMockChart();
 
-                    // Start loading real expense data in background
-                    loadInitialExpenseData();
+                    // Initialize expense loading queue without blocking UI
+                    initializeExpenseLoader();
                 } else {
                     throw new Error('Could not parse VISUALIZATION_DATA');
                 }
@@ -788,78 +788,152 @@
             }
         }
 
-        async function loadInitialExpenseData() {
-            // Load just the first 5 deputies to avoid timeouts
-            const sampleDeputies = deputyData.slice(0, 5);
+        // Modern async queue system for loading expenses
+        class ExpenseLoader {
+            constructor() {
+                this.queue = [];
+                this.isProcessing = false;
+                this.maxConcurrent = 2;
+                this.retryAttempts = 3;
+                this.baseDelay = 1000;
+            }
 
-            for (let i = 0; i < sampleDeputies.length; i++) {
-                const deputy = sampleDeputies[i];
-
+            async fetchWithRetry(url, options = {}, attempts = this.retryAttempts) {
                 try {
-                    // Search for deputy by name
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+                    const response = await fetch(url, {
+                        ...options,
+                        signal: controller.signal
+                    });
+
+                    clearTimeout(timeoutId);
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    return await response.json();
+                } catch (error) {
+                    if (attempts > 1 && !error.name === 'AbortError') {
+                        console.log(`Retrying ${url}, ${attempts - 1} attempts left`);
+                        await this.delay(this.baseDelay * (this.retryAttempts - attempts + 1));
+                        return this.fetchWithRetry(url, options, attempts - 1);
+                    }
+                    throw error;
+                }
+            }
+
+            delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            async loadDeputyExpenses(deputy, index) {
+                try {
+                    // Search for deputy
                     const searchUrl = isLocal ?
                         `${API_BASE}/deputados?nome=${encodeURIComponent(deputy.deputado)}&ordem=ASC&ordenarPor=nome` :
                         `${API_BASE}deputados?nome=${encodeURIComponent(deputy.deputado)}&ordem=ASC&ordenarPor=nome`;
 
-                    console.log(`Attempting to fetch: ${searchUrl}`);
+                    const searchData = await this.fetchWithRetry(searchUrl);
 
-                    const searchResponse = await fetch(searchUrl, {
-                        signal: AbortSignal.timeout(10000) // 10 second timeout
-                    });
+                    if (searchData.dados && searchData.dados.length > 0) {
+                        const deputyInfo = searchData.dados[0];
 
-                    if (searchResponse.ok) {
-                        const searchData = await searchResponse.json();
+                        // Get expenses
+                        const expenseUrl = isLocal ?
+                            `${API_BASE}/deputados/${deputyInfo.id}/despesas?ano=${currentYear}&ordem=ASC&ordenarPor=dataDocumento` :
+                            `${API_BASE}deputados/${deputyInfo.id}/despesas?ano=${currentYear}&ordem=ASC&ordenarPor=dataDocumento`;
 
-                        if (searchData.dados && searchData.dados.length > 0) {
-                            const deputyInfo = searchData.dados[0];
+                        const expenseDataResponse = await this.fetchWithRetry(expenseUrl);
 
-                            // Get expenses
-                            const expenseUrl = isLocal ?
-                                `${API_BASE}/deputados/${deputyInfo.id}/despesas?ano=${currentYear}&ordem=ASC&ordenarPor=dataDocumento` :
-                                `${API_BASE}deputados/${deputyInfo.id}/despesas?ano=${currentYear}&ordem=ASC&ordenarPor=dataDocumento`;
+                        const totalExpense = expenseDataResponse.dados.reduce((sum, expense) => {
+                            return sum + (expense.valorLiquido || 0);
+                        }, 0);
 
-                            const expenseResponse = await fetch(expenseUrl);
-                            if (expenseResponse.ok) {
-                                const expenseDataResponse = await expenseResponse.json();
+                        // Update data atomically
+                        this.updateDeputyData(index, {
+                            totalExpense,
+                            expenseCount: expenseDataResponse.dados.length,
+                            id: deputyInfo.id,
+                            expenses: expenseDataResponse.dados,
+                            loading: false
+                        });
 
-                                const totalExpense = expenseDataResponse.dados.reduce((sum, expense) => {
-                                    return sum + (expense.valorLiquido || 0);
-                                }, 0);
-
-                                // Update both the current display data and the master data
-                                expenseData[i] = {
-                                    ...expenseData[i],
-                                    totalExpense: totalExpense,
-                                    expenseCount: expenseDataResponse.dados.length,
-                                    id: deputyInfo.id,
-                                    expenses: expenseDataResponse.dados,
-                                    loading: false
-                                };
-
-                                // Also update the master data array
-                                allExpenseData[i] = {
-                                    ...allExpenseData[i],
-                                    totalExpense: totalExpense,
-                                    expenseCount: expenseDataResponse.dados.length,
-                                    id: deputyInfo.id,
-                                    expenses: expenseDataResponse.dados,
-                                    loading: false
-                                };
-
-                                // Re-render to show updated data
-                                renderDeputyGrid();
-                                updateStatsDisplay();
-                                updateTopSpendersChart();
-                            }
-                        }
+                        console.log(`✅ Loaded expenses for ${deputy.deputado}: ${formatCurrency(totalExpense)}`);
+                        return true;
                     }
                 } catch (error) {
-                    console.error(`Error loading ${deputy.deputado}:`, error);
+                    console.warn(`❌ Failed to load ${deputy.deputado}:`, error.message);
+                    // Mark as failed but don't break the queue
+                    this.updateDeputyData(index, {
+                        totalExpense: 0,
+                        expenseCount: 0,
+                        loading: false,
+                        error: error.message
+                    });
+                }
+                return false;
+            }
+
+            updateDeputyData(index, updates) {
+                if (expenseData[index]) {
+                    Object.assign(expenseData[index], updates);
+                }
+                if (allExpenseData[index]) {
+                    Object.assign(allExpenseData[index], updates);
                 }
 
-                // Longer delay to avoid API timeouts
-                await new Promise(resolve => setTimeout(resolve, 500));
+                // Throttled UI updates
+                if (!this.updateScheduled) {
+                    this.updateScheduled = true;
+                    setTimeout(() => {
+                        renderDeputyGrid();
+                        updateStatsDisplay();
+                        updateTopSpendersChart();
+                        this.updateScheduled = false;
+                    }, 100);
+                }
             }
+
+            async processQueue() {
+                if (this.isProcessing || this.queue.length === 0) return;
+
+                this.isProcessing = true;
+                console.log(`🔄 Processing ${this.queue.length} deputies in expense queue`);
+
+                const batch = this.queue.splice(0, this.maxConcurrent);
+                const promises = batch.map(({deputy, index}) =>
+                    this.loadDeputyExpenses(deputy, index)
+                );
+
+                await Promise.allSettled(promises);
+                await this.delay(500); // Rate limiting
+
+                this.isProcessing = false;
+
+                if (this.queue.length > 0) {
+                    setTimeout(() => this.processQueue(), 100);
+                }
+            }
+
+            addToQueue(deputy, index) {
+                this.queue.push({deputy, index});
+                this.processQueue();
+            }
+        }
+
+        const expenseLoader = new ExpenseLoader();
+
+        function initializeExpenseLoader() {
+            console.log('🚀 Initializing modern expense loader');
+
+            // Add first 10 deputies to the queue for immediate loading
+            const priority = deputyData.slice(0, 10);
+            priority.forEach((deputy, index) => {
+                expenseLoader.addToQueue(deputy, index);
+            });
         }
 
         async function loadExpenseData() {
@@ -1200,6 +1274,15 @@
 
                 currentPage++;
                 renderCurrentPage();
+
+                // Load expense data for newly visible deputies
+                const startIndex = (currentPage - 1) * PAGE_SIZE;
+                const endIndex = currentPage * PAGE_SIZE;
+                for (let i = startIndex; i < Math.min(endIndex, deputyData.length); i++) {
+                    if (allExpenseData[i] && allExpenseData[i].loading && !allExpenseData[i].error) {
+                        expenseLoader.addToQueue(deputyData[i], i);
+                    }
+                }
             });
 
             // Show the button initially
