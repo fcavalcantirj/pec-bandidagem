@@ -498,6 +498,258 @@
                 max-width: 280px;
             }
         }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 2rem 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .deputy-main-info {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .deputy-modal-photo {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .deputy-info-section p {
+            margin: 0.75rem 0;
+            line-height: 1.6;
+        }
+
+        .deputy-info-section strong {
+            color: #374151;
+            font-weight: 600;
+        }
+
+        .contact-action-section, .appreciation-section {
+            background: #fbbf24;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .appreciation-section {
+            background: #10b981;
+        }
+
+        .action-banner, .appreciation-banner {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0f172a;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .appreciation-banner {
+            color: white;
+        }
+
+        .contact-info {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-email {
+            color: #1e40af;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+
+        .contact-email:hover {
+            text-decoration: underline;
+        }
+
+        .no-contact {
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .message-templates {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .template-section h4 {
+            margin: 0 0 0.75rem 0;
+            color: #0f172a;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .template-section textarea {
+            width: 100%;
+            height: 120px;
+            padding: 1rem;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            resize: vertical;
+            margin-bottom: 0.75rem;
+        }
+
+        .copy-btn {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .copy-btn:hover {
+            background: #1e3a8a;
+            transform: translateY(-1px);
+        }
+
+        .additional-info {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .info-section h4 {
+            margin: 0 0 1rem 0;
+            color: #0f172a;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+        }
+
+        .info-section p {
+            margin: 0.5rem 0;
+            line-height: 1.6;
+        }
+
+        .info-section strong {
+            color: #374151;
+            font-weight: 600;
+        }
+
+        /* Mobile modal styles */
+        @media (max-width: 768px) {
+            .modal-overlay {
+                padding: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 95vh;
+            }
+
+            .modal-header {
+                padding: 1.5rem 1.5rem 1rem;
+            }
+
+            .modal-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .modal-body {
+                padding: 1.5rem;
+            }
+
+            .deputy-main-info {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            .deputy-modal-photo {
+                max-width: 200px;
+                margin: 0 auto;
+            }
+
+            .message-templates {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -779,22 +1031,203 @@
         }
 
         // Show deputy details (could be expanded to modal)
-        function showDeputyDetails(deputyName) {
+        async function showDeputyDetails(deputyName) {
             const deputy = allDeputies.find(d => d.name === deputyName);
             if (deputy) {
                 trackVisualizationInteraction('deputy_search', 'deputy_selected', deputyName);
 
-                alert(`
-Deputado: ${deputy.name}
-Partido: ${deputy.party}
-Estado: ${deputy.state}
+                // Fetch additional deputy info from API
+                let deputyDetails = null;
+                try {
+                    const response = await fetch(`https://dadosabertos.camara.leg.br/api/v2/deputados/${deputy.id}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        deputyDetails = data.dados;
+                    }
+                } catch (error) {
+                    console.log('Error fetching deputy details:', error);
+                }
 
-Votação:
-• 1º Turno: ${deputy.round1_vote}
-• 2º Turno: ${deputy.round2_vote}
-• Posição sobre voto secreto: ${deputy.secret_defense}
-• Consistência: ${deputy.consistency}
-                `);
+                showDeputyModal(deputy, deputyDetails);
+            }
+        }
+
+        function showDeputyModal(deputy, details) {
+            // Remove existing modal if any
+            const existingModal = document.getElementById('deputyModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+
+            const isProPEC = deputy.round2_vote === 'Sim';
+
+            // Create modal HTML
+            const modalHTML = `
+                <div id="deputyModal" class="modal-overlay">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>${deputy.name}</h2>
+                            <button class="modal-close" onclick="closeDeputyModal()">&times;</button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="deputy-main-info">
+                                <div class="deputy-photo-section">
+                                    <img src="https://www.camara.leg.br/internet/deputado/bandep/${deputy.id}.jpg"
+                                         alt="${deputy.name}" class="deputy-modal-photo"
+                                         onerror="this.src='https://via.placeholder.com/150x180/e5e7eb/64748b?text=${deputy.name.charAt(0)}'">
+                                </div>
+
+                                <div class="deputy-info-section">
+                                    ${details ? `
+                                    <p><strong>Nome Civil:</strong> ${details.nomeCivil || deputy.name}</p>
+                                    <p><strong>Nome Eleitoral:</strong> ${details.ultimoStatus?.nomeEleitoral || deputy.name}</p>
+                                    ` : ''}
+                                    <p><strong>Partido:</strong> ${deputy.party}</p>
+                                    <p><strong>UF:</strong> ${deputy.state}</p>
+                                    <p><strong>1º Turno:</strong> <span class="vote-badge ${deputy.round1_vote === 'Sim' ? 'vote-sim' : 'vote-nao'}">${deputy.round1_vote}</span></p>
+                                    <p><strong>2º Turno:</strong> <span class="vote-badge ${deputy.round2_vote === 'Sim' ? 'vote-sim' : 'vote-nao'}">${deputy.round2_vote}</span></p>
+                                </div>
+                            </div>
+
+                            ${isProPEC ? `
+                            <div class="contact-action-section">
+                                <div class="action-banner">
+                                    🏴 Faça seu protesto por email ou nas redes sociais!
+                                </div>
+
+                                <div class="contact-info">
+                                    ${details?.ultimoStatus?.gabinete?.email ? `
+                                    <a href="mailto:${details.ultimoStatus.gabinete.email}" class="contact-email">
+                                        ${details.ultimoStatus.gabinete.email}
+                                    </a>
+                                    ` : '<span class="no-contact">Email não informado</span>'}
+                                </div>
+
+                                <div class="message-templates">
+                                    <div class="template-section">
+                                        <h4>📱 Texto para Redes Sociais</h4>
+                                        <textarea id="socialText" readonly>Prezado ${deputy.name}, seu voto na PEC 3/21 (PEC da blindagem) envergonha eleitores. Ela cria políticos intocáveis e destrói a democracia brasileira. Reconsidere sua posição!</textarea>
+                                        <button onclick="copyToClipboard('socialText')" class="copy-btn">📋 Copiar</button>
+                                    </div>
+
+                                    <div class="template-section">
+                                        <h4>📧 Texto para Email</h4>
+                                        <textarea id="emailText" readonly>Prezado ${deputy.name},\n\nAcompanhei seu voto referente a PEC 3 de 2021, também conhecida como "PEC da Blindagem". Como eleitor do seu estado, gostaria de expressar minha preocupação com essa decisão que pode comprometer a transparência e accountability de nossos representantes.\n\nAtenciosamente,\n[Seu nome]</textarea>
+                                        <button onclick="copyToClipboard('emailText')" class="copy-btn">📋 Copiar</button>
+                                    </div>
+                                </div>
+                            </div>
+                            ` : `
+                            <div class="appreciation-section">
+                                <div class="appreciation-banner">
+                                    👏 Apoie este deputado por defender a transparência!
+                                </div>
+
+                                <div class="contact-info">
+                                    ${details?.ultimoStatus?.gabinete?.email ? `
+                                    <a href="mailto:${details.ultimoStatus.gabinete.email}" class="contact-email">
+                                        ${details.ultimoStatus.gabinete.email}
+                                    </a>
+                                    ` : '<span class="no-contact">Email não informado</span>'}
+                                </div>
+
+                                <div class="message-templates">
+                                    <div class="template-section">
+                                        <h4>📱 Texto para Redes Sociais</h4>
+                                        <textarea id="socialText" readonly>Parabéns ${deputy.name} por votar CONTRA a PEC da Blindagem! Obrigado por defender a transparência e a democracia brasileira. Continue representando bem nossos interesses! 👏</textarea>
+                                        <button onclick="copyToClipboard('socialText')" class="copy-btn">📋 Copiar</button>
+                                    </div>
+
+                                    <div class="template-section">
+                                        <h4>📧 Texto para Email</h4>
+                                        <textarea id="emailText" readonly>Prezado ${deputy.name},\n\nGostaria de parabenizá-lo por seu voto CONTRA a PEC 3 de 2021. Sua posição em defesa da transparência e accountability democrática é fundamental para nossa democracia.\n\nContinue representando bem os interesses do povo!\n\nAtenciosamente,\n[Seu nome]</textarea>
+                                        <button onclick="copyToClipboard('emailText')" class="copy-btn">📋 Copiar</button>
+                                    </div>
+                                </div>
+                            </div>
+                            `}
+
+                            ${details ? `
+                            <div class="additional-info">
+                                <div class="info-grid">
+                                    <div class="info-section">
+                                        <h4>👤 Informações Pessoais</h4>
+                                        ${details.sexo ? `<p><strong>Sexo:</strong> ${details.sexo === 'M' ? 'Masculino' : 'Feminino'}</p>` : ''}
+                                        ${details.dataNascimento ? `<p><strong>Data de Nascimento:</strong> ${new Date(details.dataNascimento).toLocaleDateString('pt-BR')}</p>` : ''}
+                                        ${details.municipioNascimento && details.ufNascimento ? `<p><strong>Local de Nascimento:</strong> ${details.municipioNascimento} - ${details.ufNascimento}</p>` : ''}
+                                        ${details.escolaridade ? `<p><strong>Escolaridade:</strong> ${details.escolaridade}</p>` : ''}
+                                        ${details.ultimoStatus?.situacao ? `<p><strong>Situação:</strong> ${details.ultimoStatus.situacao}</p>` : ''}
+                                        ${details.ultimoStatus?.condicaoEleitoral ? `<p><strong>Condição Eleitoral:</strong> ${details.ultimoStatus.condicaoEleitoral}</p>` : ''}
+                                    </div>
+
+                                    ${details.ultimoStatus?.gabinete ? `
+                                    <div class="info-section">
+                                        <h4>🏛️ Gabinete</h4>
+                                        ${details.ultimoStatus.gabinete.sala ? `<p><strong>Sala:</strong> ${details.ultimoStatus.gabinete.sala}</p>` : ''}
+                                        ${details.ultimoStatus.gabinete.predio ? `<p><strong>Prédio:</strong> ${details.ultimoStatus.gabinete.predio}</p>` : ''}
+                                        ${details.ultimoStatus.gabinete.andar ? `<p><strong>Andar:</strong> ${details.ultimoStatus.gabinete.andar}</p>` : ''}
+                                        ${details.ultimoStatus.gabinete.telefone ? `<p><strong>Telefone:</strong> ${details.ultimoStatus.gabinete.telefone}</p>` : ''}
+                                    </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add modal to page
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+            // Add event listeners
+            const modal = document.getElementById('deputyModal');
+
+            // Close modal when clicking outside
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeDeputyModal();
+                }
+            });
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeDeputyModal();
+                }
+            });
+        }
+
+        function closeDeputyModal() {
+            const modal = document.getElementById('deputyModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function copyToClipboard(textareaId) {
+            const textarea = document.getElementById(textareaId);
+            textarea.select();
+            textarea.setSelectionRange(0, 99999); // For mobile devices
+
+            try {
+                document.execCommand('copy');
+
+                // Show feedback
+                const button = textarea.nextElementSibling;
+                const originalText = button.textContent;
+                button.textContent = '✅ Copiado!';
+                button.style.background = '#10b981';
+
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '';
+                }, 2000);
+
+                trackVisualizationInteraction('deputy_modal', 'text_copied', textareaId);
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
             }
         }
 
