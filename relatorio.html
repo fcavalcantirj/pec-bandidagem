@@ -1,1268 +1,812 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Relatório Completo - PEC da Bandidagem | Análise Acadêmica</title>
-    <meta name="description" content="Relatório acadêmico completo da análise da PEC da Bandidagem. Metodologia, estatísticas detalhadas, conclusões e insights sobre padrões de votação na Câmara.">
-    <meta name="keywords" content="relatório acadêmico, metodologia, estatísticas, índice Rice, correlação Pearson, análise política">
-    <meta property="og:title" content="Relatório Completo - PEC da Bandidagem">
-    <meta property="og:description" content="Acesse o relatório analítico completo da PEC da Bandidagem com metodologia transparente e estatísticas detalhadas.">
-    <meta property="og:url" content="https://pec-bandidagem.vercel.app/relatorio.html">
-    <link rel="canonical" href="https://pec-bandidagem.vercel.app/relatorio.html">
+    <meta
+      name="description"
+      content="Relatório acadêmico completo da análise da PEC da Bandidagem. Metodologia, estatísticas detalhadas, conclusões e insights sobre padrões de votação na Câmara." />
+    <meta
+      name="keywords"
+      content="relatório acadêmico, metodologia, estatísticas, índice Rice, correlação Pearson, análise política" />
+    <meta
+      property="og:title"
+      content="Relatório Completo - PEC da Bandidagem" />
+    <meta
+      property="og:description"
+      content="Acesse o relatório analítico completo da PEC da Bandidagem com metodologia transparente e estatísticas detalhadas." />
+    <meta
+      property="og:url"
+      content="https://pec-bandidagem.vercel.app/relatorio.html" />
+    <link
+      rel="canonical"
+      href="https://pec-bandidagem.vercel.app/relatorio.html" />
 
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P47CK1TDL8"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-P47CK1TDL8"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-P47CK1TDL8');
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-P47CK1TDL8");
     </script>
     <script src="analytics.js"></script>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #1a202c;
-            line-height: 1.6;
-            font-weight: 500;
-        }
-
-        /* GitHub fork ribbon - classic style */
-        .github-fork-ribbon {
-            width: 12.1em;
-            height: 12.1em;
-            position: fixed;
-            overflow: hidden;
-            top: 0;
-            right: 0;
-            z-index: 9999;
-            pointer-events: none;
-            font-size: 13px;
-            text-decoration: none;
-            text-indent: -999999px;
-        }
-
-        .github-fork-ribbon:hover, .github-fork-ribbon:active {
-            background-color: rgba(0, 0, 0, 0.0);
-        }
-
-        .github-fork-ribbon:before, .github-fork-ribbon:after {
-            position: absolute;
-            display: block;
-            width: 15.38em;
-            height: 1.54em;
-            top: 3.23em;
-            right: -3.23em;
-            -webkit-box-sizing: content-box;
-            -moz-box-sizing: content-box;
-            box-sizing: content-box;
-            -webkit-transform: rotate(45deg);
-            -moz-transform: rotate(45deg);
-            -ms-transform: rotate(45deg);
-            -o-transform: rotate(45deg);
-            transform: rotate(45deg);
-        }
-
-        .github-fork-ribbon:before {
-            content: "";
-            padding: .38em 0;
-            background-color: #a00;
-            background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.15)));
-            background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
-            background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
-            background-image: -ms-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
-            background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
-            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
-            -webkit-box-shadow: 0 .15em .23em 0 rgba(0, 0, 0, 0.5);
-            -moz-box-shadow: 0 .15em .23em 0 rgba(0, 0, 0, 0.5);
-            box-shadow: 0 .15em .23em 0 rgba(0, 0, 0, 0.5);
-            pointer-events: auto;
-        }
-
-        .github-fork-ribbon:after {
-            content: attr(data-ribbon);
-            color: #fff;
-            font: 700 1em "Helvetica Neue", Helvetica, Arial, sans-serif;
-            line-height: 1.54em;
-            text-decoration: none;
-            text-shadow: 0 -.08em rgba(0, 0, 0, 0.5);
-            text-align: center;
-            text-indent: 0;
-            padding: .15em 0;
-            margin: .15em 0;
-            border-width: .08em 0;
-            border-style: dotted;
-            border-color: #fff;
-            border-color: rgba(255, 255, 255, 0.7);
-        }
-
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 3rem 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            border-bottom: 3px solid #4f46e5;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 3rem;
-            color: #1e293b;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-        }
-
-        .header .subtitle {
-            font-size: 1.4rem;
-            color: #64748b;
-            margin-bottom: 2rem;
-        }
-
-        .nav {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .nav a {
-            padding: 0.75rem 1.5rem;
-            background: #4f46e5;
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .nav a:hover {
-            background: #3730a3;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .section {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 2.5rem;
-            margin: 2rem 0;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .section-title {
-            font-size: 2rem;
-            color: #1e293b;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            border-bottom: 3px solid #e2e8f0;
-            padding-bottom: 0.5rem;
-        }
-
-        .subsection {
-            margin: 2rem 0;
-        }
-
-        .subsection h3 {
-            font-size: 1.4rem;
-            color: #475569;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .subsection h4 {
-            font-size: 1.2rem;
-            color: #64748b;
-            margin-bottom: 0.8rem;
-            margin-top: 1.5rem;
-        }
-
-        .stats-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .stats-table th {
-            background: #4f46e5;
-            color: white;
-            padding: 1rem;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        .stats-table td {
-            padding: 0.8rem 1rem;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .stats-table tr:hover {
-            background: #f8fafc;
-        }
-
-        /* Mobile responsive tables */
-        @media (max-width: 768px) {
-            .stats-table {
-                font-size: 0.85rem;
-                overflow-x: auto;
-                display: block;
-                white-space: nowrap;
-            }
-
-            .stats-table th {
-                padding: 0.7rem 0.5rem;
-                min-width: 80px;
-            }
-
-            .stats-table td {
-                padding: 0.6rem 0.5rem;
-                min-width: 80px;
-            }
-
-            /* Make table scrollable on mobile */
-            .table-container {
-                overflow-x: auto;
-                margin: 1rem -1rem;
-                padding: 0 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .stats-table {
-                font-size: 0.75rem;
-            }
-
-            .stats-table th {
-                padding: 0.5rem 0.3rem;
-                min-width: 70px;
-            }
-
-            .stats-table td {
-                padding: 0.5rem 0.3rem;
-                min-width: 70px;
-            }
-        }
-
-        .highlight-box {
-            background: linear-gradient(135deg, #fef3c7, #fbbf24);
-            border-left: 4px solid #f59e0b;
-            padding: 1.5rem;
-            border-radius: 12px;
-            margin: 1.5rem 0;
-        }
-
-        .highlight-title {
-            font-weight: bold;
-            color: #92400e;
-            margin-bottom: 0.8rem;
-            font-size: 1.1rem;
-        }
-
-        .key-metrics {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .metric-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border-left: 4px solid #4f46e5;
-            transition: transform 0.3s ease;
-        }
-
-        .metric-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .metric-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #4f46e5;
-            display: block;
-        }
-
-        .metric-label {
-            color: #64748b;
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-        }
-
-        .party-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin: 1.5rem 0;
-        }
-
-        .party-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border-top: 4px solid #10b981;
-        }
-
-        .party-card.opposition {
-            border-top-color: #ef4444;
-        }
-
-        .party-card.divided {
-            border-top-color: #f59e0b;
-        }
-
-        .party-name {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #1e293b;
-            margin-bottom: 1rem;
-        }
-
-        .party-stats {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-        }
-
-        .party-stat {
-            text-align: center;
-        }
-
-        .party-stat-number {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #4f46e5;
-        }
-
-        .party-stat-label {
-            font-size: 0.8rem;
-            color: #64748b;
-        }
-
-        .deputy-list {
-            background: #f8fafc;
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            font-size: 0.9rem;
-            color: #475569;
-        }
-
-        .correlation-box {
-            background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
-            border: 2px solid #6366f1;
-            border-radius: 12px;
-            padding: 2rem;
-            margin: 2rem 0;
-            text-align: center;
-        }
-
-        .correlation-value {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #4338ca;
-            display: block;
-        }
-
-        .correlation-label {
-            font-size: 1.2rem;
-            color: #6366f1;
-            margin-top: 0.5rem;
-        }
-
-        .insights-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .insight-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border-left: 4px solid #8b5cf6;
-        }
-
-        .insight-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #8b5cf6;
-            margin-bottom: 1rem;
-        }
-
-        .insight-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #1e293b;
-            margin-bottom: 0.5rem;
-        }
-
-        .insight-text {
-            color: #64748b;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        .toc {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin: 2rem 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .toc h3 {
-            color: #1e293b;
-            margin-bottom: 1rem;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 0.5rem;
-        }
-
-        .toc ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .toc li {
-            margin: 0.5rem 0;
-        }
-
-        .toc a {
-            color: #4f46e5;
-            text-decoration: none;
-            padding: 0.5rem;
-            border-radius: 4px;
-            transition: background 0.3s ease;
-        }
-
-        .toc a:hover {
-            background: #f1f5f9;
-        }
-
-        .code-block {
-            background: #1e293b;
-            color: #e2e8f0;
-            padding: 1.5rem;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            margin: 1rem 0;
-            overflow-x: auto;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
-            }
-
-            .container {
-                padding: 1rem;
-            }
-
-            .section {
-                padding: 1.5rem;
-            }
-
-            .nav {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .key-metrics {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
-            }
-
-            .party-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .section-title {
-                font-size: 1.5rem;
-                line-height: 1.3;
-            }
-
-            .subsection h3 {
-                font-size: 1.1rem;
-                line-height: 1.3;
-            }
-
-            .metric-card {
-                padding: 1rem;
-            }
-
-            .highlight-box {
-                padding: 1rem;
-                margin: 1rem 0;
-            }
-        }
-
-        /* Additional mobile improvements for very small screens */
-        @media (max-width: 480px) {
-            .container {
-                padding: 0.5rem;
-            }
-
-            .header {
-                padding: 2rem 1rem;
-            }
-
-            .header h1 {
-                font-size: 1.8rem;
-            }
-
-            .section-title {
-                font-size: 1.3rem;
-            }
-
-            .key-metrics {
-                grid-template-columns: 1fr;
-            }
-
-            .section {
-                padding: 1rem;
-            }
-
-            .metric-label {
-                font-size: 0.8rem;
-            }
-        }
-    </style>
-</head>
-<body>
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body class="relatorio">
     <!-- GitHub Fork Ribbon -->
-    <a class="github-fork-ribbon" href="https://github.com/fcavalcantirj/pec-bandidagem" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
+    <a
+      class="github-fork-ribbon"
+      href="https://github.com/fcavalcantirj/pec-bandidagem"
+      data-ribbon="Fork me on GitHub"
+      title="Fork me on GitHub"
+      >Fork me on GitHub</a
+    >
 
     <div class="header">
-        <h1>📊 Relatório Analítico</h1>
-        <div class="subtitle">⚠️ ALERTA: Análise dos 353 Deputados que Aprovaram a PEC da Bandidagem</div>
-        <nav class="nav">
-            <a href="index.html">🏠 Início</a>
-            <a href="deputados.html">👥 Deputados</a>
-            <a href="partidos.html">🎯 Partidos</a>
-            <a href="estados.html">🗺️ Estados</a>
-            <a href="fluxo.html">🔄 Fluxo</a>
-            <a href="relatorio.html" class="active">📋 Relatório</a>
-            <a href="despesas.html">💰 Despesas</a>
-        </nav>
+      <h1>📊 Relatório Analítico</h1>
+      <div class="subtitle">
+        ⚠️ ALERTA: Análise dos 353 Deputados que Aprovaram a PEC da Bandidagem
+      </div>
+      <nav class="nav">
+        <a href="index.html">🏠 Início</a>
+        <a href="deputados.html">👥 Deputados</a>
+        <a href="partidos.html">🎯 Partidos</a>
+        <a href="estados.html">🗺️ Estados</a>
+        <a href="fluxo.html">🔄 Fluxo</a>
+        <a href="relatorio.html" class="active">📋 Relatório</a>
+        <a href="despesas.html">💰 Despesas</a>
+      </nav>
     </div>
 
     <div class="container">
-        <!-- Table of Contents -->
-        <div class="toc">
-            <h3>📑 Índice do Relatório</h3>
-            <ul>
-                <li><a href="#sumario">📋 Sumário Executivo</a></li>
-                <li><a href="#partidaria">🏛️ Análise Partidária</a></li>
-                <li><a href="#mudancas">🔄 Mudanças Entre Turnos</a></li>
-                <li><a href="#regional">🗺️ Análise Regional</a></li>
-                <li><a href="#correlacao">🔐 Correlação Voto Secreto</a></li>
-                <li><a href="#coesao">🎯 Coesão Partidária</a></li>
-                <li><a href="#insights">🔍 Descobertas Principais</a></li>
-                <li><a href="#casos">📝 Casos Notáveis</a></li>
-                <li><a href="#conclusoes">💡 Conclusões</a></li>
-            </ul>
+      <!-- Table of Contents -->
+      <div class="toc">
+        <h3>📑 Índice do Relatório</h3>
+        <ul>
+          <li><a href="#sumario">📋 Sumário Executivo</a></li>
+          <li><a href="#partidaria">🏛️ Análise Partidária</a></li>
+          <li><a href="#mudancas">🔄 Mudanças Entre Turnos</a></li>
+          <li><a href="#regional">🗺️ Análise Regional</a></li>
+          <li><a href="#correlacao">🔐 Correlação Voto Secreto</a></li>
+          <li><a href="#coesao">🎯 Coesão Partidária</a></li>
+          <li><a href="#insights">🔍 Descobertas Principais</a></li>
+          <li><a href="#casos">📝 Casos Notáveis</a></li>
+          <li><a href="#conclusoes">💡 Conclusões</a></li>
+        </ul>
+      </div>
+
+      <!-- Executive Summary -->
+      <div class="section" id="sumario">
+        <h2 class="section-title" style="color: #dc2626">
+          🚨 ALERTA: Sumário da Aprovação
+        </h2>
+
+        <p style="font-size: 1.1rem; margin-bottom: 2rem; color: #475569">
+          A análise dos dados de votação da
+          <strong>PEC da Bandidagem</strong> revela padrões complexos de
+          comportamento político, com forte polarização partidária,
+          significativa correlação entre apoio à PEC e defesa do voto secreto, e
+          variações regionais marcantes.
+        </p>
+
+        <div class="key-metrics">
+          <div class="metric-card">
+            <span class="metric-number">488</span>
+            <div class="metric-label">Deputados 1º Turno</div>
+          </div>
+          <div class="metric-card">
+            <span class="metric-number">477</span>
+            <div class="metric-label">Deputados 2º Turno</div>
+          </div>
+          <div class="metric-card">
+            <span class="metric-number">72.3%</span>
+            <div class="metric-label">Aprovação 1º Turno</div>
+          </div>
+          <div class="metric-card">
+            <span class="metric-number">72.1%</span>
+            <div class="metric-label">Aprovação 2º Turno</div>
+          </div>
+          <div class="metric-card">
+            <span class="metric-number">99.4%</span>
+            <div class="metric-label">Estabilidade de Voto</div>
+          </div>
+          <div class="metric-card">
+            <span class="metric-number">0.83</span>
+            <div class="metric-label">Correlação c/ Voto Secreto</div>
+          </div>
         </div>
 
-        <!-- Executive Summary -->
-        <div class="section" id="sumario">
-            <h2 class="section-title" style="color: #dc2626;">🚨 ALERTA: Sumário da Aprovação</h2>
+        <table class="stats-table">
+          <thead>
+            <tr>
+              <th>Métrica</th>
+              <th>1º Turno</th>
+              <th>2º Turno</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Total de Votantes</strong></td>
+              <td>488</td>
+              <td>477</td>
+            </tr>
+            <tr>
+              <td><strong>Votos SIM</strong></td>
+              <td>353 (72.3%)</td>
+              <td>344 (72.1%)</td>
+            </tr>
+            <tr>
+              <td><strong>Votos NÃO</strong></td>
+              <td>134 (27.5%)</td>
+              <td>133 (27.9%)</td>
+            </tr>
+            <tr>
+              <td><strong>Abstenções</strong></td>
+              <td>1 (0.2%)</td>
+              <td>0 (0.0%)</td>
+            </tr>
+            <tr>
+              <td><strong>Quórum Mínimo</strong></td>
+              <td>✅ Atingido</td>
+              <td>✅ Atingido</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-            <p style="font-size: 1.1rem; margin-bottom: 2rem; color: #475569;">
-                A análise dos dados de votação da <strong>PEC da Bandidagem</strong> revela padrões complexos de comportamento político,
-                com forte polarização partidária, significativa correlação entre apoio à PEC e defesa do voto secreto,
-                e variações regionais marcantes.
-            </p>
+      <!-- Party Analysis -->
+      <div class="section" id="partidaria">
+        <h2 class="section-title" style="color: #dc2626">
+          🚨 Partidos que Aprovaram a PEC
+        </h2>
 
-            <div class="key-metrics">
-                <div class="metric-card">
-                    <span class="metric-number">488</span>
-                    <div class="metric-label">Deputados 1º Turno</div>
+        <div class="subsection">
+          <h3>📈 Partidos com APOIO MASSIVO (>90% de aprovação)</h3>
+
+          <div class="party-grid">
+            <div class="party-card">
+              <div class="party-name">🔵 PL - Partido Liberal</div>
+              <div class="party-stats">
+                <div class="party-stat">
+                  <div class="party-stat-number">100%</div>
+                  <div class="party-stat-label">Aprovação</div>
                 </div>
-                <div class="metric-card">
-                    <span class="metric-number">477</span>
-                    <div class="metric-label">Deputados 2º Turno</div>
+                <div class="party-stat">
+                  <div class="party-stat-number">83</div>
+                  <div class="party-stat-label">Deputados</div>
                 </div>
-                <div class="metric-card">
-                    <span class="metric-number">72.3%</span>
-                    <div class="metric-label">Aprovação 1º Turno</div>
+                <div class="party-stat">
+                  <div class="party-stat-number">95.1%</div>
+                  <div class="party-stat-label">Voto Secreto</div>
                 </div>
-                <div class="metric-card">
-                    <span class="metric-number">72.1%</span>
-                    <div class="metric-label">Aprovação 2º Turno</div>
-                </div>
-                <div class="metric-card">
-                    <span class="metric-number">99.4%</span>
-                    <div class="metric-label">Estabilidade de Voto</div>
-                </div>
-                <div class="metric-card">
-                    <span class="metric-number">0.83</span>
-                    <div class="metric-label">Correlação c/ Voto Secreto</div>
-                </div>
+              </div>
+              <div class="deputy-list">
+                <strong>Característica:</strong> Coesão partidária perfeita -
+                nenhuma dissidência em ambos os turnos
+              </div>
             </div>
 
+            <div class="party-card">
+              <div class="party-name">🟢 Republicanos</div>
+              <div class="party-stats">
+                <div class="party-stat">
+                  <div class="party-stat-number">100%</div>
+                  <div class="party-stat-label">2º Turno</div>
+                </div>
+                <div class="party-stat">
+                  <div class="party-stat-number">43</div>
+                  <div class="party-stat-label">Deputados</div>
+                </div>
+                <div class="party-stat">
+                  <div class="party-stat-number">97.6%</div>
+                  <div class="party-stat-label">Voto Secreto</div>
+                </div>
+              </div>
+              <div class="deputy-list">
+                <strong>Único dissidente:</strong> Alex Santana (BA) - Abstenção
+                no 1º turno, alinhamento no 2º
+              </div>
+            </div>
+
+            <div class="party-card">
+              <div class="party-name">🟡 PP - Progressistas</div>
+              <div class="party-stats">
+                <div class="party-stat">
+                  <div class="party-stat-number">93.8%</div>
+                  <div class="party-stat-label">Aprovação</div>
+                </div>
+                <div class="party-stat">
+                  <div class="party-stat-number">48</div>
+                  <div class="party-stat-label">Deputados</div>
+                </div>
+                <div class="party-stat">
+                  <div class="party-stat-number">95.7%</div>
+                  <div class="party-stat-label">Voto Secreto</div>
+                </div>
+              </div>
+              <div class="deputy-list">
+                <strong>Dissidentes:</strong> Daniel Barbosa (AL), Del. Bruno
+                Lima (SP), Socorro Neri (AC)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <h3>📉 Partidos com OPOSIÇÃO MASSIVA (>80% contra)</h3>
+
+          <div class="party-grid">
+            <div class="party-card opposition">
+              <div class="party-name">🔴 PT - Partido dos Trabalhadores</div>
+              <div class="party-stats">
+                <div class="party-stat">
+                  <div class="party-stat-number">83.3%</div>
+                  <div class="party-stat-label">Oposição</div>
+                </div>
+                <div class="party-stat">
+                  <div class="party-stat-number">60</div>
+                  <div class="party-stat-label">Deputados</div>
+                </div>
+                <div class="party-stat">
+                  <div class="party-stat-number">14%</div>
+                  <div class="party-stat-label">Voto Secreto</div>
+                </div>
+              </div>
+              <div class="deputy-list">
+                <strong>Dissidentes notáveis:</strong> Dr. Francisco (PI),
+                Flávio Nogueira (PI)<br />
+                <strong>Mudaram voto:</strong> Airton Faleiro (PA), Leonardo
+                Monteiro (MG)
+              </div>
+            </div>
+
+            <div class="party-card opposition">
+              <div class="party-name">🟣 PSOL</div>
+              <div class="party-stats">
+                <div class="party-stat">
+                  <div class="party-stat-number">100%</div>
+                  <div class="party-stat-label">Oposição</div>
+                </div>
+                <div class="party-stat">
+                  <div class="party-stat-number">0%</div>
+                  <div class="party-stat-label">Voto Secreto</div>
+                </div>
+              </div>
+              <div class="deputy-list">
+                <strong>Coesão total:</strong> Nenhuma dissidência em ambos os
+                turnos
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <h3>🤝 Partidos DIVIDIDOS (Coesão <70%)</h3>
+
+          <div class="table-container">
             <table class="stats-table">
-                <thead>
-                    <tr>
-                        <th>Métrica</th>
-                        <th>1º Turno</th>
-                        <th>2º Turno</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Total de Votantes</strong></td>
-                        <td>488</td>
-                        <td>477</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Votos SIM</strong></td>
-                        <td>353 (72.3%)</td>
-                        <td>344 (72.1%)</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Votos NÃO</strong></td>
-                        <td>134 (27.5%)</td>
-                        <td>133 (27.9%)</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Abstenções</strong></td>
-                        <td>1 (0.2%)</td>
-                        <td>0 (0.0%)</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Quórum Mínimo</strong></td>
-                        <td>✅ Atingido</td>
-                        <td>✅ Atingido</td>
-                    </tr>
-                </tbody>
+              <thead>
+                <tr>
+                  <th>Partido</th>
+                  <th>Coesão</th>
+                  <th>Votação SIM</th>
+                  <th>Votação NÃO</th>
+                  <th>Característica</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>PSDB</strong></td>
+                  <td>0%</td>
+                  <td>50%</td>
+                  <td>50%</td>
+                  <td>Divisão perfeita</td>
+                </tr>
+                <tr>
+                  <td><strong>PV</strong></td>
+                  <td>0%</td>
+                  <td>50%</td>
+                  <td>50%</td>
+                  <td>Divisão perfeita</td>
+                </tr>
+                <tr>
+                  <td><strong>Solidariedade</strong></td>
+                  <td>0%</td>
+                  <td>50%</td>
+                  <td>50%</td>
+                  <td>Divisão equilibrada</td>
+                </tr>
+                <tr>
+                  <td><strong>PSD</strong></td>
+                  <td>14.3%</td>
+                  <td>57.1%</td>
+                  <td>42.9%</td>
+                  <td>Forte divisão interna</td>
+                </tr>
+              </tbody>
             </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vote Changes -->
+      <div class="section" id="mudancas">
+        <h2 class="section-title" style="color: #dc2626">
+          🚨 Como os Votos SIM Aumentaram
+        </h2>
+
+        <div class="highlight-box">
+          <div class="highlight-title">🎯 Estabilidade Extraordinária</div>
+          Apenas <strong>3 deputados</strong> (0.6%) mudaram seu voto entre os
+          turnos, todos de SIM para NÃO, demonstrando posições consolidadas e
+          pouca margem para mudança de opinião.
         </div>
 
-        <!-- Party Analysis -->
-        <div class="section" id="partidaria">
-            <h2 class="section-title" style="color: #dc2626;">🚨 Partidos que Aprovaram a PEC</h2>
+        <div class="subsection">
+          <h3>🔀 Deputados que Mudaram de Posição</h3>
 
-            <div class="subsection">
-                <h3>📈 Partidos com APOIO MASSIVO (>90% de aprovação)</h3>
-
-                <div class="party-grid">
-                    <div class="party-card">
-                        <div class="party-name">🔵 PL - Partido Liberal</div>
-                        <div class="party-stats">
-                            <div class="party-stat">
-                                <div class="party-stat-number">100%</div>
-                                <div class="party-stat-label">Aprovação</div>
-                            </div>
-                            <div class="party-stat">
-                                <div class="party-stat-number">83</div>
-                                <div class="party-stat-label">Deputados</div>
-                            </div>
-                            <div class="party-stat">
-                                <div class="party-stat-number">95.1%</div>
-                                <div class="party-stat-label">Voto Secreto</div>
-                            </div>
-                        </div>
-                        <div class="deputy-list">
-                            <strong>Característica:</strong> Coesão partidária perfeita - nenhuma dissidência em ambos os turnos
-                        </div>
-                    </div>
-
-                    <div class="party-card">
-                        <div class="party-name">🟢 Republicanos</div>
-                        <div class="party-stats">
-                            <div class="party-stat">
-                                <div class="party-stat-number">100%</div>
-                                <div class="party-stat-label">2º Turno</div>
-                            </div>
-                            <div class="party-stat">
-                                <div class="party-stat-number">43</div>
-                                <div class="party-stat-label">Deputados</div>
-                            </div>
-                            <div class="party-stat">
-                                <div class="party-stat-number">97.6%</div>
-                                <div class="party-stat-label">Voto Secreto</div>
-                            </div>
-                        </div>
-                        <div class="deputy-list">
-                            <strong>Único dissidente:</strong> Alex Santana (BA) - Abstenção no 1º turno, alinhamento no 2º
-                        </div>
-                    </div>
-
-                    <div class="party-card">
-                        <div class="party-name">🟡 PP - Progressistas</div>
-                        <div class="party-stats">
-                            <div class="party-stat">
-                                <div class="party-stat-number">93.8%</div>
-                                <div class="party-stat-label">Aprovação</div>
-                            </div>
-                            <div class="party-stat">
-                                <div class="party-stat-number">48</div>
-                                <div class="party-stat-label">Deputados</div>
-                            </div>
-                            <div class="party-stat">
-                                <div class="party-stat-number">95.7%</div>
-                                <div class="party-stat-label">Voto Secreto</div>
-                            </div>
-                        </div>
-                        <div class="deputy-list">
-                            <strong>Dissidentes:</strong> Daniel Barbosa (AL), Del. Bruno Lima (SP), Socorro Neri (AC)
-                        </div>
-                    </div>
-                </div>
+          <div class="party-grid">
+            <div class="party-card divided">
+              <div class="party-name">Airton Faleiro (PT/PA)</div>
+              <div class="deputy-list">
+                • Único do PT no Pará a votar SIM inicialmente<br />
+                • Alinhamento posterior com a bancada partidária<br />
+                • Mudança: SIM → NÃO
+              </div>
             </div>
 
-            <div class="subsection">
-                <h3>📉 Partidos com OPOSIÇÃO MASSIVA (>80% contra)</h3>
-
-                <div class="party-grid">
-                    <div class="party-card opposition">
-                        <div class="party-name">🔴 PT - Partido dos Trabalhadores</div>
-                        <div class="party-stats">
-                            <div class="party-stat">
-                                <div class="party-stat-number">83.3%</div>
-                                <div class="party-stat-label">Oposição</div>
-                            </div>
-                            <div class="party-stat">
-                                <div class="party-stat-number">60</div>
-                                <div class="party-stat-label">Deputados</div>
-                            </div>
-                            <div class="party-stat">
-                                <div class="party-stat-number">14%</div>
-                                <div class="party-stat-label">Voto Secreto</div>
-                            </div>
-                        </div>
-                        <div class="deputy-list">
-                            <strong>Dissidentes notáveis:</strong> Dr. Francisco (PI), Flávio Nogueira (PI)<br>
-                            <strong>Mudaram voto:</strong> Airton Faleiro (PA), Leonardo Monteiro (MG)
-                        </div>
-                    </div>
-
-                    <div class="party-card opposition">
-                        <div class="party-name">🟣 PSOL</div>
-                        <div class="party-stats">
-                            <div class="party-stat">
-                                <div class="party-stat-number">100%</div>
-                                <div class="party-stat-label">Oposição</div>
-                            </div>
-                            <div class="party-stat">
-                                <div class="party-stat-number">0%</div>
-                                <div class="party-stat-label">Voto Secreto</div>
-                            </div>
-                        </div>
-                        <div class="deputy-list">
-                            <strong>Coesão total:</strong> Nenhuma dissidência em ambos os turnos
-                        </div>
-                    </div>
-                </div>
+            <div class="party-card divided">
+              <div class="party-name">Daniela Waguinho (União/RJ)</div>
+              <div class="deputy-list">
+                • Mudança surpreendente dado o apoio massivo do União<br />
+                • Possível pressão local ou reavaliação política<br />
+                • Mudança: SIM → NÃO
+              </div>
             </div>
 
-            <div class="subsection">
-                <h3>🤝 Partidos DIVIDIDOS (Coesão <70%)</h3>
-
-                <div class="table-container">
-                    <table class="stats-table">
-                    <thead>
-                        <tr>
-                            <th>Partido</th>
-                            <th>Coesão</th>
-                            <th>Votação SIM</th>
-                            <th>Votação NÃO</th>
-                            <th>Característica</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>PSDB</strong></td>
-                            <td>0%</td>
-                            <td>50%</td>
-                            <td>50%</td>
-                            <td>Divisão perfeita</td>
-                        </tr>
-                        <tr>
-                            <td><strong>PV</strong></td>
-                            <td>0%</td>
-                            <td>50%</td>
-                            <td>50%</td>
-                            <td>Divisão perfeita</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Solidariedade</strong></td>
-                            <td>0%</td>
-                            <td>50%</td>
-                            <td>50%</td>
-                            <td>Divisão equilibrada</td>
-                        </tr>
-                        <tr>
-                            <td><strong>PSD</strong></td>
-                            <td>14.3%</td>
-                            <td>57.1%</td>
-                            <td>42.9%</td>
-                            <td>Forte divisão interna</td>
-                        </tr>
-                    </tbody>
-                    </table>
-                </div>
+            <div class="party-card divided">
+              <div class="party-name">Leonardo Monteiro (PT/MG)</div>
+              <div class="deputy-list">
+                • Correção de curso para alinhar com o partido<br />
+                • Minas Gerais teve votação dividida<br />
+                • Mudança: SIM → NÃO
+              </div>
             </div>
+          </div>
         </div>
 
-        <!-- Vote Changes -->
-        <div class="section" id="mudancas">
-            <h2 class="section-title" style="color: #dc2626;">🚨 Como os Votos SIM Aumentaram</h2>
+        <div class="key-metrics">
+          <div class="metric-card">
+            <span class="metric-number">472</span>
+            <div class="metric-label">Deputados em Ambos os Turnos</div>
+          </div>
+          <div class="metric-card">
+            <span class="metric-number">16</span>
+            <div class="metric-label">Ausentes no 2º Turno</div>
+          </div>
+          <div class="metric-card">
+            <span class="metric-number">5</span>
+            <div class="metric-label">Novos no 2º Turno</div>
+          </div>
+          <div class="metric-card">
+            <span class="metric-number">97%</span>
+            <div class="metric-label">Taxa de Participação</div>
+          </div>
+        </div>
+      </div>
 
-            <div class="highlight-box">
-                <div class="highlight-title">🎯 Estabilidade Extraordinária</div>
-                Apenas <strong>3 deputados</strong> (0.6%) mudaram seu voto entre os turnos, todos de SIM para NÃO,
-                demonstrando posições consolidadas e pouca margem para mudança de opinião.
+      <!-- Regional Analysis -->
+      <div class="section" id="regional">
+        <h2 class="section-title" style="color: #dc2626">
+          🚨 Regiões que Mais Aprovaram
+        </h2>
+
+        <div class="subsection">
+          <h3>🏆 Estados com APOIO TOTAL (100% SIM)</h3>
+
+          <div class="party-grid">
+            <div class="party-card">
+              <div class="party-name">Tocantins (TO)</div>
+              <div class="party-stats">
+                <div class="party-stat">
+                  <div class="party-stat-number">8/8</div>
+                  <div class="party-stat-label">Deputados</div>
+                </div>
+                <div class="party-stat">
+                  <div class="party-stat-number">100%</div>
+                  <div class="party-stat-label">Unanimidade</div>
+                </div>
+              </div>
             </div>
 
-            <div class="subsection">
-                <h3>🔀 Deputados que Mudaram de Posição</h3>
-
-                <div class="party-grid">
-                    <div class="party-card divided">
-                        <div class="party-name">Airton Faleiro (PT/PA)</div>
-                        <div class="deputy-list">
-                            • Único do PT no Pará a votar SIM inicialmente<br>
-                            • Alinhamento posterior com a bancada partidária<br>
-                            • Mudança: SIM → NÃO
-                        </div>
-                    </div>
-
-                    <div class="party-card divided">
-                        <div class="party-name">Daniela Waguinho (União/RJ)</div>
-                        <div class="deputy-list">
-                            • Mudança surpreendente dado o apoio massivo do União<br>
-                            • Possível pressão local ou reavaliação política<br>
-                            • Mudança: SIM → NÃO
-                        </div>
-                    </div>
-
-                    <div class="party-card divided">
-                        <div class="party-name">Leonardo Monteiro (PT/MG)</div>
-                        <div class="deputy-list">
-                            • Correção de curso para alinhar com o partido<br>
-                            • Minas Gerais teve votação dividida<br>
-                            • Mudança: SIM → NÃO
-                        </div>
-                    </div>
+            <div class="party-card">
+              <div class="party-name">Piauí (PI)</div>
+              <div class="party-stats">
+                <div class="party-stat">
+                  <div class="party-stat-number">10/10</div>
+                  <div class="party-stat-label">Deputados</div>
                 </div>
+                <div class="party-stat">
+                  <div class="party-stat-number">100%</div>
+                  <div class="party-stat-label">Alinhamento</div>
+                </div>
+              </div>
             </div>
-
-            <div class="key-metrics">
-                <div class="metric-card">
-                    <span class="metric-number">472</span>
-                    <div class="metric-label">Deputados em Ambos os Turnos</div>
-                </div>
-                <div class="metric-card">
-                    <span class="metric-number">16</span>
-                    <div class="metric-label">Ausentes no 2º Turno</div>
-                </div>
-                <div class="metric-card">
-                    <span class="metric-number">5</span>
-                    <div class="metric-label">Novos no 2º Turno</div>
-                </div>
-                <div class="metric-card">
-                    <span class="metric-number">97%</span>
-                    <div class="metric-label">Taxa de Participação</div>
-                </div>
-            </div>
+          </div>
         </div>
 
-        <!-- Regional Analysis -->
-        <div class="section" id="regional">
-            <h2 class="section-title" style="color: #dc2626;">🚨 Regiões que Mais Aprovaram</h2>
+        <div class="subsection">
+          <h3>⚠️ Estados DIVIDIDOS (≤60% aprovação)</h3>
 
-            <div class="subsection">
-                <h3>🏆 Estados com APOIO TOTAL (100% SIM)</h3>
-
-                <div class="party-grid">
-                    <div class="party-card">
-                        <div class="party-name">Tocantins (TO)</div>
-                        <div class="party-stats">
-                            <div class="party-stat">
-                                <div class="party-stat-number">8/8</div>
-                                <div class="party-stat-label">Deputados</div>
-                            </div>
-                            <div class="party-stat">
-                                <div class="party-stat-number">100%</div>
-                                <div class="party-stat-label">Unanimidade</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="party-card">
-                        <div class="party-name">Piauí (PI)</div>
-                        <div class="party-stats">
-                            <div class="party-stat">
-                                <div class="party-stat-number">10/10</div>
-                                <div class="party-stat-label">Deputados</div>
-                            </div>
-                            <div class="party-stat">
-                                <div class="party-stat-number">100%</div>
-                                <div class="party-stat-label">Alinhamento</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="subsection">
-                <h3>⚠️ Estados DIVIDIDOS (≤60% aprovação)</h3>
-
-                <div class="table-container">
-                    <table class="stats-table">
-                    <thead>
-                        <tr>
-                            <th>Estado</th>
-                            <th>Aprovação</th>
-                            <th>Deputados</th>
-                            <th>Contexto</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Sergipe (SE)</strong></td>
-                            <td>50.0%</td>
-                            <td>3-3</td>
-                            <td>Divisão perfeita</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Rio Grande do Sul (RS)</strong></td>
-                            <td>60.7%</td>
-                            <td>17-11</td>
-                            <td>Tradição de independência</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Bahia (BA)</strong></td>
-                            <td>61.1%</td>
-                            <td>22-14</td>
-                            <td>Grande bancada dividida</td>
-                        </tr>
-                        <tr>
-                            <td><strong>São Paulo (SP)</strong></td>
-                            <td>59.7%</td>
-                            <td>42-28</td>
-                            <td>Maior colégio eleitoral dividido</td>
-                        </tr>
-                    </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="highlight-box">
-                <div class="highlight-title">📈 Padrões Regionais Identificados</div>
-                <ul style="margin-left: 1.5rem; color: #92400e;">
-                    <li><strong>Norte/Nordeste:</strong> Tendência de maior apoio (exceção: Bahia e Sergipe)</li>
-                    <li><strong>Sul/Sudeste:</strong> Maior resistência e divisão</li>
-                    <li><strong>Centro-Oeste:</strong> Apoio moderado a alto</li>
-                    <li><strong>Capitais vs Interior:</strong> Deputados de capitais mostraram maior resistência</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Correlation Analysis -->
-        <div class="section" id="correlacao">
-            <h2 class="section-title">🔐 Correlação: Voto × Defesa do Voto Secreto</h2>
-
-            <div class="correlation-box">
-                <span class="correlation-value">r = 0.83</span>
-                <div class="correlation-label">Forte Correlação Positiva</div>
-            </div>
-
+          <div class="table-container">
             <table class="stats-table">
-                <thead>
-                    <tr>
-                        <th>Votação</th>
-                        <th>Defendeu Voto Secreto</th>
-                        <th>Contra Voto Secreto</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>SIM</strong></td>
-                        <td>291 (86.4%)</td>
-                        <td>46 (13.6%)</td>
-                        <td>337</td>
-                    </tr>
-                    <tr>
-                        <td><strong>NÃO</strong></td>
-                        <td>4 (3.0%)</td>
-                        <td>120 (97.0%)</td>
-                        <td>124</td>
-                    </tr>
-                </tbody>
+              <thead>
+                <tr>
+                  <th>Estado</th>
+                  <th>Aprovação</th>
+                  <th>Deputados</th>
+                  <th>Contexto</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Sergipe (SE)</strong></td>
+                  <td>50.0%</td>
+                  <td>3-3</td>
+                  <td>Divisão perfeita</td>
+                </tr>
+                <tr>
+                  <td><strong>Rio Grande do Sul (RS)</strong></td>
+                  <td>60.7%</td>
+                  <td>17-11</td>
+                  <td>Tradição de independência</td>
+                </tr>
+                <tr>
+                  <td><strong>Bahia (BA)</strong></td>
+                  <td>61.1%</td>
+                  <td>22-14</td>
+                  <td>Grande bancada dividida</td>
+                </tr>
+                <tr>
+                  <td><strong>São Paulo (SP)</strong></td>
+                  <td>59.7%</td>
+                  <td>42-28</td>
+                  <td>Maior colégio eleitoral dividido</td>
+                </tr>
+              </tbody>
             </table>
-
-            <div class="highlight-box">
-                <div class="highlight-title">🎭 Casos Contraditórios</div>
-                Apenas <strong>4 deputados</strong> votaram NÃO mas defenderam voto secreto:
-                <ul style="margin-left: 1.5rem; margin-top: 0.5rem; color: #92400e;">
-                    <li>Emanuel Pinheiro N (MDB/MT)</li>
-                    <li>João Daniel (PT/SE)</li>
-                    <li>Valmir Assunção (PT/BA)</li>
-                    <li>Weliton Prado (Solidariedade/MG)</li>
-                </ul>
-                <strong>Interpretação:</strong> Possível tentativa de equilibrar posição partidária com pressão da base eleitoral.
-            </div>
+          </div>
         </div>
 
-        <!-- Party Cohesion -->
-        <div class="section" id="coesao">
-            <h2 class="section-title">🎯 Coesão Partidária: Índice Rice</h2>
+        <div class="highlight-box">
+          <div class="highlight-title">📈 Padrões Regionais Identificados</div>
+          <ul style="margin-left: 1.5rem; color: #92400e">
+            <li>
+              <strong>Norte/Nordeste:</strong> Tendência de maior apoio
+              (exceção: Bahia e Sergipe)
+            </li>
+            <li><strong>Sul/Sudeste:</strong> Maior resistência e divisão</li>
+            <li><strong>Centro-Oeste:</strong> Apoio moderado a alto</li>
+            <li>
+              <strong>Capitais vs Interior:</strong> Deputados de capitais
+              mostraram maior resistência
+            </li>
+          </ul>
+        </div>
+      </div>
 
-            <div class="code-block">
-Alta Coesão (>90%)
-├── PL, Republicanos, Novo: 100%
-├── PCdoB, PSOL, PRD, Rede: 100%
-├── PP: 87.8%
-└── MDB: 86.5%
+      <!-- Correlation Analysis -->
+      <div class="section" id="correlacao">
+        <h2 class="section-title">
+          🔐 Correlação: Voto × Defesa do Voto Secreto
+        </h2>
 
-Média Coesão (70-90%)
-├── União: 82.4%
-├── Avante: 85.7%
-└── Podemos: 82.4%
-
-Baixa Coesão (<70%)
-├── PT: 66.7%
-├── PDT: 50%
-├── PSD: 14.3%
-└── PSDB, PV, Solidariedade: 0%
-            </div>
+        <div class="correlation-box">
+          <span class="correlation-value">r = 0.83</span>
+          <div class="correlation-label">Forte Correlação Positiva</div>
         </div>
 
-        <!-- Key Insights -->
-        <div class="section" id="insights">
-            <h2 class="section-title">🔍 Descobertas e Insights Principais</h2>
+        <table class="stats-table">
+          <thead>
+            <tr>
+              <th>Votação</th>
+              <th>Defendeu Voto Secreto</th>
+              <th>Contra Voto Secreto</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>SIM</strong></td>
+              <td>291 (86.4%)</td>
+              <td>46 (13.6%)</td>
+              <td>337</td>
+            </tr>
+            <tr>
+              <td><strong>NÃO</strong></td>
+              <td>4 (3.0%)</td>
+              <td>120 (97.0%)</td>
+              <td>124</td>
+            </tr>
+          </tbody>
+        </table>
 
-            <div class="insights-grid">
-                <div class="insight-card">
-                    <div class="insight-number">1️⃣</div>
-                    <div class="insight-title">Polarização Extrema</div>
-                    <div class="insight-text">
-                        Partidos de direita/centro-direita: apoio massivo (>90%)<br>
-                        Partidos de esquerda: oposição massiva (>80%)<br>
-                        Centro político: profundamente dividido
-                    </div>
-                </div>
+        <div class="highlight-box">
+          <div class="highlight-title">🎭 Casos Contraditórios</div>
+          Apenas <strong>4 deputados</strong> votaram NÃO mas defenderam voto
+          secreto:
+          <ul style="margin-left: 1.5rem; margin-top: 0.5rem; color: #92400e">
+            <li>Emanuel Pinheiro N (MDB/MT)</li>
+            <li>João Daniel (PT/SE)</li>
+            <li>Valmir Assunção (PT/BA)</li>
+            <li>Weliton Prado (Solidariedade/MG)</li>
+          </ul>
+          <strong>Interpretação:</strong> Possível tentativa de equilibrar
+          posição partidária com pressão da base eleitoral.
+        </div>
+      </div>
 
-                <div class="insight-card">
-                    <div class="insight-number">2️⃣</div>
-                    <div class="insight-title">Disciplina Partidária Variável</div>
-                    <div class="insight-text">
-                        PL manteve 100% de disciplina<br>
-                        PT teve 12 dissidentes no 1º turno<br>
-                        PSDB completamente dividido
-                    </div>
-                </div>
+      <!-- Party Cohesion -->
+      <div class="section" id="coesao">
+        <h2 class="section-title">🎯 Coesão Partidária: Índice Rice</h2>
 
-                <div class="insight-card">
-                    <div class="insight-number">3️⃣</div>
-                    <div class="insight-title">Geografia Política</div>
-                    <div class="insight-text">
-                        Norte/Nordeste mais favorável (exceções: BA, SE)<br>
-                        Sul/Sudeste mais resistente<br>
-                        Estados menores com votações mais coesas
-                    </div>
-                </div>
+        <div class="code-block">
+          Alta Coesão (>90%) ├── PL, Republicanos, Novo: 100% ├── PCdoB, PSOL,
+          PRD, Rede: 100% ├── PP: 87.8% └── MDB: 86.5% Média Coesão (70-90%) ├──
+          União: 82.4% ├── Avante: 85.7% └── Podemos: 82.4% Baixa Coesão (<70%)
+          ├── PT: 66.7% ├── PDT: 50% ├── PSD: 14.3% └── PSDB, PV, Solidariedade:
+          0%
+        </div>
+      </div>
 
-                <div class="insight-card">
-                    <div class="insight-number">4️⃣</div>
-                    <div class="insight-title">Voto Secreto como Proxy</div>
-                    <div class="insight-text">
-                        Forte indicador de apoio à PEC (r=0.83)<br>
-                        Apenas 4 contradições em 461 votos válidos<br>
-                        Questões intrinsecamente ligadas
-                    </div>
-                </div>
+      <!-- Key Insights -->
+      <div class="section" id="insights">
+        <h2 class="section-title">🔍 Descobertas e Insights Principais</h2>
 
-                <div class="insight-card">
-                    <div class="insight-number">5️⃣</div>
-                    <div class="insight-title">Estabilidade Entre Turnos</div>
-                    <div class="insight-text">
-                        Apenas 0.6% mudaram de voto<br>
-                        Manutenção do resultado geral<br>
-                        Pequeno aumento na coesão partidária
-                    </div>
-                </div>
+        <div class="insights-grid">
+          <div class="insight-card">
+            <div class="insight-number">1️⃣</div>
+            <div class="insight-title">Polarização Extrema</div>
+            <div class="insight-text">
+              Partidos de direita/centro-direita: apoio massivo (>90%)<br />
+              Partidos de esquerda: oposição massiva (>80%)<br />
+              Centro político: profundamente dividido
             </div>
+          </div>
+
+          <div class="insight-card">
+            <div class="insight-number">2️⃣</div>
+            <div class="insight-title">Disciplina Partidária Variável</div>
+            <div class="insight-text">
+              PL manteve 100% de disciplina<br />
+              PT teve 12 dissidentes no 1º turno<br />
+              PSDB completamente dividido
+            </div>
+          </div>
+
+          <div class="insight-card">
+            <div class="insight-number">3️⃣</div>
+            <div class="insight-title">Geografia Política</div>
+            <div class="insight-text">
+              Norte/Nordeste mais favorável (exceções: BA, SE)<br />
+              Sul/Sudeste mais resistente<br />
+              Estados menores com votações mais coesas
+            </div>
+          </div>
+
+          <div class="insight-card">
+            <div class="insight-number">4️⃣</div>
+            <div class="insight-title">Voto Secreto como Proxy</div>
+            <div class="insight-text">
+              Forte indicador de apoio à PEC (r=0.83)<br />
+              Apenas 4 contradições em 461 votos válidos<br />
+              Questões intrinsecamente ligadas
+            </div>
+          </div>
+
+          <div class="insight-card">
+            <div class="insight-number">5️⃣</div>
+            <div class="insight-title">Estabilidade Entre Turnos</div>
+            <div class="insight-text">
+              Apenas 0.6% mudaram de voto<br />
+              Manutenção do resultado geral<br />
+              Pequeno aumento na coesão partidária
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notable Cases -->
+      <div class="section" id="casos">
+        <h2 class="section-title">📝 Casos Notáveis e Exceções</h2>
+
+        <div class="subsection">
+          <h3>🌟 Dissidentes Corajosos</h3>
+
+          <div class="party-grid">
+            <div class="party-card opposition">
+              <div class="party-name">
+                No PT (votaram SIM contra orientação)
+              </div>
+              <div class="deputy-list">
+                <strong>Bancada do Piauí:</strong> 3 deputados<br />
+                <strong>Dissidentes isolados:</strong> em outros estados<br />
+                <strong>Característica:</strong> Possível influência
+                local/regional
+              </div>
+            </div>
+
+            <div class="party-card divided">
+              <div class="party-name">Oposição interna (União/PSD/MDB)</div>
+              <div class="deputy-list">
+                <strong>Kim Kataguiri (União/SP):</strong> Perfil ideológico
+                diferenciado<br />
+                <strong>Rosangela Moro (União/SP):</strong> Posicionamento
+                independente<br />
+                <strong>Baleia Rossi (MDB/SP):</strong> Liderança com posição
+                própria
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- Notable Cases -->
-        <div class="section" id="casos">
-            <h2 class="section-title">📝 Casos Notáveis e Exceções</h2>
-
-            <div class="subsection">
-                <h3>🌟 Dissidentes Corajosos</h3>
-
-                <div class="party-grid">
-                    <div class="party-card opposition">
-                        <div class="party-name">No PT (votaram SIM contra orientação)</div>
-                        <div class="deputy-list">
-                            <strong>Bancada do Piauí:</strong> 3 deputados<br>
-                            <strong>Dissidentes isolados:</strong> em outros estados<br>
-                            <strong>Característica:</strong> Possível influência local/regional
-                        </div>
-                    </div>
-
-                    <div class="party-card divided">
-                        <div class="party-name">Oposição interna (União/PSD/MDB)</div>
-                        <div class="deputy-list">
-                            <strong>Kim Kataguiri (União/SP):</strong> Perfil ideológico diferenciado<br>
-                            <strong>Rosangela Moro (União/SP):</strong> Posicionamento independente<br>
-                            <strong>Baleia Rossi (MDB/SP):</strong> Liderança com posição própria
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="highlight-box">
-                <div class="highlight-title">🔄 O Único Abstencionista</div>
-                <strong>Alex Santana</strong> (Republicanos/BA) registrou a única abstenção da votação no 1º turno,
-                alinhando-se ao partido no 2º turno.
-            </div>
+        <div class="highlight-box">
+          <div class="highlight-title">🔄 O Único Abstencionista</div>
+          <strong>Alex Santana</strong> (Republicanos/BA) registrou a única
+          abstenção da votação no 1º turno, alinhando-se ao partido no 2º turno.
         </div>
+      </div>
 
-        <!-- Conclusions -->
-        <div class="section" id="conclusoes">
-            <h2 class="section-title">💡 Conclusões</h2>
+      <!-- Conclusions -->
+      <div class="section" id="conclusoes">
+        <h2 class="section-title">💡 Conclusões</h2>
 
-            <div class="insights-grid">
-                <div class="insight-card">
-                    <div class="insight-number">📊</div>
-                    <div class="insight-title">Apoio Governista Sólido</div>
-                    <div class="insight-text">
-                        A PEC demonstrou forte apoio da base governista, com partidos do Centrão
-                        e direita votando massivamente a favor.
-                    </div>
-                </div>
-
-                <div class="insight-card">
-                    <div class="insight-number">🛡️</div>
-                    <div class="insight-title">Oposição Coesa</div>
-                    <div class="insight-text">
-                        A oposição manteve coesão significativa, especialmente PSOL e PCdoB
-                        com 100% de votos contrários.
-                    </div>
-                </div>
-
-                <div class="insight-card">
-                    <div class="insight-number">🔗</div>
-                    <div class="insight-title">Questões Interligadas</div>
-                    <div class="insight-text">
-                        A correlação entre voto favorável e defesa do voto secreto (r=0.83)
-                        sugere que as questões estão intrinsecamente ligadas.
-                    </div>
-                </div>
-
-                <div class="insight-card">
-                    <div class="insight-number">🗺️</div>
-                    <div class="insight-title">Divisões Regionais</div>
-                    <div class="insight-text">
-                        Padrões regionais revelam divisões culturais e políticas, com Norte/Nordeste
-                        mais alinhados e Sul/Sudeste mais divididos.
-                    </div>
-                </div>
-
-                <div class="insight-card">
-                    <div class="insight-number">⚖️</div>
-                    <div class="insight-title">Posições Consolidadas</div>
-                    <div class="insight-text">
-                        A estabilidade entre turnos (99.4% mantiveram voto) indica posições
-                        consolidadas e pouca margem para mudança.
-                    </div>
-                </div>
-
-                <div class="insight-card">
-                    <div class="insight-number">🎭</div>
-                    <div class="insight-title">Centro Fragmentado</div>
-                    <div class="insight-text">
-                        Partidos de centro (PSD, PSDB) mostraram as maiores divisões internas,
-                        refletindo dificuldade em temas polarizadores.
-                    </div>
-                </div>
+        <div class="insights-grid">
+          <div class="insight-card">
+            <div class="insight-number">📊</div>
+            <div class="insight-title">Apoio Governista Sólido</div>
+            <div class="insight-text">
+              A PEC demonstrou forte apoio da base governista, com partidos do
+              Centrão e direita votando massivamente a favor.
             </div>
-        </div>
+          </div>
 
-        <!-- Metadata -->
-        <div class="section">
-            <h2 class="section-title">📅 Metadados da Análise</h2>
-
-            <table class="stats-table">
-                <tbody>
-                    <tr>
-                        <td><strong>Data da Análise</strong></td>
-                        <td>Setembro 2025</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Fonte dos Dados</strong></td>
-                        <td>Votação Nominal da Câmara dos Deputados</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Total de Registros Analisados</strong></td>
-                        <td>965 votos</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Metodologia</strong></td>
-                        <td>Análise estatística descritiva e correlacional</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Ferramentas</strong></td>
-                        <td>Python, OpenPyXL, análise de coesão partidária (Índice Rice)</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <div style="margin-top: 2rem; padding: 1.5rem; background: #f8fafc; border-radius: 8px; text-align: center; font-style: italic; color: #64748b;">
-                Este relatório foi gerado através de análise computacional dos dados de votação,
-                identificando padrões, correlações e anomalias no comportamento parlamentar.
+          <div class="insight-card">
+            <div class="insight-number">🛡️</div>
+            <div class="insight-title">Oposição Coesa</div>
+            <div class="insight-text">
+              A oposição manteve coesão significativa, especialmente PSOL e
+              PCdoB com 100% de votos contrários.
             </div>
+          </div>
+
+          <div class="insight-card">
+            <div class="insight-number">🔗</div>
+            <div class="insight-title">Questões Interligadas</div>
+            <div class="insight-text">
+              A correlação entre voto favorável e defesa do voto secreto
+              (r=0.83) sugere que as questões estão intrinsecamente ligadas.
+            </div>
+          </div>
+
+          <div class="insight-card">
+            <div class="insight-number">🗺️</div>
+            <div class="insight-title">Divisões Regionais</div>
+            <div class="insight-text">
+              Padrões regionais revelam divisões culturais e políticas, com
+              Norte/Nordeste mais alinhados e Sul/Sudeste mais divididos.
+            </div>
+          </div>
+
+          <div class="insight-card">
+            <div class="insight-number">⚖️</div>
+            <div class="insight-title">Posições Consolidadas</div>
+            <div class="insight-text">
+              A estabilidade entre turnos (99.4% mantiveram voto) indica
+              posições consolidadas e pouca margem para mudança.
+            </div>
+          </div>
+
+          <div class="insight-card">
+            <div class="insight-number">🎭</div>
+            <div class="insight-title">Centro Fragmentado</div>
+            <div class="insight-text">
+              Partidos de centro (PSD, PSDB) mostraram as maiores divisões
+              internas, refletindo dificuldade em temas polarizadores.
+            </div>
+          </div>
         </div>
+      </div>
+
+      <!-- Metadata -->
+      <div class="section">
+        <h2 class="section-title">📅 Metadados da Análise</h2>
+
+        <table class="stats-table">
+          <tbody>
+            <tr>
+              <td><strong>Data da Análise</strong></td>
+              <td>Setembro 2025</td>
+            </tr>
+            <tr>
+              <td><strong>Fonte dos Dados</strong></td>
+              <td>Votação Nominal da Câmara dos Deputados</td>
+            </tr>
+            <tr>
+              <td><strong>Total de Registros Analisados</strong></td>
+              <td>965 votos</td>
+            </tr>
+            <tr>
+              <td><strong>Metodologia</strong></td>
+              <td>Análise estatística descritiva e correlacional</td>
+            </tr>
+            <tr>
+              <td><strong>Ferramentas</strong></td>
+              <td>
+                Python, OpenPyXL, análise de coesão partidária (Índice Rice)
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div
+          style="
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            text-align: center;
+            font-style: italic;
+            color: #64748b;
+          ">
+          Este relatório foi gerado através de análise computacional dos dados
+          de votação, identificando padrões, correlações e anomalias no
+          comportamento parlamentar.
+        </div>
+      </div>
     </div>
-    <div class="footer" style="background: rgba(30, 41, 59, 0.95); color: white; padding: 2rem; margin-top: 3rem; text-align: center;">
-        <div class="footer-content" style="max-width: 1200px; margin: 0 auto;">
-            <div id="version-info" style="margin: 1rem 0; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                <!-- Version info will be injected here by version.js -->
-            </div>
-            <p style="margin-top: 1rem; font-size: 0.9rem; color: #94a3b8;">
-                <a href="index.html" style="color: #3b82f6; text-decoration: none;">← Voltar ao início</a> |
-                Criado por <a href="https://github.com/fcavalcantirj" style="color: #3b82f6; text-decoration: none;">fcavalcantirj</a>
-            </p>
+    <div
+      class="footer"
+      style="
+        background: rgba(30, 41, 59, 0.95);
+        color: white;
+        padding: 2rem;
+        margin-top: 3rem;
+        text-align: center;
+      ">
+      <div class="footer-content" style="max-width: 1200px; margin: 0 auto">
+        <div
+          id="version-info"
+          style="
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+          ">
+          <!-- Version info will be injected here by version.js -->
         </div>
+        <p style="margin-top: 1rem; font-size: 0.9rem; color: #94a3b8">
+          <a href="index.html" style="color: #3b82f6; text-decoration: none"
+            >← Voltar ao início</a
+          >
+          | Criado por
+          <a
+            href="https://github.com/fcavalcantirj"
+            style="color: #3b82f6; text-decoration: none"
+            >fcavalcantirj</a
+          >
+        </p>
+      </div>
     </div>
 
     <script src="version.js"></script>
-</body>
+  </body>
 </html>

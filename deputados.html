@@ -1,1022 +1,406 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Busca de Deputados - PEC da Bandidagem | 488 Deputados Federais</title>
-    <meta name="description" content="Busque e filtre os 488 deputados que votaram na PEC da Bandidagem. Veja quem votou SIM (341), NÃO (131) ou mudou de voto. Filtros por partido e estado disponíveis.">
-    <meta name="keywords" content="busca deputados, PEC da Bandidagem, lista deputados, voto SIM, voto NÃO, filtro por partido">
-    <meta property="og:title" content="Busca de Deputados - PEC da Bandidagem">
-    <meta property="og:description" content="Encontre e analise individualmente os deputados que votaram na PEC da Bandidagem. Filtros avançados por voto, partido e estado.">
-    <meta property="og:url" content="https://pec-bandidagem.vercel.app/deputados.html">
-    <link rel="canonical" href="https://pec-bandidagem.vercel.app/deputados.html">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Busca de Deputados - PEC da Bandidagem | 488 Deputados Federais
+    </title>
+    <meta
+      name="description"
+      content="Busque e filtre os 488 deputados que votaram na PEC da Bandidagem. Veja quem votou SIM (341), NÃO (131) ou mudou de voto. Filtros por partido e estado disponíveis." />
+    <meta
+      name="keywords"
+      content="busca deputados, PEC da Bandidagem, lista deputados, voto SIM, voto NÃO, filtro por partido" />
+    <meta
+      property="og:title"
+      content="Busca de Deputados - PEC da Bandidagem" />
+    <meta
+      property="og:description"
+      content="Encontre e analise individualmente os deputados que votaram na PEC da Bandidagem. Filtros avançados por voto, partido e estado." />
+    <meta
+      property="og:url"
+      content="https://pec-bandidagem.vercel.app/deputados.html" />
+    <link
+      rel="canonical"
+      href="https://pec-bandidagem.vercel.app/deputados.html" />
 
     <!-- Resource preloading for performance -->
-    <link rel="preload" href="data.js" as="script">
-    <link rel="dns-prefetch" href="//www.googletagmanager.com">
+    <link rel="preload" href="data.js" as="script" />
+    <link rel="dns-prefetch" href="//www.googletagmanager.com" />
 
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P47CK1TDL8"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-P47CK1TDL8"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-      gtag('config', 'G-P47CK1TDL8', {
+      gtag("config", "G-P47CK1TDL8", {
         send_page_view: true,
-        page_title: 'PEC da Bandidagem - Deputados Individuais',
-        content_group1: 'Deputy Analysis',
-        content_group2: 'Political Analysis'
+        page_title: "PEC da Bandidagem - Deputados Individuais",
+        content_group1: "Deputy Analysis",
+        content_group2: "Political Analysis",
       });
     </script>
+
+    <link rel="stylesheet" href="assets/css/style.css" />
     <script src="analytics.js"></script>
-
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: #1e293b;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .header {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(15px);
-            padding: 1.5rem 1rem;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.15);
-            border-bottom: 4px solid #4f46e5;
-            border-radius: 0 0 24px 24px;
-            border-left: 1px solid rgba(255,255,255,0.8);
-            border-right: 1px solid rgba(255,255,255,0.8);
-        }
-
-        .header h1 {
-            font-size: 1.8rem;
-            color: #0f172a;
-            margin-bottom: 0.5rem;
-            text-align: center;
-            line-height: 1.2;
-            font-weight: 800;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
-
-        .header p {
-            font-size: 1rem;
-            color: #334155;
-            text-align: center;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-
-        .nav {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            margin-top: 1rem;
-        }
-
-        .nav a {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            background: rgba(79, 70, 229, 0.1);
-            color: #4f46e5;
-            text-decoration: none;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(79, 70, 229, 0.2);
-        }
-
-        .nav a:hover {
-            background: #4f46e5;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-        }
-
-        .search-section {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(15px);
-            border-radius: 24px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
-            border: 1px solid rgba(255,255,255,0.8);
-        }
-
-        .search-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        @media (min-width: 768px) {
-            .search-container {
-                grid-template-columns: 2fr 1fr 1fr;
-            }
-        }
-
-        .search-input, .filter-select {
-            padding: 1rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: white;
-        }
-
-        .search-input:focus, .filter-select:focus {
-            outline: none;
-            border-color: #4f46e5;
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-        }
-
-        .stats-summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .stat-card {
-            background: #f8fafc;
-            padding: 1rem;
-            border-radius: 12px;
-            text-align: center;
-            border-left: 4px solid #4f46e5;
-        }
-
-        .stat-number {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #4f46e5;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: #64748b;
-            margin-top: 0.25rem;
-        }
-
-        .deputies-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .deputy-card {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 1.5rem;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.8);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .deputy-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 16px 50px rgba(0,0,0,0.15);
-        }
-
-        .deputy-name {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 0.5rem;
-        }
-
-        .deputy-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-            color: #64748b;
-        }
-
-        .party-state {
-            font-weight: 600;
-        }
-
-        .voting-badges {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .vote-badge {
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: white;
-        }
-
-        .vote-sim {
-            background: #e11d48;
-        }
-
-        .vote-nao {
-            background: #2563eb;
-        }
-
-        .vote-abstencao {
-            background: #f59e0b;
-        }
-
-        .vote-ausente {
-            background: #6b7280;
-        }
-
-        .deputy-details {
-            font-size: 0.9rem;
-            color: #475569;
-        }
-
-        .secret-vote-indicator {
-            margin-top: 0.5rem;
-            padding: 0.3rem 0.8rem;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .defended-secret {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .opposed-secret {
-            background: #dcfce7;
-            color: #166534;
-        }
-
-        .consistency-indicator {
-            display: inline-block;
-            padding: 0.2rem 0.6rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-left: 0.5rem;
-        }
-
-        .consistent {
-            background: #dcfce7;
-            color: #166534;
-        }
-
-        .changed {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .load-more {
-            display: block;
-            margin: 2rem auto;
-            padding: 1rem 2rem;
-            background: #4f46e5;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .load-more:hover {
-            background: #3730a3;
-            transform: translateY(-2px);
-        }
-
-        .no-results {
-            text-align: center;
-            padding: 3rem;
-            color: #64748b;
-            font-size: 1.1rem;
-        }
-
-        /* Mobile optimizations */
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.6rem;
-            }
-
-            .deputies-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            .deputy-card {
-                padding: 1.2rem;
-            }
-
-            .container {
-                padding: 1rem;
-            }
-        }
-
-        /* GitHub Fork Ribbon */
-        .github-fork-ribbon {
-            width: 12.1em;
-            height: 12.1em;
-            position: fixed;
-            overflow: hidden;
-            top: 0;
-            right: 0;
-            z-index: 9999;
-            pointer-events: none;
-            font-size: 13px;
-            text-decoration: none;
-            text-indent: -999999px;
-            opacity: 0.9;
-        }
-
-        .github-fork-ribbon:before, .github-fork-ribbon:after {
-            position: absolute;
-            display: block;
-            width: 15.38em;
-            height: 1.54em;
-            top: 3.23em;
-            right: -3.23em;
-            box-sizing: content-box;
-            transform: rotate(45deg);
-        }
-
-        .github-fork-ribbon:before {
-            content: "";
-            padding: .38em 0;
-            background-color: #a00;
-            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
-            box-shadow: 0 .15em .23em 0 rgba(0, 0, 0, 0.5);
-            pointer-events: auto;
-        }
-
-        .github-fork-ribbon:after {
-            content: attr(data-ribbon);
-            color: #fff;
-            font: 700 1em "Helvetica Neue", Helvetica, Arial, sans-serif;
-            line-height: 1.54em;
-            text-decoration: none;
-            text-shadow: 0 -.08em rgba(0, 0, 0, 0.5);
-            text-align: center;
-            text-indent: 0;
-            padding: .15em 0;
-            margin: .15em 0;
-            border-width: .08em 0;
-            border-style: dotted;
-            border-color: #fff;
-            border-color: rgba(255, 255, 255, 0.7);
-        }
-
-        @media (max-width: 480px) {
-            .github-fork-ribbon {
-                font-size: 10px;
-                opacity: 0.8;
-            }
-        }
-
-        .tooltip {
-            position: absolute;
-            background: rgba(30, 41, 59, 0.95);
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            line-height: 1.4;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 1000;
-        }
-
-        /* Vote Filter Buttons */
-        .vote-filters {
-            margin: 2rem 0;
-            padding: 1.5rem;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .filter-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            padding: 0.75rem 1.5rem;
-            border: 2px solid transparent;
-            border-radius: 25px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.8);
-            color: #374151;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .filter-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-        }
-
-        .filter-btn.active {
-            background: #4f46e5;
-            color: white;
-            border-color: #4f46e5;
-            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.3);
-        }
-
-        .filter-btn.filter-sim {
-            border-color: #e11d48;
-            color: #e11d48;
-        }
-
-        .filter-btn.filter-sim.active {
-            background: #e11d48;
-            color: white;
-            box-shadow: 0 6px 20px rgba(225, 29, 72, 0.3);
-        }
-
-        .filter-btn.filter-nao {
-            border-color: #2563eb;
-            color: #2563eb;
-        }
-
-        .filter-btn.filter-nao.active {
-            background: #2563eb;
-            color: white;
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
-        }
-
-        .filter-btn.filter-changed {
-            border-color: #d97706;
-            color: #d97706;
-        }
-
-        .filter-btn.filter-changed.active {
-            background: #d97706;
-            color: white;
-            box-shadow: 0 6px 20px rgba(217, 119, 6, 0.3);
-        }
-
-        /* Mobile responsive */
-        @media (max-width: 768px) {
-            .filter-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .filter-btn {
-                width: 100%;
-                max-width: 280px;
-            }
-        }
-
-        /* Modal Styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(4px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            padding: 1rem;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 20px;
-            max-width: 900px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-            position: relative;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 2rem 2rem 1rem;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .modal-header h2 {
-            margin: 0;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #0f172a;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 2rem;
-            color: #6b7280;
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 50%;
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-        }
-
-        .modal-close:hover {
-            background: #f3f4f6;
-            color: #374151;
-        }
-
-        .modal-body {
-            padding: 2rem;
-        }
-
-        .deputy-main-info {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .deputy-modal-photo {
-            width: 100%;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .deputy-info-section p {
-            margin: 0.75rem 0;
-            line-height: 1.6;
-        }
-
-        .deputy-info-section strong {
-            color: #374151;
-            font-weight: 600;
-        }
-
-        .contact-action-section, .appreciation-section {
-            background: #fbbf24;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .appreciation-section {
-            background: #10b981;
-        }
-
-        .action-banner, .appreciation-banner {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #0f172a;
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .appreciation-banner {
-            color: white;
-        }
-
-        .contact-info {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .contact-email {
-            color: #1e40af;
-            font-weight: 600;
-            text-decoration: none;
-            font-size: 1.1rem;
-        }
-
-        .contact-email:hover {
-            text-decoration: underline;
-        }
-
-        .no-contact {
-            color: #6b7280;
-            font-style: italic;
-        }
-
-        .message-templates {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-
-        .template-section h4 {
-            margin: 0 0 0.75rem 0;
-            color: #0f172a;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-
-        .template-section textarea {
-            width: 100%;
-            height: 120px;
-            padding: 1rem;
-            border: 2px solid #d1d5db;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            resize: vertical;
-            margin-bottom: 0.75rem;
-        }
-
-        .copy-btn {
-            background: #1e40af;
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            width: 100%;
-        }
-
-        .copy-btn:hover {
-            background: #1e3a8a;
-            transform: translateY(-1px);
-        }
-
-        .additional-info {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid #e5e7eb;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-
-        .info-section h4 {
-            margin: 0 0 1rem 0;
-            color: #0f172a;
-            font-size: 1.1rem;
-            font-weight: 700;
-            border-bottom: 2px solid #e5e7eb;
-            padding-bottom: 0.5rem;
-        }
-
-        .info-section p {
-            margin: 0.5rem 0;
-            line-height: 1.6;
-        }
-
-        .info-section strong {
-            color: #374151;
-            font-weight: 600;
-        }
-
-        /* Mobile modal styles */
-        @media (max-width: 768px) {
-            .modal-overlay {
-                padding: 0.5rem;
-            }
-
-            .modal-content {
-                max-height: 95vh;
-            }
-
-            .modal-header {
-                padding: 1.5rem 1.5rem 1rem;
-            }
-
-            .modal-header h2 {
-                font-size: 1.5rem;
-            }
-
-            .modal-body {
-                padding: 1.5rem;
-            }
-
-            .deputy-main-info {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-                text-align: center;
-            }
-
-            .deputy-modal-photo {
-                max-width: 200px;
-                margin: 0 auto;
-            }
-
-            .message-templates {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            .info-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-        }
-    </style>
-</head>
-<body>
+  </head>
+  <body class="deputados">
     <!-- GitHub Fork Ribbon -->
-    <a class="github-fork-ribbon" href="https://github.com/fcavalcantirj/pec-bandidagem" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
+    <a
+      class="github-fork-ribbon"
+      href="https://github.com/fcavalcantirj/pec-bandidagem"
+      data-ribbon="Fork me on GitHub"
+      title="Fork me on GitHub"
+      >Fork me on GitHub</a
+    >
 
     <div class="header">
-        <h1>👥 PEC da Bandidagem</h1>
-        <p>Busca e Análise Individual de Deputados</p>
+      <h1>👥 PEC da Bandidagem</h1>
+      <p>Busca e Análise Individual de Deputados</p>
 
-        <nav class="nav">
-            <a href="index.html">🏠 Início</a>
-            <a href="deputados.html" class="active">👥 Deputados</a>
-            <a href="partidos.html">🎯 Partidos</a>
-            <a href="estados.html">🗺️ Estados</a>
-            <a href="fluxo.html">🔄 Fluxo</a>
-            <a href="relatorio.html">📋 Relatório</a>
-            <a href="despesas.html">💰 Despesas</a>
-        </nav>
+      <nav class="nav">
+        <a href="index.html">🏠 Início</a>
+        <a href="deputados.html" class="active">👥 Deputados</a>
+        <a href="partidos.html">🎯 Partidos</a>
+        <a href="estados.html">🗺️ Estados</a>
+        <a href="fluxo.html">🔄 Fluxo</a>
+        <a href="relatorio.html">📋 Relatório</a>
+        <a href="despesas.html">💰 Despesas</a>
+      </nav>
     </div>
 
     <div class="container">
-        <div class="search-section">
-            <h2 style="text-align: center; margin-bottom: 1.5rem; color: #0f172a;">🔍 Buscar Deputados</h2>
+      <div class="search-section">
+        <h2 style="text-align: center; margin-bottom: 1.5rem; color: #0f172a">
+          🔍 Buscar Deputados
+        </h2>
 
-            <div class="search-container">
-                <input type="text" id="searchInput" class="search-input" placeholder="Digite o nome do deputado...">
-                <select id="partyFilter" class="filter-select">
-                    <option value="">Todos os Partidos</option>
-                </select>
-                <select id="stateFilter" class="filter-select">
-                    <option value="">Todos os Estados</option>
-                </select>
-            </div>
-
-            <div class="vote-filters">
-                <h3 style="text-align: center; margin-bottom: 1rem; color: #1a202c; font-size: 1.1rem; font-weight: 700;">Filtrar por Voto:</h3>
-                <div class="filter-buttons">
-                    <button id="filterAll" class="filter-btn active">📊 Todos (488)</button>
-                    <button id="filterSim" class="filter-btn filter-sim">🚨 Votaram SIM (341)</button>
-                    <button id="filterNao" class="filter-btn filter-nao">✅ Votaram NÃO (131)</button>
-                    <button id="filterChanged" class="filter-btn filter-changed">🔄 Mudaram Voto (3)</button>
-                </div>
-            </div>
-
-            <div class="stats-summary" id="searchStats">
-                <div class="stat-card">
-                    <div class="stat-number" id="totalCount">-</div>
-                    <div class="stat-label">Total Encontrado</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="simCount">-</div>
-                    <div class="stat-label">Votaram SIM</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="naoCount">-</div>
-                    <div class="stat-label">Votaram NÃO</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="changedCount">-</div>
-                    <div class="stat-label">Mudaram Voto</div>
-                </div>
-            </div>
+        <div class="search-container">
+          <input
+            type="text"
+            id="searchInput"
+            class="search-input"
+            placeholder="Digite o nome do deputado..." />
+          <select id="partyFilter" class="filter-select">
+            <option value="">Todos os Partidos</option>
+          </select>
+          <select id="stateFilter" class="filter-select">
+            <option value="">Todos os Estados</option>
+          </select>
         </div>
 
-        <div class="deputies-grid" id="deputiesGrid">
-            <!-- Deputies will be populated here -->
+        <div class="vote-filters">
+          <h3
+            style="
+              text-align: center;
+              margin-bottom: 1rem;
+              color: #1a202c;
+              font-size: 1.1rem;
+              font-weight: 700;
+            ">
+            Filtrar por Voto:
+          </h3>
+          <div class="filter-buttons">
+            <button id="filterAll" class="filter-btn active">
+              📊 Todos (488)
+            </button>
+            <button id="filterSim" class="filter-btn filter-sim">
+              🚨 Votaram SIM (341)
+            </button>
+            <button id="filterNao" class="filter-btn filter-nao">
+              ✅ Votaram NÃO (131)
+            </button>
+            <button id="filterChanged" class="filter-btn filter-changed">
+              🔄 Mudaram Voto (3)
+            </button>
+          </div>
         </div>
 
-        <div class="no-results" id="noResults" style="display: none;">
-            🔍 Nenhum deputado encontrado com os critérios selecionados.
+        <div class="stats-summary" id="searchStats">
+          <div class="stat-card">
+            <div class="stat-number" id="totalCount">-</div>
+            <div class="stat-label">Total Encontrado</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="simCount">-</div>
+            <div class="stat-label">Votaram SIM</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="naoCount">-</div>
+            <div class="stat-label">Votaram NÃO</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="changedCount">-</div>
+            <div class="stat-label">Mudaram Voto</div>
+          </div>
         </div>
+      </div>
 
-        <button class="load-more" id="loadMore" style="display: none;">
-            Carregar Mais Deputados
-        </button>
+      <div class="deputies-grid" id="deputiesGrid">
+        <!-- Deputies will be populated here -->
+      </div>
+
+      <div class="no-results" id="noResults" style="display: none">
+        🔍 Nenhum deputado encontrado com os critérios selecionados.
+      </div>
+
+      <button class="load-more" id="loadMore" style="display: none">
+        Carregar Mais Deputados
+      </button>
     </div>
 
     <div class="tooltip" id="tooltip"></div>
 
-    <div class="footer" style="background: rgba(30, 41, 59, 0.95); color: white; padding: 2rem; margin-top: 3rem; text-align: center;">
-        <div class="footer-content" style="max-width: 1200px; margin: 0 auto;">
-            <div id="version-info" style="margin: 1rem 0; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                <!-- Version info will be injected here by version.js -->
-            </div>
-            <p style="margin-top: 1rem; font-size: 0.9rem; color: #94a3b8;">
-                <a href="index.html" style="color: #3b82f6; text-decoration: none;">← Voltar ao início</a> |
-                Criado por <a href="https://github.com/fcavalcantirj" style="color: #3b82f6; text-decoration: none;">fcavalcantirj</a>
-            </p>
+    <div
+      class="footer"
+      style="
+        background: rgba(30, 41, 59, 0.95);
+        color: white;
+        padding: 2rem;
+        margin-top: 3rem;
+        text-align: center;
+      ">
+      <div class="footer-content" style="max-width: 1200px; margin: 0 auto">
+        <div
+          id="version-info"
+          style="
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+          ">
+          <!-- Version info will be injected here by version.js -->
         </div>
+        <p style="margin-top: 1rem; font-size: 0.9rem; color: #94a3b8">
+          <a href="index.html" style="color: #3b82f6; text-decoration: none"
+            >← Voltar ao início</a
+          >
+          | Criado por
+          <a
+            href="https://github.com/fcavalcantirj"
+            style="color: #3b82f6; text-decoration: none"
+            >fcavalcantirj</a
+          >
+        </p>
+      </div>
     </div>
 
     <script src="data.js"></script>
     <script src="version.js"></script>
     <script>
-        let allDeputies = [];
-        let filteredDeputies = [];
-        let currentPage = 0;
-        const itemsPerPage = 50;
+      let allDeputies = [];
+      let filteredDeputies = [];
+      let currentPage = 0;
+      const itemsPerPage = 50;
 
-        // Load and process deputy data
-        function loadDeputyData() {
-            if (typeof VISUALIZATION_DATA !== 'undefined') {
-                console.log('Loading deputy data...');
+      // Load and process deputy data
+      function loadDeputyData() {
+        if (typeof VISUALIZATION_DATA !== "undefined") {
+          console.log("Loading deputy data...");
 
-                // Combine data from both rounds
-                const round1Data = VISUALIZATION_DATA.round1 || [];
-                const round2Data = VISUALIZATION_DATA.round2 || [];
+          // Combine data from both rounds
+          const round1Data = VISUALIZATION_DATA.round1 || [];
+          const round2Data = VISUALIZATION_DATA.round2 || [];
 
-                // Create a map for round 2 data
-                const round2Map = new Map();
-                round2Data.forEach(deputy => {
-                    round2Map.set(deputy.deputado, deputy);
-                });
+          // Create a map for round 2 data
+          const round2Map = new Map();
+          round2Data.forEach((deputy) => {
+            round2Map.set(deputy.deputado, deputy);
+          });
 
-                // Process all deputies
-                allDeputies = round1Data.map(deputy1 => {
-                    const deputy2 = round2Map.get(deputy1.deputado);
+          // Process all deputies
+          allDeputies = round1Data.map((deputy1) => {
+            const deputy2 = round2Map.get(deputy1.deputado);
 
-                    return {
-                        name: deputy1.deputado,
-                        party: deputy1.partido,
-                        state: deputy1.estado,
-                        round1_vote: deputy1.voto,
-                        round2_vote: deputy2 ? deputy2.voto : 'Ausente',
-                        secret_defense: deputy2 ? deputy2.voto_secreto : 'Não informado',
-                        changed_vote: deputy1.voto !== (deputy2 ? deputy2.voto : deputy1.voto),
-                        consistency: deputy1.voto === (deputy2 ? deputy2.voto : deputy1.voto) ? 'Consistente' : 'Mudou'
-                    };
-                });
-
-                console.log(`Loaded ${allDeputies.length} deputies`);
-
-                setupFilters();
-                filterDeputies();
-                trackVisualizationInteraction('deputy_search', 'data_loaded', `${allDeputies.length} deputies`);
-            } else {
-                console.error('Deputy data not found');
-            }
-        }
-
-        // Setup filter options
-        function setupFilters() {
-            const parties = [...new Set(allDeputies.map(d => d.party))].sort();
-            const states = [...new Set(allDeputies.map(d => d.state))].sort();
-
-            const partySelect = document.getElementById('partyFilter');
-            const stateSelect = document.getElementById('stateFilter');
-
-            parties.forEach(party => {
-                const option = document.createElement('option');
-                option.value = party;
-                option.textContent = party;
-                partySelect.appendChild(option);
-            });
-
-            states.forEach(state => {
-                const option = document.createElement('option');
-                option.value = state;
-                option.textContent = state;
-                stateSelect.appendChild(option);
-            });
-        }
-
-        // Filter deputies based on search and filters
-        function filterDeputies() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const partyFilter = document.getElementById('partyFilter').value;
-            const stateFilter = document.getElementById('stateFilter').value;
-
-            filteredDeputies = allDeputies.filter(deputy => {
-                const matchesSearch = deputy.name.toLowerCase().includes(searchTerm);
-                const matchesParty = !partyFilter || deputy.party === partyFilter;
-                const matchesState = !stateFilter || deputy.state === stateFilter;
-
-                // Vote filtering based on active filter button
-                const matchesVoteFilter = checkVoteFilter(deputy);
-
-                return matchesSearch && matchesParty && matchesState && matchesVoteFilter;
-            });
-
-            currentPage = 0;
-            updateStats();
-            renderDeputies();
-
-            // Track search if there's a search term
-            if (searchTerm) {
-                trackVisualizationInteraction('deputy_search', 'search_performed', searchTerm);
-            }
-        }
-
-        // Update statistics
-        function updateStats() {
-            const total = filteredDeputies.length;
-            const simCount = filteredDeputies.filter(d => d.round2_vote === 'Sim').length;
-            const naoCount = filteredDeputies.filter(d => d.round2_vote === 'Não').length;
-            const changedCount = filteredDeputies.filter(d => d.changed_vote).length;
-
-            document.getElementById('totalCount').textContent = total;
-            document.getElementById('simCount').textContent = simCount;
-            document.getElementById('naoCount').textContent = naoCount;
-            document.getElementById('changedCount').textContent = changedCount;
-        }
-
-        // Render deputies grid
-        function renderDeputies() {
-            const grid = document.getElementById('deputiesGrid');
-            const noResults = document.getElementById('noResults');
-            const loadMore = document.getElementById('loadMore');
-
-            if (filteredDeputies.length === 0) {
-                grid.innerHTML = '';
-                noResults.style.display = 'block';
-                loadMore.style.display = 'none';
-                return;
-            }
-
-            noResults.style.display = 'none';
-
-            const endIndex = Math.min((currentPage + 1) * itemsPerPage, filteredDeputies.length);
-            const deputiesToShow = filteredDeputies.slice(0, endIndex);
-
-            grid.innerHTML = deputiesToShow.map(deputy => createDeputyCard(deputy)).join('');
-
-            // Show/hide load more button
-            if (endIndex < filteredDeputies.length) {
-                loadMore.style.display = 'block';
-            } else {
-                loadMore.style.display = 'none';
-            }
-        }
-
-        // Create deputy card HTML
-        function createDeputyCard(deputy) {
-            const getVoteBadge = (vote) => {
-                const classes = {
-                    'Sim': 'vote-sim',
-                    'Não': 'vote-nao',
-                    'Abstenção': 'vote-abstencao',
-                    'Ausente': 'vote-ausente'
-                };
-                return `<span class="vote-badge ${classes[vote] || 'vote-ausente'}">${vote}</span>`;
+            return {
+              name: deputy1.deputado,
+              party: deputy1.partido,
+              state: deputy1.estado,
+              round1_vote: deputy1.voto,
+              round2_vote: deputy2 ? deputy2.voto : "Ausente",
+              secret_defense: deputy2 ? deputy2.voto_secreto : "Não informado",
+              changed_vote:
+                deputy1.voto !== (deputy2 ? deputy2.voto : deputy1.voto),
+              consistency:
+                deputy1.voto === (deputy2 ? deputy2.voto : deputy1.voto)
+                  ? "Consistente"
+                  : "Mudou",
             };
+          });
 
-            const getSecretVoteIndicator = (defense) => {
-                if (defense === 'Sim') {
-                    return '<div class="secret-vote-indicator defended-secret">🔐 Defendeu voto secreto</div>';
-                } else if (defense === 'Não') {
-                    return '<div class="secret-vote-indicator opposed-secret">🔓 Contra voto secreto</div>';
-                }
-                return '';
-            };
+          console.log(`Loaded ${allDeputies.length} deputies`);
 
-            const getConsistencyIndicator = (consistency) => {
-                if (consistency === 'Consistente') {
-                    return '<span class="consistency-indicator consistent">✓ Consistente</span>';
-                } else {
-                    return '<span class="consistency-indicator changed">⚠ Mudou voto</span>';
-                }
-            };
+          setupFilters();
+          filterDeputies();
+          trackVisualizationInteraction(
+            "deputy_search",
+            "data_loaded",
+            `${allDeputies.length} deputies`
+          );
+        } else {
+          console.error("Deputy data not found");
+        }
+      }
 
-            return `
-                <div class="deputy-card" onclick="showDeputyDetails('${deputy.name}')">
+      // Setup filter options
+      function setupFilters() {
+        const parties = [...new Set(allDeputies.map((d) => d.party))].sort();
+        const states = [...new Set(allDeputies.map((d) => d.state))].sort();
+
+        const partySelect = document.getElementById("partyFilter");
+        const stateSelect = document.getElementById("stateFilter");
+
+        parties.forEach((party) => {
+          const option = document.createElement("option");
+          option.value = party;
+          option.textContent = party;
+          partySelect.appendChild(option);
+        });
+
+        states.forEach((state) => {
+          const option = document.createElement("option");
+          option.value = state;
+          option.textContent = state;
+          stateSelect.appendChild(option);
+        });
+      }
+
+      // Filter deputies based on search and filters
+      function filterDeputies() {
+        const searchTerm = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+        const partyFilter = document.getElementById("partyFilter").value;
+        const stateFilter = document.getElementById("stateFilter").value;
+
+        filteredDeputies = allDeputies.filter((deputy) => {
+          const matchesSearch = deputy.name.toLowerCase().includes(searchTerm);
+          const matchesParty = !partyFilter || deputy.party === partyFilter;
+          const matchesState = !stateFilter || deputy.state === stateFilter;
+
+          // Vote filtering based on active filter button
+          const matchesVoteFilter = checkVoteFilter(deputy);
+
+          return (
+            matchesSearch && matchesParty && matchesState && matchesVoteFilter
+          );
+        });
+
+        currentPage = 0;
+        updateStats();
+        renderDeputies();
+
+        // Track search if there's a search term
+        if (searchTerm) {
+          trackVisualizationInteraction(
+            "deputy_search",
+            "search_performed",
+            searchTerm
+          );
+        }
+      }
+
+      // Update statistics
+      function updateStats() {
+        const total = filteredDeputies.length;
+        const simCount = filteredDeputies.filter(
+          (d) => d.round2_vote === "Sim"
+        ).length;
+        const naoCount = filteredDeputies.filter(
+          (d) => d.round2_vote === "Não"
+        ).length;
+        const changedCount = filteredDeputies.filter(
+          (d) => d.changed_vote
+        ).length;
+
+        document.getElementById("totalCount").textContent = total;
+        document.getElementById("simCount").textContent = simCount;
+        document.getElementById("naoCount").textContent = naoCount;
+        document.getElementById("changedCount").textContent = changedCount;
+      }
+
+      // Render deputies grid
+      function renderDeputies() {
+        const grid = document.getElementById("deputiesGrid");
+        const noResults = document.getElementById("noResults");
+        const loadMore = document.getElementById("loadMore");
+
+        if (filteredDeputies.length === 0) {
+          grid.innerHTML = "";
+          noResults.style.display = "block";
+          loadMore.style.display = "none";
+          return;
+        }
+
+        noResults.style.display = "none";
+
+        const endIndex = Math.min(
+          (currentPage + 1) * itemsPerPage,
+          filteredDeputies.length
+        );
+        const deputiesToShow = filteredDeputies.slice(0, endIndex);
+
+        grid.innerHTML = deputiesToShow
+          .map((deputy) => createDeputyCard(deputy))
+          .join("");
+
+        // Show/hide load more button
+        if (endIndex < filteredDeputies.length) {
+          loadMore.style.display = "block";
+        } else {
+          loadMore.style.display = "none";
+        }
+      }
+
+      // Create deputy card HTML
+      function createDeputyCard(deputy) {
+        const getVoteBadge = (vote) => {
+          const classes = {
+            Sim: "vote-sim",
+            Não: "vote-nao",
+            Abstenção: "vote-abstencao",
+            Ausente: "vote-ausente",
+          };
+          return `<span class="vote-badge ${
+            classes[vote] || "vote-ausente"
+          }">${vote}</span>`;
+        };
+
+        const getSecretVoteIndicator = (defense) => {
+          if (defense === "Sim") {
+            return '<div class="secret-vote-indicator defended-secret">🔐 Defendeu voto secreto</div>';
+          } else if (defense === "Não") {
+            return '<div class="secret-vote-indicator opposed-secret">🔓 Contra voto secreto</div>';
+          }
+          return "";
+        };
+
+        const getConsistencyIndicator = (consistency) => {
+          if (consistency === "Consistente") {
+            return '<span class="consistency-indicator consistent">✓ Consistente</span>';
+          } else {
+            return '<span class="consistency-indicator changed">⚠ Mudou voto</span>';
+          }
+        };
+
+        return `
+                <div class="deputy-card" onclick="showDeputyDetails('${
+                  deputy.name
+                }')">
                     <div class="deputy-name">${deputy.name}</div>
                     <div class="deputy-info">
-                        <span class="party-state">${deputy.party} - ${deputy.state}</span>
+                        <span class="party-state">${deputy.party} - ${
+          deputy.state
+        }</span>
                         ${getConsistencyIndicator(deputy.consistency)}
                     </div>
                     <div class="voting-badges">
@@ -1026,81 +410,93 @@
                         ${getVoteBadge(deputy.round2_vote)}
                     </div>
                     <div class="deputy-details">
-                        <div>Padrão de votação: ${deputy.round1_vote} → ${deputy.round2_vote}</div>
+                        <div>Padrão de votação: ${deputy.round1_vote} → ${
+          deputy.round2_vote
+        }</div>
                         ${getSecretVoteIndicator(deputy.secret_defense)}
                     </div>
                 </div>
             `;
+      }
+
+      // Show deputy details (could be expanded to modal)
+      async function showDeputyDetails(deputyName) {
+        const deputy = allDeputies.find((d) => d.name === deputyName);
+        if (deputy) {
+          // Track deputy click with consistent naming across pages
+          trackVisualizationInteraction(
+            "deputy_search",
+            "deputy_selected",
+            deputyName
+          );
+
+          // Also track with same event name as despesas page for consistency
+          if (typeof gtag !== "undefined") {
+            gtag("event", "deputy_click", {
+              event_category: "deputados_interaction",
+              event_label: deputyName,
+              page_type: "deputados",
+            });
+          }
+
+          // First search for the deputy by name to get their ID
+          let deputyDetails = null;
+          try {
+            // Use proxy for Vercel deployment, direct API for local development
+            const isLocal =
+              window.location.hostname === "localhost" ||
+              window.location.hostname === "127.0.0.1";
+            const apiBase = isLocal
+              ? "https://dadosabertos.camara.leg.br/api/v2"
+              : "/api/proxy?endpoint=";
+
+            const searchUrl = isLocal
+              ? `${apiBase}/deputados?nome=${encodeURIComponent(
+                  deputyName
+                )}&ordem=ASC&ordenarPor=nome`
+              : `${apiBase}deputados?nome=${encodeURIComponent(
+                  deputyName
+                )}&ordem=ASC&ordenarPor=nome`;
+
+            const searchResponse = await fetch(searchUrl);
+            if (searchResponse.ok) {
+              const searchData = await searchResponse.json();
+
+              if (searchData.dados && searchData.dados.length > 0) {
+                const deputyInfo = searchData.dados[0]; // Take the first match
+
+                // Now get their detailed info
+                const detailUrl = isLocal
+                  ? `${apiBase}/deputados/${deputyInfo.id}`
+                  : `${apiBase}deputados/${deputyInfo.id}`;
+
+                const detailResponse = await fetch(detailUrl);
+                if (detailResponse.ok) {
+                  const detailData = await detailResponse.json();
+                  deputyDetails = detailData.dados;
+                  deputyDetails.id = deputyInfo.id; // Add the ID for consistency
+                }
+              }
+            }
+          } catch (error) {
+            console.log("Error fetching deputy details:", error);
+          }
+
+          showDeputyModal(deputy, deputyDetails);
+        }
+      }
+
+      function showDeputyModal(deputy, details) {
+        // Remove existing modal if any
+        const existingModal = document.getElementById("deputyModal");
+        if (existingModal) {
+          existingModal.remove();
         }
 
-        // Show deputy details (could be expanded to modal)
-        async function showDeputyDetails(deputyName) {
-            const deputy = allDeputies.find(d => d.name === deputyName);
-            if (deputy) {
-                // Track deputy click with consistent naming across pages
-                trackVisualizationInteraction('deputy_search', 'deputy_selected', deputyName);
+        const isProPEC = deputy.round2_vote === "Sim";
 
-                // Also track with same event name as despesas page for consistency
-                if (typeof gtag !== 'undefined') {
-                    gtag('event', 'deputy_click', {
-                        event_category: 'deputados_interaction',
-                        event_label: deputyName,
-                        page_type: 'deputados'
-                    });
-                }
-
-                // First search for the deputy by name to get their ID
-                let deputyDetails = null;
-                try {
-                    // Use proxy for Vercel deployment, direct API for local development
-                    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-                    const apiBase = isLocal ?
-                        'https://dadosabertos.camara.leg.br/api/v2' :
-                        '/api/proxy?endpoint=';
-
-                    const searchUrl = isLocal ?
-                        `${apiBase}/deputados?nome=${encodeURIComponent(deputyName)}&ordem=ASC&ordenarPor=nome` :
-                        `${apiBase}deputados?nome=${encodeURIComponent(deputyName)}&ordem=ASC&ordenarPor=nome`;
-
-                    const searchResponse = await fetch(searchUrl);
-                    if (searchResponse.ok) {
-                        const searchData = await searchResponse.json();
-
-                        if (searchData.dados && searchData.dados.length > 0) {
-                            const deputyInfo = searchData.dados[0]; // Take the first match
-
-                            // Now get their detailed info
-                            const detailUrl = isLocal ?
-                                `${apiBase}/deputados/${deputyInfo.id}` :
-                                `${apiBase}deputados/${deputyInfo.id}`;
-
-                            const detailResponse = await fetch(detailUrl);
-                            if (detailResponse.ok) {
-                                const detailData = await detailResponse.json();
-                                deputyDetails = detailData.dados;
-                                deputyDetails.id = deputyInfo.id; // Add the ID for consistency
-                            }
-                        }
-                    }
-                } catch (error) {
-                    console.log('Error fetching deputy details:', error);
-                }
-
-                showDeputyModal(deputy, deputyDetails);
-            }
-        }
-
-        function showDeputyModal(deputy, details) {
-            // Remove existing modal if any
-            const existingModal = document.getElementById('deputyModal');
-            if (existingModal) {
-                existingModal.remove();
-            }
-
-            const isProPEC = deputy.round2_vote === 'Sim';
-
-            // Create modal HTML
-            const modalHTML = `
+        // Create modal HTML
+        const modalHTML = `
                 <div id="deputyModal" class="modal-overlay">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -1111,8 +507,14 @@
                         <div class="modal-body">
                             <div class="deputy-main-info">
                                 <div class="deputy-photo-section">
-                                    <img src="${details && details.id ? `https://www.camara.leg.br/internet/deputado/bandep/${details.id}.jpg` : ''}"
-                                         alt="${deputy.name}" class="deputy-modal-photo"
+                                    <img src="${
+                                      details && details.id
+                                        ? `https://www.camara.leg.br/internet/deputado/bandep/${details.id}.jpg`
+                                        : ""
+                                    }"
+                                         alt="${
+                                           deputy.name
+                                         }" class="deputy-modal-photo"
                                          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
                                     <div class="deputy-photo-fallback" style="display: none; width: 150px; height: 180px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; align-items: center; justify-content: center; color: white; font-size: 3rem; font-weight: bold;">
                                         ${deputy.name.charAt(0)}
@@ -1120,224 +522,354 @@
                                 </div>
 
                                 <div class="deputy-info-section">
-                                    ${details ? `
-                                    <p><strong>Nome Civil:</strong> ${details.nomeCivil || deputy.name}</p>
-                                    <p><strong>Nome Eleitoral:</strong> ${details.ultimoStatus?.nomeEleitoral || deputy.name}</p>
-                                    ` : ''}
-                                    <p><strong>Partido:</strong> ${deputy.party}</p>
+                                    ${
+                                      details
+                                        ? `
+                                    <p><strong>Nome Civil:</strong> ${
+                                      details.nomeCivil || deputy.name
+                                    }</p>
+                                    <p><strong>Nome Eleitoral:</strong> ${
+                                      details.ultimoStatus?.nomeEleitoral ||
+                                      deputy.name
+                                    }</p>
+                                    `
+                                        : ""
+                                    }
+                                    <p><strong>Partido:</strong> ${
+                                      deputy.party
+                                    }</p>
                                     <p><strong>UF:</strong> ${deputy.state}</p>
-                                    <p><strong>1º Turno:</strong> <span class="vote-badge ${deputy.round1_vote === 'Sim' ? 'vote-sim' : 'vote-nao'}">${deputy.round1_vote}</span></p>
-                                    <p><strong>2º Turno:</strong> <span class="vote-badge ${deputy.round2_vote === 'Sim' ? 'vote-sim' : 'vote-nao'}">${deputy.round2_vote}</span></p>
+                                    <p><strong>1º Turno:</strong> <span class="vote-badge ${
+                                      deputy.round1_vote === "Sim"
+                                        ? "vote-sim"
+                                        : "vote-nao"
+                                    }">${deputy.round1_vote}</span></p>
+                                    <p><strong>2º Turno:</strong> <span class="vote-badge ${
+                                      deputy.round2_vote === "Sim"
+                                        ? "vote-sim"
+                                        : "vote-nao"
+                                    }">${deputy.round2_vote}</span></p>
                                 </div>
                             </div>
 
-                            ${isProPEC ? `
+                            ${
+                              isProPEC
+                                ? `
                             <div class="contact-action-section">
                                 <div class="action-banner">
                                     🏴 Faça seu protesto por email ou nas redes sociais!
                                 </div>
 
                                 <div class="contact-info">
-                                    ${details?.ultimoStatus?.gabinete?.email ? `
+                                    ${
+                                      details?.ultimoStatus?.gabinete?.email
+                                        ? `
                                     <a href="mailto:${details.ultimoStatus.gabinete.email}" class="contact-email">
                                         ${details.ultimoStatus.gabinete.email}
                                     </a>
-                                    ` : '<span class="no-contact">Email não informado</span>'}
+                                    `
+                                        : '<span class="no-contact">Email não informado</span>'
+                                    }
                                 </div>
 
                                 <div class="message-templates">
                                     <div class="template-section">
                                         <h4>📱 Texto para Redes Sociais</h4>
-                                        <textarea id="socialText" readonly>Prezado ${deputy.name}, seu voto na PEC 3/21 (PEC da blindagem) envergonha eleitores. Ela cria políticos intocáveis e destrói a democracia brasileira. Reconsidere sua posição!</textarea>
+                                        <textarea id="socialText" readonly>Prezado ${
+                                          deputy.name
+                                        }, seu voto na PEC 3/21 (PEC da blindagem) envergonha eleitores. Ela cria políticos intocáveis e destrói a democracia brasileira. Reconsidere sua posição!</textarea>
                                         <button onclick="copyToClipboard('socialText')" class="copy-btn">📋 Copiar</button>
                                     </div>
 
                                     <div class="template-section">
                                         <h4>📧 Texto para Email</h4>
-                                        <textarea id="emailText" readonly>Prezado ${deputy.name},\n\nAcompanhei seu voto referente a PEC 3 de 2021, também conhecida como "PEC da Blindagem". Como eleitor do seu estado, gostaria de expressar minha preocupação com essa decisão que pode comprometer a transparência e accountability de nossos representantes.\n\nAtenciosamente,\n[Seu nome]</textarea>
+                                        <textarea id="emailText" readonly>Prezado ${
+                                          deputy.name
+                                        },\n\nAcompanhei seu voto referente a PEC 3 de 2021, também conhecida como "PEC da Blindagem". Como eleitor do seu estado, gostaria de expressar minha preocupação com essa decisão que pode comprometer a transparência e accountability de nossos representantes.\n\nAtenciosamente,\n[Seu nome]</textarea>
                                         <button onclick="copyToClipboard('emailText')" class="copy-btn">📋 Copiar</button>
                                     </div>
                                 </div>
                             </div>
-                            ` : `
+                            `
+                                : `
                             <div class="appreciation-section">
                                 <div class="appreciation-banner">
                                     👏 Apoie este deputado por defender a transparência!
                                 </div>
 
                                 <div class="contact-info">
-                                    ${details?.ultimoStatus?.gabinete?.email ? `
+                                    ${
+                                      details?.ultimoStatus?.gabinete?.email
+                                        ? `
                                     <a href="mailto:${details.ultimoStatus.gabinete.email}" class="contact-email">
                                         ${details.ultimoStatus.gabinete.email}
                                     </a>
-                                    ` : '<span class="no-contact">Email não informado</span>'}
+                                    `
+                                        : '<span class="no-contact">Email não informado</span>'
+                                    }
                                 </div>
 
                                 <div class="message-templates">
                                     <div class="template-section">
                                         <h4>📱 Texto para Redes Sociais</h4>
-                                        <textarea id="socialText" readonly>Parabéns ${deputy.name} por votar CONTRA a PEC da Blindagem! Obrigado por defender a transparência e a democracia brasileira. Continue representando bem nossos interesses! 👏</textarea>
+                                        <textarea id="socialText" readonly>Parabéns ${
+                                          deputy.name
+                                        } por votar CONTRA a PEC da Blindagem! Obrigado por defender a transparência e a democracia brasileira. Continue representando bem nossos interesses! 👏</textarea>
                                         <button onclick="copyToClipboard('socialText')" class="copy-btn">📋 Copiar</button>
                                     </div>
 
                                     <div class="template-section">
                                         <h4>📧 Texto para Email</h4>
-                                        <textarea id="emailText" readonly>Prezado ${deputy.name},\n\nGostaria de parabenizá-lo por seu voto CONTRA a PEC 3 de 2021. Sua posição em defesa da transparência e accountability democrática é fundamental para nossa democracia.\n\nContinue representando bem os interesses do povo!\n\nAtenciosamente,\n[Seu nome]</textarea>
+                                        <textarea id="emailText" readonly>Prezado ${
+                                          deputy.name
+                                        },\n\nGostaria de parabenizá-lo por seu voto CONTRA a PEC 3 de 2021. Sua posição em defesa da transparência e accountability democrática é fundamental para nossa democracia.\n\nContinue representando bem os interesses do povo!\n\nAtenciosamente,\n[Seu nome]</textarea>
                                         <button onclick="copyToClipboard('emailText')" class="copy-btn">📋 Copiar</button>
                                     </div>
                                 </div>
                             </div>
-                            `}
+                            `
+                            }
 
-                            ${details ? `
+                            ${
+                              details
+                                ? `
                             <div class="additional-info">
                                 <div class="info-grid">
                                     <div class="info-section">
                                         <h4>👤 Informações Pessoais</h4>
-                                        ${details.sexo ? `<p><strong>Sexo:</strong> ${details.sexo === 'M' ? 'Masculino' : 'Feminino'}</p>` : ''}
-                                        ${details.dataNascimento ? `<p><strong>Data de Nascimento:</strong> ${new Date(details.dataNascimento).toLocaleDateString('pt-BR')}</p>` : ''}
-                                        ${details.municipioNascimento && details.ufNascimento ? `<p><strong>Local de Nascimento:</strong> ${details.municipioNascimento} - ${details.ufNascimento}</p>` : ''}
-                                        ${details.escolaridade ? `<p><strong>Escolaridade:</strong> ${details.escolaridade}</p>` : ''}
-                                        ${details.ultimoStatus?.situacao ? `<p><strong>Situação:</strong> ${details.ultimoStatus.situacao}</p>` : ''}
-                                        ${details.ultimoStatus?.condicaoEleitoral ? `<p><strong>Condição Eleitoral:</strong> ${details.ultimoStatus.condicaoEleitoral}</p>` : ''}
+                                        ${
+                                          details.sexo
+                                            ? `<p><strong>Sexo:</strong> ${
+                                                details.sexo === "M"
+                                                  ? "Masculino"
+                                                  : "Feminino"
+                                              }</p>`
+                                            : ""
+                                        }
+                                        ${
+                                          details.dataNascimento
+                                            ? `<p><strong>Data de Nascimento:</strong> ${new Date(
+                                                details.dataNascimento
+                                              ).toLocaleDateString(
+                                                "pt-BR"
+                                              )}</p>`
+                                            : ""
+                                        }
+                                        ${
+                                          details.municipioNascimento &&
+                                          details.ufNascimento
+                                            ? `<p><strong>Local de Nascimento:</strong> ${details.municipioNascimento} - ${details.ufNascimento}</p>`
+                                            : ""
+                                        }
+                                        ${
+                                          details.escolaridade
+                                            ? `<p><strong>Escolaridade:</strong> ${details.escolaridade}</p>`
+                                            : ""
+                                        }
+                                        ${
+                                          details.ultimoStatus?.situacao
+                                            ? `<p><strong>Situação:</strong> ${details.ultimoStatus.situacao}</p>`
+                                            : ""
+                                        }
+                                        ${
+                                          details.ultimoStatus
+                                            ?.condicaoEleitoral
+                                            ? `<p><strong>Condição Eleitoral:</strong> ${details.ultimoStatus.condicaoEleitoral}</p>`
+                                            : ""
+                                        }
                                     </div>
 
-                                    ${details.ultimoStatus?.gabinete ? `
+                                    ${
+                                      details.ultimoStatus?.gabinete
+                                        ? `
                                     <div class="info-section">
                                         <h4>🏛️ Gabinete</h4>
-                                        ${details.ultimoStatus.gabinete.sala ? `<p><strong>Sala:</strong> ${details.ultimoStatus.gabinete.sala}</p>` : ''}
-                                        ${details.ultimoStatus.gabinete.predio ? `<p><strong>Prédio:</strong> ${details.ultimoStatus.gabinete.predio}</p>` : ''}
-                                        ${details.ultimoStatus.gabinete.andar ? `<p><strong>Andar:</strong> ${details.ultimoStatus.gabinete.andar}</p>` : ''}
-                                        ${details.ultimoStatus.gabinete.telefone ? `<p><strong>Telefone:</strong> ${details.ultimoStatus.gabinete.telefone}</p>` : ''}
+                                        ${
+                                          details.ultimoStatus.gabinete.sala
+                                            ? `<p><strong>Sala:</strong> ${details.ultimoStatus.gabinete.sala}</p>`
+                                            : ""
+                                        }
+                                        ${
+                                          details.ultimoStatus.gabinete.predio
+                                            ? `<p><strong>Prédio:</strong> ${details.ultimoStatus.gabinete.predio}</p>`
+                                            : ""
+                                        }
+                                        ${
+                                          details.ultimoStatus.gabinete.andar
+                                            ? `<p><strong>Andar:</strong> ${details.ultimoStatus.gabinete.andar}</p>`
+                                            : ""
+                                        }
+                                        ${
+                                          details.ultimoStatus.gabinete.telefone
+                                            ? `<p><strong>Telefone:</strong> ${details.ultimoStatus.gabinete.telefone}</p>`
+                                            : ""
+                                        }
                                     </div>
-                                    ` : ''}
+                                    `
+                                        : ""
+                                    }
                                 </div>
                             </div>
-                            ` : ''}
+                            `
+                                : ""
+                            }
                         </div>
                     </div>
                 </div>
             `;
 
-            // Add modal to page
-            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        // Add modal to page
+        document.body.insertAdjacentHTML("beforeend", modalHTML);
 
-            // Add event listeners
-            const modal = document.getElementById('deputyModal');
+        // Add event listeners
+        const modal = document.getElementById("deputyModal");
 
-            // Close modal when clicking outside
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    closeDeputyModal();
-                }
-            });
-
-            // Close modal with Escape key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    closeDeputyModal();
-                }
-            });
-        }
-
-        function closeDeputyModal() {
-            const modal = document.getElementById('deputyModal');
-            if (modal) {
-                modal.remove();
-            }
-        }
-
-        function copyToClipboard(textareaId) {
-            const textarea = document.getElementById(textareaId);
-            textarea.select();
-            textarea.setSelectionRange(0, 99999); // For mobile devices
-
-            try {
-                document.execCommand('copy');
-
-                // Show feedback
-                const button = textarea.nextElementSibling;
-                const originalText = button.textContent;
-                button.textContent = '✅ Copiado!';
-                button.style.background = '#10b981';
-
-                setTimeout(() => {
-                    button.textContent = originalText;
-                    button.style.background = '';
-                }, 2000);
-
-                trackVisualizationInteraction('deputy_modal', 'text_copied', textareaId);
-            } catch (err) {
-                console.error('Failed to copy text: ', err);
-            }
-        }
-
-        // Vote filter functionality
-        let currentVoteFilter = 'all'; // 'all', 'sim', 'nao', 'changed'
-
-        function checkVoteFilter(deputy) {
-            switch(currentVoteFilter) {
-                case 'all':
-                    return true;
-                case 'sim':
-                    return deputy.round2_vote === 'Sim';
-                case 'nao':
-                    return deputy.round2_vote === 'Não';
-                case 'changed':
-                    return deputy.round1_vote !== deputy.round2_vote;
-                default:
-                    return true;
-            }
-        }
-
-        function setVoteFilter(filter) {
-            currentVoteFilter = filter;
-
-            // Update button states
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`filter${filter.charAt(0).toUpperCase() + filter.slice(1)}`).classList.add('active');
-
-            // Apply filter
-            filterDeputies();
-
-            // Track filter usage
-            trackVisualizationInteraction('deputy_search', 'vote_filter', filter);
-        }
-
-        // Event listeners
-        document.getElementById('searchInput').addEventListener('input', filterDeputies);
-        document.getElementById('partyFilter').addEventListener('change', filterDeputies);
-        document.getElementById('stateFilter').addEventListener('change', filterDeputies);
-
-        // Vote filter button listeners
-        document.getElementById('filterAll').addEventListener('click', () => setVoteFilter('all'));
-        document.getElementById('filterSim').addEventListener('click', () => setVoteFilter('sim'));
-        document.getElementById('filterNao').addEventListener('click', () => setVoteFilter('nao'));
-        document.getElementById('filterChanged').addEventListener('click', () => setVoteFilter('changed'));
-
-        document.getElementById('loadMore').addEventListener('click', () => {
-            currentPage++;
-            renderDeputies();
-            trackVisualizationInteraction('deputy_search', 'load_more', `page_${currentPage}`);
+        // Close modal when clicking outside
+        modal.addEventListener("click", function (e) {
+          if (e.target === modal) {
+            closeDeputyModal();
+          }
         });
 
-        // Analytics function (from analytics.js)
-        function trackVisualizationInteraction(chartType, action, details, value = 1) {
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'visualization_interaction', {
-                    chart_type: chartType,
-                    interaction_action: action,
-                    interaction_details: details,
-                    event_category: 'Data Visualization',
-                    page_type: 'Deputy Search'
-                });
-            }
-        }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            loadDeputyData();
+        // Close modal with Escape key
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") {
+            closeDeputyModal();
+          }
         });
+      }
+
+      function closeDeputyModal() {
+        const modal = document.getElementById("deputyModal");
+        if (modal) {
+          modal.remove();
+        }
+      }
+
+      function copyToClipboard(textareaId) {
+        const textarea = document.getElementById(textareaId);
+        textarea.select();
+        textarea.setSelectionRange(0, 99999); // For mobile devices
+
+        try {
+          document.execCommand("copy");
+
+          // Show feedback
+          const button = textarea.nextElementSibling;
+          const originalText = button.textContent;
+          button.textContent = "✅ Copiado!";
+          button.style.background = "#10b981";
+
+          setTimeout(() => {
+            button.textContent = originalText;
+            button.style.background = "";
+          }, 2000);
+
+          trackVisualizationInteraction(
+            "deputy_modal",
+            "text_copied",
+            textareaId
+          );
+        } catch (err) {
+          console.error("Failed to copy text: ", err);
+        }
+      }
+
+      // Vote filter functionality
+      let currentVoteFilter = "all"; // 'all', 'sim', 'nao', 'changed'
+
+      function checkVoteFilter(deputy) {
+        switch (currentVoteFilter) {
+          case "all":
+            return true;
+          case "sim":
+            return deputy.round2_vote === "Sim";
+          case "nao":
+            return deputy.round2_vote === "Não";
+          case "changed":
+            return deputy.round1_vote !== deputy.round2_vote;
+          default:
+            return true;
+        }
+      }
+
+      function setVoteFilter(filter) {
+        currentVoteFilter = filter;
+
+        // Update button states
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+        document
+          .getElementById(
+            `filter${filter.charAt(0).toUpperCase() + filter.slice(1)}`
+          )
+          .classList.add("active");
+
+        // Apply filter
+        filterDeputies();
+
+        // Track filter usage
+        trackVisualizationInteraction("deputy_search", "vote_filter", filter);
+      }
+
+      // Event listeners
+      document
+        .getElementById("searchInput")
+        .addEventListener("input", filterDeputies);
+      document
+        .getElementById("partyFilter")
+        .addEventListener("change", filterDeputies);
+      document
+        .getElementById("stateFilter")
+        .addEventListener("change", filterDeputies);
+
+      // Vote filter button listeners
+      document
+        .getElementById("filterAll")
+        .addEventListener("click", () => setVoteFilter("all"));
+      document
+        .getElementById("filterSim")
+        .addEventListener("click", () => setVoteFilter("sim"));
+      document
+        .getElementById("filterNao")
+        .addEventListener("click", () => setVoteFilter("nao"));
+      document
+        .getElementById("filterChanged")
+        .addEventListener("click", () => setVoteFilter("changed"));
+
+      document.getElementById("loadMore").addEventListener("click", () => {
+        currentPage++;
+        renderDeputies();
+        trackVisualizationInteraction(
+          "deputy_search",
+          "load_more",
+          `page_${currentPage}`
+        );
+      });
+
+      // Analytics function (from analytics.js)
+      function trackVisualizationInteraction(
+        chartType,
+        action,
+        details,
+        value = 1
+      ) {
+        if (typeof gtag !== "undefined") {
+          gtag("event", "visualization_interaction", {
+            chart_type: chartType,
+            interaction_action: action,
+            interaction_details: details,
+            event_category: "Data Visualization",
+            page_type: "Deputy Search",
+          });
+        }
+      }
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", () => {
+        loadDeputyData();
+      });
     </script>
-</body>
+  </body>
 </html>

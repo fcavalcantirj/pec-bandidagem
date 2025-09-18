@@ -1,253 +1,288 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PEC da Bandidagem - Análise Interativa dos Padrões de Votação na Câmara dos Deputados</title>
-    <meta name="description" content="Análise completa dos 353 deputados que votaram SIM na PEC da Bandidagem. Visualizações interativas por partido, estado e correlação com voto secreto. Dados oficiais da Câmara dos Deputados.">
-    <meta name="keywords" content="PEC da Bandidagem, deputados, votação, análise política, Câmara dos Deputados, voto secreto, partidos políticos">
-    <meta name="author" content="fcavalcantirj">
-    <meta property="og:title" content="PEC da Bandidagem - Análise Interativa dos Padrões de Votação">
-    <meta property="og:description" content="Descubra quais dos 488 deputados votaram a favor da controversa PEC da Bandidagem. Análise completa com visualizações interativas por partido e estado.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://pec-bandidagem.vercel.app/">
-    <meta property="og:image" content="https://pec-bandidagem.vercel.app/og-image.png">
-    <meta property="og:image:alt" content="Análise da PEC da Bandidagem - 353 deputados votaram SIM">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <link rel="canonical" href="https://pec-bandidagem.vercel.app/">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://pec-bandidagem.vercel.app/og-image.png">
-    <meta name="twitter:title" content="PEC da Bandidagem - Análise Interativa dos Padrões de Votação">
-    <meta name="twitter:description" content="353 deputados votaram SIM na PEC da Bandidagem. Veja a análise completa com dados oficiais da Câmara dos Deputados.">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      PEC da Bandidagem - Análise Interativa dos Padrões de Votação na Câmara
+      dos Deputados
+    </title>
+    <meta
+      name="description"
+      content="Análise completa dos 353 deputados que votaram SIM na PEC da Bandidagem. Visualizações interativas por partido, estado e correlação com voto secreto. Dados oficiais da Câmara dos Deputados." />
+    <meta
+      name="keywords"
+      content="PEC da Bandidagem, deputados, votação, análise política, Câmara dos Deputados, voto secreto, partidos políticos" />
+    <meta name="author" content="fcavalcantirj" />
+    <meta
+      property="og:title"
+      content="PEC da Bandidagem - Análise Interativa dos Padrões de Votação" />
+    <meta
+      property="og:description"
+      content="Descubra quais dos 488 deputados votaram a favor da controversa PEC da Bandidagem. Análise completa com visualizações interativas por partido e estado." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://pec-bandidagem.vercel.app/" />
+    <meta
+      property="og:image"
+      content="https://pec-bandidagem.vercel.app/og-image.png" />
+    <meta
+      property="og:image:alt"
+      content="Análise da PEC da Bandidagem - 353 deputados votaram SIM" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <link rel="canonical" href="https://pec-bandidagem.vercel.app/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:image"
+      content="https://pec-bandidagem.vercel.app/og-image.png" />
+    <meta
+      name="twitter:title"
+      content="PEC da Bandidagem - Análise Interativa dos Padrões de Votação" />
+    <meta
+      name="twitter:description"
+      content="353 deputados votaram SIM na PEC da Bandidagem. Veja a análise completa com dados oficiais da Câmara dos Deputados." />
 
     <!-- Schema.org Structured Data -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Dataset",
-      "name": "PEC da Bandidagem - Análise de Votação",
-      "description": "Conjunto de dados completo sobre a votação da PEC da Bandidagem na Câmara dos Deputados, incluindo análise por deputado, partido e estado.",
-      "url": "https://pec-bandidagem.vercel.app/",
-      "creator": {
-        "@type": "Person",
-        "name": "fcavalcantirj",
-        "url": "https://github.com/fcavalcantirj"
-      },
-      "datePublished": "2025-09-17",
-      "dateModified": "2025-09-17",
-      "license": "https://creativecommons.org/licenses/by/4.0/",
-      "keywords": ["PEC da Bandidagem", "Câmara dos Deputados", "votação", "análise política", "dados abertos"],
-      "spatialCoverage": {
-        "@type": "Place",
-        "name": "Brasil"
-      },
-      "variableMeasured": [
-        "Voto por deputado",
-        "Voto por partido",
-        "Voto por estado",
-        "Correlação com voto secreto"
-      ]
-    }
-    </script>
-
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "PEC da Bandidagem - Análise Interativa",
-      "url": "https://pec-bandidagem.vercel.app/",
-      "description": "Plataforma de análise interativa dos padrões de votação na PEC da Bandidagem",
-      "publisher": {
-        "@type": "Person",
-        "name": "fcavalcantirj"
-      },
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://pec-bandidagem.vercel.app/deputados.html?q={search_term_string}",
-        "query-input": "required name=search_term_string"
+      {
+        "@context": "https://schema.org",
+        "@type": "Dataset",
+        "name": "PEC da Bandidagem - Análise de Votação",
+        "description": "Conjunto de dados completo sobre a votação da PEC da Bandidagem na Câmara dos Deputados, incluindo análise por deputado, partido e estado.",
+        "url": "https://pec-bandidagem.vercel.app/",
+        "creator": {
+          "@type": "Person",
+          "name": "fcavalcantirj",
+          "url": "https://github.com/fcavalcantirj"
+        },
+        "datePublished": "2025-09-17",
+        "dateModified": "2025-09-17",
+        "license": "https://creativecommons.org/licenses/by/4.0/",
+        "keywords": [
+          "PEC da Bandidagem",
+          "Câmara dos Deputados",
+          "votação",
+          "análise política",
+          "dados abertos"
+        ],
+        "spatialCoverage": {
+          "@type": "Place",
+          "name": "Brasil"
+        },
+        "variableMeasured": [
+          "Voto por deputado",
+          "Voto por partido",
+          "Voto por estado",
+          "Correlação com voto secreto"
+        ]
       }
-    }
     </script>
 
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "GovernmentOrganization",
-      "name": "Câmara dos Deputados",
-      "url": "https://www.camara.leg.br/",
-      "description": "Casa legislativa do Congresso Nacional do Brasil",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Brasília",
-        "addressRegion": "DF",
-        "addressCountry": "BR"
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "PEC da Bandidagem - Análise Interativa",
+        "url": "https://pec-bandidagem.vercel.app/",
+        "description": "Plataforma de análise interativa dos padrões de votação na PEC da Bandidagem",
+        "publisher": {
+          "@type": "Person",
+          "name": "fcavalcantirj"
+        },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://pec-bandidagem.vercel.app/deputados.html?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
       }
-    }
     </script>
 
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Event",
-      "name": "Votação da PEC da Bandidagem",
-      "description": "Proposta de Emenda à Constituição votada na Câmara dos Deputados em dois turnos",
-      "startDate": "2024",
-      "location": {
-        "@type": "Place",
+      {
+        "@context": "https://schema.org",
+        "@type": "GovernmentOrganization",
         "name": "Câmara dos Deputados",
+        "url": "https://www.camara.leg.br/",
+        "description": "Casa legislativa do Congresso Nacional do Brasil",
         "address": {
           "@type": "PostalAddress",
           "addressLocality": "Brasília",
           "addressRegion": "DF",
           "addressCountry": "BR"
         }
-      },
-      "organizer": {
-        "@type": "GovernmentOrganization",
-        "name": "Câmara dos Deputados"
       }
-    }
     </script>
 
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "O que é a PEC da Bandidagem?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "A PEC da Bandidagem é uma Proposta de Emenda à Constituição que foi votada na Câmara dos Deputados. 353 deputados votaram SIM, representando 72.3% dos votos válidos."
+      {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        "name": "Votação da PEC da Bandidagem",
+        "description": "Proposta de Emenda à Constituição votada na Câmara dos Deputados em dois turnos",
+        "startDate": "2024",
+        "location": {
+          "@type": "Place",
+          "name": "Câmara dos Deputados",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Brasília",
+            "addressRegion": "DF",
+            "addressCountry": "BR"
           }
         },
-        {
-          "@type": "Question",
-          "name": "Quantos deputados votaram a favor da PEC?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "353 deputados votaram SIM na PEC da Bandidagem, enquanto 131 votaram NÃO. Houve alta correlação (r=0.83) com a defesa do voto secreto."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Quais partidos mais apoiaram a PEC?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "PL teve 100% de disciplina partidária votando SIM. Partidos de direita apresentaram apoio massivo (>90%), enquanto PT e outros partidos de esquerda fizeram oposição."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Como posso ver os dados dos deputados do meu estado?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Use nossa análise por estados para ver como sua região votou. Estados como Tocantins e Piauí tiveram 100% de aprovação, enquanto outros foram mais divididos."
-          }
+        "organizer": {
+          "@type": "GovernmentOrganization",
+          "name": "Câmara dos Deputados"
         }
-      ]
-    }
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "O que é a PEC da Bandidagem?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "A PEC da Bandidagem é uma Proposta de Emenda à Constituição que foi votada na Câmara dos Deputados. 353 deputados votaram SIM, representando 72.3% dos votos válidos."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Quantos deputados votaram a favor da PEC?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "353 deputados votaram SIM na PEC da Bandidagem, enquanto 131 votaram NÃO. Houve alta correlação (r=0.83) com a defesa do voto secreto."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Quais partidos mais apoiaram a PEC?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "PL teve 100% de disciplina partidária votando SIM. Partidos de direita apresentaram apoio massivo (>90%), enquanto PT e outros partidos de esquerda fizeram oposição."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Como posso ver os dados dos deputados do meu estado?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Use nossa análise por estados para ver como sua região votou. Estados como Tocantins e Piauí tiveram 100% de aprovação, enquanto outros foram mais divididos."
+            }
+          }
+        ]
+      }
     </script>
 
     <!-- Resource preloading for performance -->
-    <link rel="preload" href="https://d3js.org/d3.v7.min.js" as="script">
-    <link rel="preload" href="data.js" as="script">
-    <link rel="dns-prefetch" href="//www.googletagmanager.com">
-    <link rel="dns-prefetch" href="//www.google-analytics.com">
-    <link rel="dns-prefetch" href="//fonts.googleapis.com">
-    <link rel="dns-prefetch" href="//api.whatsapp.com">
-    <link rel="dns-prefetch" href="//twitter.com">
-    <link rel="dns-prefetch" href="//facebook.com">
-    <link rel="dns-prefetch" href="//linkedin.com">
+    <link rel="preload" href="https://d3js.org/d3.v7.min.js" as="script" />
+    <link rel="preload" href="data.js" as="script" />
+    <link rel="dns-prefetch" href="//www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="//www.google-analytics.com" />
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//api.whatsapp.com" />
+    <link rel="dns-prefetch" href="//twitter.com" />
+    <link rel="dns-prefetch" href="//facebook.com" />
+    <link rel="dns-prefetch" href="//linkedin.com" />
 
     <!-- Performance optimization -->
-    <link rel="preconnect" href="https://www.googletagmanager.com">
-    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <meta
+      name="robots"
+      content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta
+      name="googlebot"
+      content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 
     <!-- PWA Manifest -->
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#4f46e5">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="PEC Bandidagem">
-    <link rel="apple-touch-icon" href="/icon-192.png">
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#4f46e5" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="PEC Bandidagem" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
 
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P47CK1TDL8"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-P47CK1TDL8"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-      gtag('config', 'G-P47CK1TDL8', {
+      gtag("config", "G-P47CK1TDL8", {
         // Enhanced measurement settings
         send_page_view: true,
         allow_google_signals: true,
         allow_ad_personalization_signals: false, // Privacy-focused for political content
-        page_title: 'PEC da Bandidagem - Página Inicial',
+        page_title: "PEC da Bandidagem - Página Inicial",
         page_location: window.location.href,
-        content_group1: 'Homepage', // Content grouping for analysis
-        content_group2: 'Political Analysis',
+        content_group1: "Homepage", // Content grouping for analysis
+        content_group2: "Political Analysis",
         custom_map: {
-          'custom_parameter_1': 'section_viewed',
-          'custom_parameter_2': 'report_accessed'
-        }
+          custom_parameter_1: "section_viewed",
+          custom_parameter_2: "report_accessed",
+        },
       });
 
       // Enhanced event tracking functions
       function trackVisualizationInteraction(chartType, action, details) {
-        gtag('event', 'visualization_interaction', {
+        gtag("event", "visualization_interaction", {
           chart_type: chartType,
           interaction_action: action,
           interaction_details: details,
-          event_category: 'Data Visualization',
+          event_category: "Data Visualization",
           event_label: `${chartType}_${action}`,
-          value: 1
+          value: 1,
         });
       }
 
       function trackReportAccess(reportSection, accessMethod) {
-        gtag('event', 'report_access', {
+        gtag("event", "report_access", {
           report_section: reportSection,
           access_method: accessMethod,
-          event_category: 'Content Engagement',
+          event_category: "Content Engagement",
           event_label: `Report_${reportSection}`,
-          value: 1
+          value: 1,
         });
       }
 
       function trackNavigationFlow(fromPage, toPage, navigationMethod) {
-        gtag('event', 'navigation_flow', {
+        gtag("event", "navigation_flow", {
           from_page: fromPage,
           to_page: toPage,
           navigation_method: navigationMethod,
-          event_category: 'User Flow',
+          event_category: "User Flow",
           event_label: `${fromPage}_to_${toPage}`,
-          value: 1
+          value: 1,
         });
       }
 
       function trackContentEngagement(contentType, engagementLevel, timeSpent) {
-        gtag('event', 'content_engagement', {
+        gtag("event", "content_engagement", {
           content_type: contentType,
           engagement_level: engagementLevel,
           time_spent_seconds: timeSpent,
-          event_category: 'Content Performance',
+          event_category: "Content Performance",
           event_label: `${contentType}_${engagementLevel}`,
-          value: timeSpent
+          value: timeSpent,
         });
       }
 
       function trackSocialShare(platform, contentShared) {
-        gtag('event', 'social_share', {
+        gtag("event", "social_share", {
           platform: platform,
           content_shared: contentShared,
-          event_category: 'Social Engagement',
+          event_category: "Social Engagement",
           event_label: `Share_${platform}`,
-          value: 1
+          value: 1,
         });
       }
 
@@ -257,1182 +292,693 @@
       let deepEngagement = false;
 
       // Scroll depth tracking
-      window.addEventListener('scroll', function() {
+      window.addEventListener("scroll", function () {
         if (!hasScrolled) {
           hasScrolled = true;
-          gtag('event', 'scroll_start', {
-            event_category: 'Page Engagement',
-            event_label: 'First Scroll',
-            value: Math.round((Date.now() - pageStartTime) / 1000)
+          gtag("event", "scroll_start", {
+            event_category: "Page Engagement",
+            event_label: "First Scroll",
+            value: Math.round((Date.now() - pageStartTime) / 1000),
           });
         }
 
-        const scrollPercentage = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+        const scrollPercentage = Math.round(
+          (window.scrollY / (document.body.scrollHeight - window.innerHeight)) *
+            100
+        );
 
         if (scrollPercentage > 75 && !deepEngagement) {
           deepEngagement = true;
-          gtag('event', 'deep_engagement', {
+          gtag("event", "deep_engagement", {
             scroll_percentage: scrollPercentage,
-            event_category: 'Page Engagement',
-            event_label: 'Deep Scroll',
-            value: Math.round((Date.now() - pageStartTime) / 1000)
+            event_category: "Page Engagement",
+            event_label: "Deep Scroll",
+            value: Math.round((Date.now() - pageStartTime) / 1000),
           });
         }
       });
 
       // Track time on page when user leaves
-      window.addEventListener('beforeunload', function() {
+      window.addEventListener("beforeunload", function () {
         const timeSpent = Math.round((Date.now() - pageStartTime) / 1000);
-        trackContentEngagement('homepage', timeSpent > 120 ? 'high' : timeSpent > 30 ? 'medium' : 'low', timeSpent);
+        trackContentEngagement(
+          "homepage",
+          timeSpent > 120 ? "high" : timeSpent > 30 ? "medium" : "low",
+          timeSpent
+        );
       });
     </script>
 
     <script src="https://d3js.org/d3.v7.min.js" defer></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #1a202c;
-            font-weight: 500;
-            /* Mobile-first: ensure smooth scrolling and prevent horizontal scroll */
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
-
-        /* Mobile-first container approach */
-        .container, .nav-cards, .insights-grid, .key-metrics {
-            width: 100%;
-            max-width: 100%;
-            padding: 0 1rem;
-        }
-
-        .hero {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(15px);
-            padding: 2rem 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 8px 40px rgba(0,0,0,0.15);
-            border-bottom: 4px solid #4f46e5;
-            border-radius: 0 0 24px 24px;
-            text-align: center;
-            border-left: 1px solid rgba(255,255,255,0.8);
-            border-right: 1px solid rgba(255,255,255,0.8);
-        }
-
-        .hero h1 {
-            font-size: 2rem;
-            color: #1a202c;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.15);
-            line-height: 1.2;
-            font-weight: 900;
-            letter-spacing: -0.025em;
-            font-weight: 800;
-        }
-
-        .hero .subtitle {
-            font-size: 1.1rem;
-            color: #1a202c;
-            margin-bottom: 1.5rem;
-            line-height: 1.5;
-            padding: 0 0.5rem;
-            font-weight: 600;
-            font-weight: 600;
-        }
-
-        .hero .description {
-            font-size: 0.95rem;
-            color: #1a202c;
-            margin: 0 auto 1.5rem;
-            line-height: 1.6;
-            padding: 0 0.5rem;
-            font-weight: 600;
-        }
-
-        /* Tablet and up */
-        @media (min-width: 768px) {
-            .hero {
-                padding: 3rem 2rem;
-            }
-
-            .hero h1 {
-                font-size: 3rem;
-            }
-
-            .hero .subtitle {
-                font-size: 1.3rem;
-                max-width: 600px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-
-            .hero .description {
-                font-size: 1.05rem;
-                max-width: 800px;
-            }
-        }
-
-        /* Desktop */
-        @media (min-width: 1024px) {
-            .hero {
-                padding: 4rem 2rem;
-            }
-
-            .hero h1 {
-                font-size: 3.5rem;
-            }
-
-            .hero .subtitle {
-                font-size: 1.5rem;
-                max-width: 800px;
-            }
-
-            .hero .description {
-                font-size: 1.1rem;
-                max-width: 1000px;
-            }
-        }
-
-        .nav-cards {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-            margin: 0 auto;
-            padding: 1rem;
-            max-width: 100%;
-        }
-
-        /* Tablet and up */
-        @media (min-width: 768px) {
-            .nav-cards {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1.5rem;
-                padding: 1.5rem;
-                max-width: 900px;
-            }
-        }
-
-        /* Desktop */
-        @media (min-width: 1024px) {
-            .nav-cards {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 2rem;
-                padding: 2rem;
-                max-width: 1200px;
-            }
-        }
-
-        .nav-card {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(15px);
-            border-radius: 24px;
-            padding: 2.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
-            border: 1px solid rgba(255,255,255,0.8);
-            transition: all 0.3s ease;
-            text-decoration: none;
-            color: inherit;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #4f46e5, #7c3aed);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-
-        .nav-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .nav-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 24px 50px rgba(0,0,0,0.18);
-        }
-
-        .nav-card-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .nav-card-title {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #1a202c;
-            margin-bottom: 1rem;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-            letter-spacing: -0.025em;
-        }
-
-        .nav-card-description {
-            color: #2d3748;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-            font-weight: 600;
-            font-size: 1rem;
-        }
-
-        .nav-card-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 0.75rem;
-            background: #f8fafc;
-            border-radius: 8px;
-        }
-
-        .stat-number {
-            font-size: 1.25rem;
-            font-weight: 900;
-            color: #4f46e5;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: #64748b;
-            margin-top: 0.25rem;
-        }
-
-        .overview-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin: 2rem auto;
-            padding: 0 1rem;
-            max-width: 100%;
-        }
-
-        /* Mobile landscape and tablet */
-        @media (min-width: 480px) {
-            .overview-stats {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 1.5rem;
-            }
-        }
-
-        /* Tablet */
-        @media (min-width: 768px) {
-            .overview-stats {
-                grid-template-columns: repeat(3, 1fr);
-                margin: 2.5rem auto;
-                max-width: 900px;
-            }
-        }
-
-        /* Desktop */
-        @media (min-width: 1024px) {
-            .overview-stats {
-                grid-template-columns: repeat(6, 1fr);
-                gap: 2rem;
-                margin: 3rem auto;
-                max-width: 1200px;
-                padding: 0 2rem;
-            }
-        }
-
-        .overview-card {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            text-align: center;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
-            border: 1px solid rgba(255,255,255,0.8);
-            border-left: 4px solid #4f46e5;
-            transition: all 0.3s ease;
-        }
-
-        .overview-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 16px 50px rgba(0,0,0,0.15);
-            border-left-color: #6366f1;
-        }
-
-        .overview-number {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: #4f46e5;
-            margin-bottom: 0.5rem;
-            line-height: 1;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            letter-spacing: -0.025em;
-        }
-
-        .overview-label {
-            color: #1a202c;
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-            letter-spacing: -0.025em;
-        }
-
-        .overview-detail {
-            color: #2d3748;
-            font-size: 0.95rem;
-            line-height: 1.4;
-            font-weight: 600;
-        }
-
-        .methodology {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(15px);
-            margin: 3rem auto;
-            max-width: 1200px;
-            border-radius: 24px;
-            padding: 3rem 2rem;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
-            border: 1px solid rgba(255,255,255,0.8);
-        }
-
-        .methodology h2 {
-            color: #0f172a;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            font-size: 2rem;
-            font-weight: 700;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
-
-        .methodology-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .methodology-item {
-            padding: 1.5rem;
-            background: #f8fafc;
-            border-radius: 12px;
-            border-left: 4px solid #4f46e5;
-        }
-
-        .methodology-title {
-            font-weight: bold;
-            color: #1e293b;
-            margin-bottom: 0.5rem;
-        }
-
-        .methodology-text {
-            color: #64748b;
-            line-height: 1.6;
-        }
-
-        .footer {
-            background: rgba(30, 41, 59, 0.95);
-            color: white;
-            padding: 2rem;
-            margin-top: 4rem;
-            text-align: center;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .footer h3 {
-            margin-bottom: 1rem;
-            color: #e2e8f0;
-        }
-
-        .footer p {
-            color: #94a3b8;
-            line-height: 1.6;
-        }
-
-        .data-sources {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .source-link {
-            color: #60a5fa;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .source-link:hover {
-            color: #93c5fd;
-        }
-
-        /* Report Highlights Styles */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .section {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 2.5rem;
-            margin: 2rem 0;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .section-title {
-            font-size: 2.2rem;
-            color: #1e293b;
-            margin-bottom: 1rem;
-            text-align: center;
-            font-weight: 700;
-        }
-
-        .section-subtitle {
-            font-size: 1.1rem;
-            color: #64748b;
-            text-align: center;
-            margin-bottom: 2.5rem;
-            line-height: 1.6;
-        }
-
-        .cta-link {
-            color: #4f46e5;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-
-        .cta-link:hover {
-            color: #3730a3;
-        }
-
-        .insights-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-            margin: 1.5rem 0;
-            padding: 0 1rem;
-        }
-
-        /* Mobile landscape and tablet */
-        @media (min-width: 480px) {
-            .insights-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-        }
-
-        /* Tablet */
-        @media (min-width: 768px) {
-            .insights-grid {
-                grid-template-columns: repeat(2, 1fr);
-                margin: 2rem auto;
-                max-width: 900px;
-            }
-        }
-
-        /* Desktop */
-        @media (min-width: 1024px) {
-            .insights-grid {
-                grid-template-columns: repeat(3, 1fr);
-                margin: 2rem auto;
-                max-width: 1200px;
-            }
-        }
-
-        .insight-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border-left: 4px solid #4f46e5;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .insight-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-
-        .insight-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .insight-card h3 {
-            font-size: 1.2rem;
-            color: #1e293b;
-            margin-bottom: 0.8rem;
-            font-weight: 600;
-        }
-
-        .insight-card p {
-            color: #64748b;
-            line-height: 1.5;
-            font-size: 0.95rem;
-        }
-
-        .cta-section {
-            background: linear-gradient(135deg, #f0f9ff, #dbeafe);
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            margin-top: 2.5rem;
-            border: 2px solid #3b82f6;
-        }
-
-        .cta-section h3 {
-            color: #1e40af;
-            margin-bottom: 1rem;
-            font-size: 1.4rem;
-        }
-
-        .cta-section p {
-            color: #1e40af;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-
-        .cta-button {
-            display: inline-block;
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
-        }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
-            background: linear-gradient(135deg, #3730a3, #6d28d9);
-        }
-
-        /* GitHub Fork Ribbon CSS */
-        .github-fork-ribbon {
-            width: 12.1em;
-            height: 12.1em;
-            position: fixed;
-            overflow: hidden;
-            top: 0;
-            right: 0;
-            z-index: 9999;
-            pointer-events: none;
-            font-size: 13px;
-            text-decoration: none;
-            text-indent: -999999px;
-            opacity: 0.9;
-            transition: opacity 0.3s ease;
-        }
-
-        .github-fork-ribbon:hover {
-            opacity: 1;
-        }
-
-        .github-fork-ribbon.fixed {
-            position: fixed;
-        }
-
-        .github-fork-ribbon:hover, .github-fork-ribbon:active {
-            background-color: rgba(0, 0, 0, 0.0);
-        }
-
-        .github-fork-ribbon:before, .github-fork-ribbon:after {
-            position: absolute;
-            display: block;
-            width: 15.38em;
-            height: 1.54em;
-            top: 3.23em;
-            right: -3.23em;
-            transform: rotate(45deg);
-            box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.5);
-            pointer-events: auto;
-        }
-
-        .github-fork-ribbon:before {
-            content: "";
-            padding: 0.38em 0;
-            background-color: #a00;
-            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
-            box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.5);
-            pointer-events: auto;
-        }
-
-        .github-fork-ribbon:after {
-            content: attr(data-ribbon);
-            color: #fff;
-            font: 700 1em "Helvetica Neue", Helvetica, Arial, sans-serif;
-            line-height: 1.54em;
-            text-decoration: none;
-            text-shadow: 0 -1px rgba(0, 0, 0, 0.5);
-            text-align: center;
-            text-indent: 0;
-            padding: 0.15em 0;
-            margin: 0.15em 0;
-            border-width: 1px 0;
-            border-style: dotted;
-            border-color: #fff;
-            border-color: rgba(255, 255, 255, 0.7);
-        }
-
-        .github-fork-ribbon.red:before {
-            background-color: #a00;
-        }
-
-        .github-fork-ribbon.blue:before {
-            background-color: #05b;
-        }
-
-        .github-fork-ribbon.green:before {
-            background-color: #090;
-        }
-
-        .github-fork-ribbon.orange:before {
-            background-color: #fa0;
-        }
-
-        .github-fork-ribbon.purple:before {
-            background-color: #c6f;
-        }
-
-        /* Improved text contrast and readability */
-        .nav-card-description strong {
-            color: #1a202c !important;
-            font-weight: 700 !important;
-        }
-
-        .overview-detail strong {
-            color: #1a202c !important;
-            font-weight: 700 !important;
-        }
-
-        .overview-detail span {
-            color: #2d3748 !important;
-            font-weight: 600 !important;
-        }
-
-        .stat-label {
-            color: #2d3748 !important;
-            font-weight: 600 !important;
-            font-size: 0.8rem !important;
-        }
-
-        /* Better card backgrounds for contrast */
-        .nav-card, .overview-card {
-            box-shadow: 0 8px 32px rgba(0,0,0,0.12) !important;
-        }
-
-        /* Landscape mobile optimization */
-        @media (max-height: 500px) and (orientation: landscape) {
-            .hero {
-                padding: 1rem;
-            }
-
-            .hero h1 {
-                font-size: 1.8rem;
-                margin-bottom: 0.5rem;
-            }
-
-            .hero .subtitle {
-                font-size: 1rem;
-                margin-bottom: 1rem;
-            }
-
-            .hero .description {
-                font-size: 0.9rem;
-                margin-bottom: 1rem;
-            }
-
-            .overview-stats {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.8rem;
-                margin: 1rem auto;
-            }
-
-            .nav-cards {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-                margin: 1.5rem auto;
-            }
-
-            .container {
-                padding: 0 0.5rem;
-            }
-        }
-
-        /* Small mobile optimizations */
-        @media (max-width: 480px) {
-            .hero {
-                padding: 1.5rem 1rem;
-                margin: 1rem auto;
-            }
-
-            .hero h1 {
-                font-size: 2rem;
-                margin-bottom: 0.8rem;
-            }
-
-            .hero .subtitle {
-                font-size: 1rem;
-                margin-bottom: 1.2rem;
-            }
-
-            .hero .description {
-                font-size: 0.9rem;
-                margin-bottom: 1rem;
-            }
-
-            .overview-stats {
-                margin: 1.5rem auto;
-                gap: 0.8rem;
-            }
-
-            .overview-card {
-                padding: 1.2rem;
-                border-radius: 16px;
-            }
-
-            .overview-number {
-                font-size: 2rem;
-                margin-bottom: 0.3rem;
-            }
-
-            .overview-label {
-                font-size: 0.9rem;
-                margin-bottom: 0.3rem;
-            }
-
-            .overview-detail {
-                font-size: 0.8rem;
-            }
-
-            .nav-card {
-                padding: 1.5rem;
-                border-radius: 20px;
-            }
-
-            .nav-card-title {
-                font-size: 1.3rem;
-                margin-bottom: 0.8rem;
-            }
-
-            .nav-card-description {
-                font-size: 0.95rem;
-                margin-bottom: 1rem;
-            }
-
-            .insight-card {
-                padding: 1.5rem;
-            }
-
-            .methodology {
-                padding: 2rem 1.5rem;
-                margin: 2rem auto;
-            }
-
-            /* Show GitHub fork ribbon on mobile but smaller */
-            .github-fork-ribbon {
-                font-size: 10px;
-                opacity: 0.8;
-            }
-        }
-
-        /* Medium mobile and up - show fork ribbon */
-        @media (min-width: 481px) {
-            .github-fork-ribbon {
-                display: block;
-            }
-        }
-    </style>
-</head>
-<body>
+    <link rel="stylesheet" href="assets/css/style.css" />
+
+    <style></style>
+  </head>
+  <body class="home">
     <!-- GitHub Fork Ribbon -->
-    <a class="github-fork-ribbon" href="https://github.com/fcavalcantirj/pec-bandidagem" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
+    <a
+      class="github-fork-ribbon"
+      href="https://github.com/fcavalcantirj/pec-bandidagem"
+      data-ribbon="Fork me on GitHub"
+      title="Fork me on GitHub"
+      >Fork me on GitHub</a
+    >
 
     <div class="hero">
-        <h1>🏛️ PEC da Bandidagem</h1>
-        <p class="subtitle">Análise Interativa dos Padrões de Votação na Câmara dos Deputados</p>
-        <p class="description">
-            <strong style="color: #dc2626;">⚠️ ALERTA: Mais de 70% dos deputados votaram A FAVOR da PEC da Bandidagem</strong><br>
-            Explore em detalhes quem são os 353 deputados que aprovaram esta proposta controversa.
-            Veja visualizações interativas dos padrões de votação por partido, estado, e identifique exatamente quem votou SIM.
-        </p>
+      <h1>🏛️ PEC da Bandidagem</h1>
+      <p class="subtitle">
+        Análise Interativa dos Padrões de Votação na Câmara dos Deputados
+      </p>
+      <p class="description">
+        <strong style="color: #dc2626"
+          >⚠️ ALERTA: Mais de 70% dos deputados votaram A FAVOR da PEC da
+          Bandidagem</strong
+        ><br />
+        Explore em detalhes quem são os 353 deputados que aprovaram esta
+        proposta controversa. Veja visualizações interativas dos padrões de
+        votação por partido, estado, e identifique exatamente quem votou SIM.
+      </p>
     </div>
 
     <div class="overview-stats">
-        <div class="overview-card" style="border: 3px solid #dc2626; background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(255,245,245,0.95)); box-shadow: 0 8px 32px rgba(220,38,38,0.15);">
-            <div class="overview-number" id="total-votes-1" style="color: #dc2626;">353 SIM</div>
-            <div class="overview-label" style="color: #991b1b; font-weight: 700;">Votaram A FAVOR - 1º Turno</div>
-            <div class="overview-detail"><strong style="color: #dc2626; font-size: 1.1rem;">72.3% APROVARAM</strong><br><span style="font-size: 0.85rem;">134 contra (27.5%)</span></div>
+      <div
+        class="overview-card"
+        style="
+          border: 3px solid #dc2626;
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.98),
+            rgba(255, 245, 245, 0.95)
+          );
+          box-shadow: 0 8px 32px rgba(220, 38, 38, 0.15);
+        ">
+        <div class="overview-number" id="total-votes-1" style="color: #dc2626">
+          353 SIM
         </div>
-        <div class="overview-card" style="border: 3px solid #dc2626; background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(255,245,245,0.95)); box-shadow: 0 8px 32px rgba(220,38,38,0.15);">
-            <div class="overview-number" id="total-votes-2" style="color: #dc2626;">344 SIM</div>
-            <div class="overview-label" style="color: #991b1b; font-weight: 700;">Votaram A FAVOR - 2º Turno</div>
-            <div class="overview-detail"><strong style="color: #dc2626; font-size: 1.1rem;">72.1% APROVARAM</strong><br><span style="font-size: 0.85rem;">133 contra (27.9%)</span></div>
+        <div class="overview-label" style="color: #991b1b; font-weight: 700">
+          Votaram A FAVOR - 1º Turno
         </div>
-        <div class="overview-card">
-            <div class="overview-number">20</div>
-            <div class="overview-label">Partidos Políticos</div>
-            <div class="overview-detail">7 com 100% coesão<br>9 divididos internamente</div>
+        <div class="overview-detail">
+          <strong style="color: #dc2626; font-size: 1.1rem"
+            >72.3% APROVARAM</strong
+          ><br /><span style="font-size: 0.85rem">134 contra (27.5%)</span>
         </div>
-        <div class="overview-card">
-            <div class="overview-number">27</div>
-            <div class="overview-label">Estados + DF</div>
-            <div class="overview-detail">2 com 100% aprovação<br>4 com ≤60% aprovação</div>
+      </div>
+      <div
+        class="overview-card"
+        style="
+          border: 3px solid #dc2626;
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.98),
+            rgba(255, 245, 245, 0.95)
+          );
+          box-shadow: 0 8px 32px rgba(220, 38, 38, 0.15);
+        ">
+        <div class="overview-number" id="total-votes-2" style="color: #dc2626">
+          344 SIM
         </div>
-        <div class="overview-card">
-            <div class="overview-number">3</div>
-            <div class="overview-label">Mudanças de Voto</div>
-            <div class="overview-detail">Apenas 0.6% dos deputados<br>Todas SIM → NÃO</div>
+        <div class="overview-label" style="color: #991b1b; font-weight: 700">
+          Votaram A FAVOR - 2º Turno
         </div>
-        <div class="overview-card">
-            <div class="overview-number">83%</div>
-            <div class="overview-label">Correlação</div>
-            <div class="overview-detail">Voto SIM × Defesa<br>do Voto Secreto</div>
+        <div class="overview-detail">
+          <strong style="color: #dc2626; font-size: 1.1rem"
+            >72.1% APROVARAM</strong
+          ><br /><span style="font-size: 0.85rem">133 contra (27.9%)</span>
         </div>
+      </div>
+      <div class="overview-card">
+        <div class="overview-number">20</div>
+        <div class="overview-label">Partidos Políticos</div>
+        <div class="overview-detail">
+          7 com 100% coesão<br />9 divididos internamente
+        </div>
+      </div>
+      <div class="overview-card">
+        <div class="overview-number">27</div>
+        <div class="overview-label">Estados + DF</div>
+        <div class="overview-detail">
+          2 com 100% aprovação<br />4 com ≤60% aprovação
+        </div>
+      </div>
+      <div class="overview-card">
+        <div class="overview-number">3</div>
+        <div class="overview-label">Mudanças de Voto</div>
+        <div class="overview-detail">
+          Apenas 0.6% dos deputados<br />Todas SIM → NÃO
+        </div>
+      </div>
+      <div class="overview-card">
+        <div class="overview-number">83%</div>
+        <div class="overview-label">Correlação</div>
+        <div class="overview-detail">
+          Voto SIM × Defesa<br />do Voto Secreto
+        </div>
+      </div>
     </div>
 
     <!-- Report Highlights Section -->
     <div class="container">
-        <div class="section">
-            <h2 class="section-title">📊 Principais Descobertas do Relatório Analítico</h2>
-            <p class="section-subtitle">
-                Nossa análise profunda revelou padrões fascinantes no comportamento parlamentar.
-                <a href="relatorio.html" class="cta-link" onclick="trackReportAccess('highlights_cta', 'inline_link')">🔍 Leia o relatório completo →</a>
+      <div class="section">
+        <h2 class="section-title">
+          📊 Principais Descobertas do Relatório Analítico
+        </h2>
+        <p class="section-subtitle">
+          Nossa análise profunda revelou padrões fascinantes no comportamento
+          parlamentar.
+          <a
+            href="relatorio.html"
+            class="cta-link"
+            onclick="trackReportAccess('highlights_cta', 'inline_link')"
+            >🔍 Leia o relatório completo →</a
+          >
+        </p>
+
+        <div class="insights-grid">
+          <div class="insight-card">
+            <div class="insight-icon">🎯</div>
+            <h3>Polarização Extrema</h3>
+            <p>
+              Partidos de direita com apoio massivo (>90%) vs. esquerda com
+              oposição massiva (>80%). Centro profundamente dividido.
+              <a
+                href="partidos.html"
+                style="color: #4f46e5; text-decoration: none"
+                >Ver análise completa por partidos →</a
+              >
             </p>
+          </div>
 
-            <div class="insights-grid">
-                <div class="insight-card">
-                    <div class="insight-icon">🎯</div>
-                    <h3>Polarização Extrema</h3>
-                    <p>Partidos de direita com apoio massivo (>90%) vs. esquerda com oposição massiva (>80%). Centro profundamente dividido. <a href="partidos.html" style="color: #4f46e5; text-decoration: none;">Ver análise completa por partidos →</a></p>
-                </div>
+          <div class="insight-card">
+            <div class="insight-icon">🔗</div>
+            <h3>Correlação Forte (r=0.83)</h3>
+            <p>
+              Voto favorável à PEC fortemente correlacionado com defesa do voto
+              secreto. Apenas 4 contradições em 461 votos.
+            </p>
+          </div>
 
-                <div class="insight-card">
-                    <div class="insight-icon">🔗</div>
-                    <h3>Correlação Forte (r=0.83)</h3>
-                    <p>Voto favorável à PEC fortemente correlacionado com defesa do voto secreto. Apenas 4 contradições em 461 votos.</p>
-                </div>
+          <div class="insight-card">
+            <div class="insight-icon">🗺️</div>
+            <h3>Divisões Regionais</h3>
+            <p>
+              Norte/Nordeste mais favorável (TO e PI: 100%). Sul/Sudeste mais
+              resistente. Estados menores mais coesos.
+              <a
+                href="estados.html"
+                style="color: #4f46e5; text-decoration: none"
+                >Ver mapa interativo →</a
+              >
+            </p>
+          </div>
 
-                <div class="insight-card">
-                    <div class="insight-icon">🗺️</div>
-                    <h3>Divisões Regionais</h3>
-                    <p>Norte/Nordeste mais favorável (TO e PI: 100%). Sul/Sudeste mais resistente. Estados menores mais coesos. <a href="estados.html" style="color: #4f46e5; text-decoration: none;">Ver mapa interativo →</a></p>
-                </div>
+          <div class="insight-card">
+            <div class="insight-icon">⚖️</div>
+            <h3>Estabilidade Extrema</h3>
+            <p>
+              99.4% mantiveram o voto entre turnos. Apenas 3 mudanças, todas de
+              SIM para NÃO. Posições consolidadas.
+              <a href="fluxo.html" style="color: #4f46e5; text-decoration: none"
+                >Ver fluxo de votos →</a
+              >
+            </p>
+          </div>
 
-                <div class="insight-card">
-                    <div class="insight-icon">⚖️</div>
-                    <h3>Estabilidade Extrema</h3>
-                    <p>99.4% mantiveram o voto entre turnos. Apenas 3 mudanças, todas de SIM para NÃO. Posições consolidadas. <a href="fluxo.html" style="color: #4f46e5; text-decoration: none;">Ver fluxo de votos →</a></p>
-                </div>
+          <div class="insight-card">
+            <div class="insight-icon">🏛️</div>
+            <h3>Disciplina Partidária</h3>
+            <p>
+              PL: 100% de disciplina. PT: 12 dissidentes. PSDB: completamente
+              dividido (50%-50%).
+            </p>
+          </div>
 
-                <div class="insight-card">
-                    <div class="insight-icon">🏛️</div>
-                    <h3>Disciplina Partidária</h3>
-                    <p>PL: 100% de disciplina. PT: 12 dissidentes. PSDB: completamente dividido (50%-50%).</p>
-                </div>
-
-                <div class="insight-card">
-                    <div class="insight-icon">📈</div>
-                    <h3>Casos Extremos</h3>
-                    <p>2 estados com 100% de aprovação (TO, PI). 4 estados divididos (≤60%). Alex Santana: único abstencionista.</p>
-                </div>
-            </div>
-
-            <div class="cta-section">
-                <h3>🔬 Análise Completa Disponível</h3>
-                <p>O relatório completo inclui análise detalhada de 965 votos, índices de coesão partidária, casos contraditórios, perfis de dissidentes e muito mais.</p>
-                <a href="relatorio.html" class="cta-button" onclick="trackReportAccess('full_report', 'cta_button')">📋 Ver Relatório Completo</a>
-            </div>
+          <div class="insight-card">
+            <div class="insight-icon">📈</div>
+            <h3>Casos Extremos</h3>
+            <p>
+              2 estados com 100% de aprovação (TO, PI). 4 estados divididos
+              (≤60%). Alex Santana: único abstencionista.
+            </p>
+          </div>
         </div>
+
+        <div class="cta-section">
+          <h3>🔬 Análise Completa Disponível</h3>
+          <p>
+            O relatório completo inclui análise detalhada de 965 votos, índices
+            de coesão partidária, casos contraditórios, perfis de dissidentes e
+            muito mais.
+          </p>
+          <a
+            href="relatorio.html"
+            class="cta-button"
+            onclick="trackReportAccess('full_report', 'cta_button')"
+            >📋 Ver Relatório Completo</a
+          >
+        </div>
+      </div>
     </div>
 
     <div class="nav-cards">
-        <a href="deputados.html" class="nav-card" onclick="trackNavigationFlow('homepage', 'deputados', 'nav_card')" style="border: 3px solid #dc2626; background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(255,245,245,0.95)); box-shadow: 0 8px 32px rgba(220,38,38,0.15);">
-            <span class="nav-card-icon" role="img" aria-label="Ícone de alerta">⚠️</span>
-            <h3 class="nav-card-title" style="color: #dc2626;">Veja QUEM votou SIM</h3>
-            <p class="nav-card-description">
-                <strong>Identifique os 353 deputados que APROVARAM a PEC.</strong>
-                Busque por nome, partido ou estado. Veja exatamente quem votou a favor e quem defendeu o voto secreto.
-            </p>
-            <div class="nav-card-stats">
-                <div class="stat-item" style="background: rgba(220,38,38,0.15); border: 2px solid rgba(220,38,38,0.3); border-radius: 8px;">
-                    <div class="stat-number" style="color: #dc2626;">353</div>
-                    <div class="stat-label">Votaram SIM</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">134</div>
-                    <div class="stat-label">Votaram NÃO</div>
-                </div>
-            </div>
-        </a>
+      <a
+        href="deputados.html"
+        class="nav-card"
+        onclick="trackNavigationFlow('homepage', 'deputados', 'nav_card')"
+        style="
+          border: 3px solid #dc2626;
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.98),
+            rgba(255, 245, 245, 0.95)
+          );
+          box-shadow: 0 8px 32px rgba(220, 38, 38, 0.15);
+        ">
+        <span class="nav-card-icon" role="img" aria-label="Ícone de alerta"
+          >⚠️</span
+        >
+        <h3 class="nav-card-title" style="color: #dc2626">
+          Veja QUEM votou SIM
+        </h3>
+        <p class="nav-card-description">
+          <strong>Identifique os 353 deputados que APROVARAM a PEC.</strong>
+          Busque por nome, partido ou estado. Veja exatamente quem votou a favor
+          e quem defendeu o voto secreto.
+        </p>
+        <div class="nav-card-stats">
+          <div
+            class="stat-item"
+            style="
+              background: rgba(220, 38, 38, 0.15);
+              border: 2px solid rgba(220, 38, 38, 0.3);
+              border-radius: 8px;
+            ">
+            <div class="stat-number" style="color: #dc2626">353</div>
+            <div class="stat-label">Votaram SIM</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">134</div>
+            <div class="stat-label">Votaram NÃO</div>
+          </div>
+        </div>
+      </a>
 
-        <a href="partidos.html" class="nav-card" onclick="trackNavigationFlow('homepage', 'partidos', 'nav_card')">
-            <span class="nav-card-icon" role="img" aria-label="Ícone de alvo representando análise">🎯</span>
-            <h3 class="nav-card-title">Análise por Partidos</h3>
-            <p class="nav-card-description">
-                Explore como cada partido político se posicionou na votação. Visualize padrões de coesão partidária,
-                dissidências internas e a correlação entre voto na PEC e defesa do voto secreto.
-            </p>
-            <div class="nav-card-stats">
-                <div class="stat-item">
-                    <div class="stat-number">100%</div>
-                    <div class="stat-label">PL & Republicanos</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">0%</div>
-                    <div class="stat-label">PSDB Coesão</div>
-                </div>
-            </div>
-        </a>
+      <a
+        href="partidos.html"
+        class="nav-card"
+        onclick="trackNavigationFlow('homepage', 'partidos', 'nav_card')">
+        <span
+          class="nav-card-icon"
+          role="img"
+          aria-label="Ícone de alvo representando análise"
+          >🎯</span
+        >
+        <h3 class="nav-card-title">Análise por Partidos</h3>
+        <p class="nav-card-description">
+          Explore como cada partido político se posicionou na votação. Visualize
+          padrões de coesão partidária, dissidências internas e a correlação
+          entre voto na PEC e defesa do voto secreto.
+        </p>
+        <div class="nav-card-stats">
+          <div class="stat-item">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">PL & Republicanos</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">0%</div>
+            <div class="stat-label">PSDB Coesão</div>
+          </div>
+        </div>
+      </a>
 
-        <a href="estados.html" class="nav-card" onclick="trackNavigationFlow('homepage', 'estados', 'nav_card')">
-            <span class="nav-card-icon" role="img" aria-label="Ícone de mapa representando estados">🗺️</span>
-            <h3 class="nav-card-title">Análise por Estados</h3>
-            <p class="nav-card-description">
-                Descubra os padrões regionais de votação. Compare como diferentes regiões do Brasil se posicionaram
-                e identifique variações geográficas na aprovação da PEC.
-            </p>
-            <div class="nav-card-stats">
-                <div class="stat-item">
-                    <div class="stat-number">TO & PI</div>
-                    <div class="stat-label">100% Aprovação</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">SE & RS</div>
-                    <div class="stat-label">Mais Divididos</div>
-                </div>
-            </div>
-        </a>
+      <a
+        href="estados.html"
+        class="nav-card"
+        onclick="trackNavigationFlow('homepage', 'estados', 'nav_card')">
+        <span
+          class="nav-card-icon"
+          role="img"
+          aria-label="Ícone de mapa representando estados"
+          >🗺️</span
+        >
+        <h3 class="nav-card-title">Análise por Estados</h3>
+        <p class="nav-card-description">
+          Descubra os padrões regionais de votação. Compare como diferentes
+          regiões do Brasil se posicionaram e identifique variações geográficas
+          na aprovação da PEC.
+        </p>
+        <div class="nav-card-stats">
+          <div class="stat-item">
+            <div class="stat-number">TO & PI</div>
+            <div class="stat-label">100% Aprovação</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">SE & RS</div>
+            <div class="stat-label">Mais Divididos</div>
+          </div>
+        </div>
+      </a>
 
-        <a href="fluxo.html" class="nav-card" onclick="trackNavigationFlow('homepage', 'fluxo', 'nav_card')">
-            <span class="nav-card-icon" role="img" aria-label="Ícone de ciclo representando fluxo">🔄</span>
-            <h3 class="nav-card-title">Fluxo de Votos</h3>
-            <p class="nav-card-description">
-                Acompanhe as mudanças entre o primeiro e segundo turno. Veja quais deputados mudaram de posição
-                e analise a estabilidade geral dos votos ao longo do processo.
-            </p>
-            <div class="nav-card-stats">
-                <div class="stat-item">
-                    <div class="stat-number">99.4%</div>
-                    <div class="stat-label">Estabilidade</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">3</div>
-                    <div class="stat-label">Mudanças SIM→NÃO</div>
-                </div>
-            </div>
-        </a>
-        <a href="relatorio.html" class="nav-card" onclick="trackNavigationFlow('homepage', 'relatorio', 'nav_card')">
-            <span class="nav-card-icon">📊</span>
-            <h3 class="nav-card-title">Relatório Completo</h3>
-            <p class="nav-card-description">
-                Análise profunda e detalhada dos dados de votação. Inclui correlações, casos extremos,
-                índices de coesão partidária e insights estratégicos sobre o comportamento parlamentar.
-            </p>
-            <div class="nav-card-stats">
-                <div class="stat-item">
-                    <div class="stat-number">965</div>
-                    <div class="stat-label">Votos Analisados</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">0.83</div>
-                    <div class="stat-label">Correlação</div>
-                </div>
-            </div>
-        </a>
-        <a href="despesas.html" class="nav-card" onclick="trackNavigationFlow('homepage', 'despesas', 'nav_card')" style="border: 3px solid #f59e0b; background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(255,251,235,0.95)); box-shadow: 0 8px 32px rgba(245,158,11,0.15);">
-            <span class="nav-card-icon" role="img" aria-label="Ícone de dinheiro">💰</span>
-            <h3 class="nav-card-title" style="color: #d97706;">Despesas dos Deputados</h3>
-            <p class="nav-card-description">
-                <strong>Transparência total dos gastos parlamentares.</strong>
-                Veja quanto cada deputado gastou com dados oficiais da Câmara dos Deputados. Análise completa de despesas públicas em tempo real.
-            </p>
-            <div class="nav-card-stats">
-                <div class="stat-item" style="background: rgba(245,158,11,0.15); border: 2px solid rgba(245,158,11,0.3); border-radius: 8px;">
-                    <div class="stat-number" style="color: #d97706;">2025</div>
-                    <div class="stat-label">Dados Atuais</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" style="color: #059669;">🔗 API</div>
-                    <div class="stat-label">Dados Oficiais</div>
-                </div>
-            </div>
-        </a>
+      <a
+        href="fluxo.html"
+        class="nav-card"
+        onclick="trackNavigationFlow('homepage', 'fluxo', 'nav_card')">
+        <span
+          class="nav-card-icon"
+          role="img"
+          aria-label="Ícone de ciclo representando fluxo"
+          >🔄</span
+        >
+        <h3 class="nav-card-title">Fluxo de Votos</h3>
+        <p class="nav-card-description">
+          Acompanhe as mudanças entre o primeiro e segundo turno. Veja quais
+          deputados mudaram de posição e analise a estabilidade geral dos votos
+          ao longo do processo.
+        </p>
+        <div class="nav-card-stats">
+          <div class="stat-item">
+            <div class="stat-number">99.4%</div>
+            <div class="stat-label">Estabilidade</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">3</div>
+            <div class="stat-label">Mudanças SIM→NÃO</div>
+          </div>
+        </div>
+      </a>
+      <a
+        href="relatorio.html"
+        class="nav-card"
+        onclick="trackNavigationFlow('homepage', 'relatorio', 'nav_card')">
+        <span class="nav-card-icon">📊</span>
+        <h3 class="nav-card-title">Relatório Completo</h3>
+        <p class="nav-card-description">
+          Análise profunda e detalhada dos dados de votação. Inclui correlações,
+          casos extremos, índices de coesão partidária e insights estratégicos
+          sobre o comportamento parlamentar.
+        </p>
+        <div class="nav-card-stats">
+          <div class="stat-item">
+            <div class="stat-number">965</div>
+            <div class="stat-label">Votos Analisados</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">0.83</div>
+            <div class="stat-label">Correlação</div>
+          </div>
+        </div>
+      </a>
+      <a
+        href="despesas.html"
+        class="nav-card"
+        onclick="trackNavigationFlow('homepage', 'despesas', 'nav_card')"
+        style="
+          border: 3px solid #f59e0b;
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.98),
+            rgba(255, 251, 235, 0.95)
+          );
+          box-shadow: 0 8px 32px rgba(245, 158, 11, 0.15);
+        ">
+        <span class="nav-card-icon" role="img" aria-label="Ícone de dinheiro"
+          >💰</span
+        >
+        <h3 class="nav-card-title" style="color: #d97706">
+          Despesas dos Deputados
+        </h3>
+        <p class="nav-card-description">
+          <strong>Transparência total dos gastos parlamentares.</strong>
+          Veja quanto cada deputado gastou com dados oficiais da Câmara dos
+          Deputados. Análise completa de despesas públicas em tempo real.
+        </p>
+        <div class="nav-card-stats">
+          <div
+            class="stat-item"
+            style="
+              background: rgba(245, 158, 11, 0.15);
+              border: 2px solid rgba(245, 158, 11, 0.3);
+              border-radius: 8px;
+            ">
+            <div class="stat-number" style="color: #d97706">2025</div>
+            <div class="stat-label">Dados Atuais</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" style="color: #059669">🔗 API</div>
+            <div class="stat-label">Dados Oficiais</div>
+          </div>
+        </div>
+      </a>
     </div>
 
     <div class="methodology">
-        <h2>📊 Metodologia e Dados</h2>
-        <div class="methodology-grid">
-            <div class="methodology-item">
-                <div class="methodology-title">🔍 Fonte dos Dados</div>
-                <div class="methodology-text">
-                    Dados extraídos dos registros oficiais de votação nominal da Câmara dos Deputados
-                    para os dois turnos da PEC da Bandidagem.
-                </div>
-            </div>
-            <div class="methodology-item">
-                <div class="methodology-title">⚡ Processamento</div>
-                <div class="methodology-text">
-                    Análise computacional usando Python e D3.js. Dados validados por métodos independentes
-                    para garantir precisão de 95%+ em todas as estatísticas.
-                </div>
-            </div>
-            <div class="methodology-item">
-                <div class="methodology-title">📈 Métricas</div>
-                <div class="methodology-text">
-                    Índice Rice de coesão partidária, correlação de Pearson, análise de fluxo e
-                    estatísticas descritivas para padrões regionais.
-                </div>
-            </div>
-            <div class="methodology-item">
-                <div class="methodology-title">✅ Validação</div>
-                <div class="methodology-text">
-                    Verificação cruzada independente de todos os dados. Relatório completo de validação
-                    disponível demonstrando acurácia para publicação.
-                </div>
-            </div>
+      <h2>📊 Metodologia e Dados</h2>
+      <div class="methodology-grid">
+        <div class="methodology-item">
+          <div class="methodology-title">🔍 Fonte dos Dados</div>
+          <div class="methodology-text">
+            Dados extraídos dos registros oficiais de votação nominal da Câmara
+            dos Deputados para os dois turnos da PEC da Bandidagem.
+          </div>
         </div>
+        <div class="methodology-item">
+          <div class="methodology-title">⚡ Processamento</div>
+          <div class="methodology-text">
+            Análise computacional usando Python e D3.js. Dados validados por
+            métodos independentes para garantir precisão de 95%+ em todas as
+            estatísticas.
+          </div>
+        </div>
+        <div class="methodology-item">
+          <div class="methodology-title">📈 Métricas</div>
+          <div class="methodology-text">
+            Índice Rice de coesão partidária, correlação de Pearson, análise de
+            fluxo e estatísticas descritivas para padrões regionais.
+          </div>
+        </div>
+        <div class="methodology-item">
+          <div class="methodology-title">✅ Validação</div>
+          <div class="methodology-text">
+            Verificação cruzada independente de todos os dados. Relatório
+            completo de validação disponível demonstrando acurácia para
+            publicação.
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Social Sharing Section -->
-    <div class="social-sharing" style="background: rgba(255,255,255,0.95); margin: 2rem auto; padding: 2rem; border-radius: 16px; max-width: 1200px; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.1);">
-        <h3 style="margin-bottom: 1rem; color: #1e293b;">📢 Compartilhe esta Análise</h3>
-        <p style="margin-bottom: 1.5rem; color: #64748b;">Ajude a espalhar transparência política</p>
-        <div class="share-buttons" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-            <a href="https://twitter.com/intent/tweet?text=Análise%20completa%20da%20PEC%20da%20Bandidagem%20-%20Veja%20como%20353%20deputados%20votaram&url=https://pec-bandidagem.vercel.app"
-               target="_blank"
-               onclick="PECAnalytics.trackSocialShare('twitter', 'homepage_share', 'homepage')"
-               style="background: #1da1f2; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: transform 0.2s;">
-                🐦 Twitter
-            </a>
-            <a href="https://www.facebook.com/sharer/sharer.php?u=https://pec-bandidagem.vercel.app"
-               target="_blank"
-               onclick="PECAnalytics.trackSocialShare('facebook', 'homepage_share', 'homepage')"
-               style="background: #4267B2; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: transform 0.2s;">
-                📘 Facebook
-            </a>
-            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://pec-bandidagem.vercel.app"
-               target="_blank"
-               onclick="PECAnalytics.trackSocialShare('linkedin', 'homepage_share', 'homepage')"
-               style="background: #0077b5; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: transform 0.2s;">
-                💼 LinkedIn
-            </a>
-            <a href="https://api.whatsapp.com/send?text=Análise%20completa%20da%20PEC%20da%20Bandidagem%20-%20https://pec-bandidagem.vercel.app"
-               target="_blank"
-               onclick="PECAnalytics.trackSocialShare('whatsapp', 'homepage_share', 'homepage')"
-               style="background: #25D366; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: transform 0.2s;">
-                💬 WhatsApp
-            </a>
-            <button onclick="navigator.clipboard.writeText('https://pec-bandidagem.vercel.app'); alert('Link copiado!'); PECAnalytics.trackSocialShare('copy_link', 'homepage_share', 'homepage')"
-                    style="background: #6b7280; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: transform 0.2s;">
-                🔗 Copiar Link
-            </button>
-        </div>
+    <div
+      class="social-sharing"
+      style="
+        background: rgba(255, 255, 255, 0.95);
+        margin: 2rem auto;
+        padding: 2rem;
+        border-radius: 16px;
+        max-width: 1200px;
+        text-align: center;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      ">
+      <h3 style="margin-bottom: 1rem; color: #1e293b">
+        📢 Compartilhe esta Análise
+      </h3>
+      <p style="margin-bottom: 1.5rem; color: #64748b">
+        Ajude a espalhar transparência política
+      </p>
+      <div
+        class="share-buttons"
+        style="
+          display: flex;
+          gap: 1rem;
+          justify-content: center;
+          flex-wrap: wrap;
+        ">
+        <a
+          href="https://twitter.com/intent/tweet?text=Análise%20completa%20da%20PEC%20da%20Bandidagem%20-%20Veja%20como%20353%20deputados%20votaram&url=https://pec-bandidagem.vercel.app"
+          target="_blank"
+          onclick="PECAnalytics.trackSocialShare('twitter', 'homepage_share', 'homepage')"
+          style="
+            background: #1da1f2;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s;
+          ">
+          🐦 Twitter
+        </a>
+        <a
+          href="https://www.facebook.com/sharer/sharer.php?u=https://pec-bandidagem.vercel.app"
+          target="_blank"
+          onclick="PECAnalytics.trackSocialShare('facebook', 'homepage_share', 'homepage')"
+          style="
+            background: #4267b2;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s;
+          ">
+          📘 Facebook
+        </a>
+        <a
+          href="https://www.linkedin.com/sharing/share-offsite/?url=https://pec-bandidagem.vercel.app"
+          target="_blank"
+          onclick="PECAnalytics.trackSocialShare('linkedin', 'homepage_share', 'homepage')"
+          style="
+            background: #0077b5;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s;
+          ">
+          💼 LinkedIn
+        </a>
+        <a
+          href="https://api.whatsapp.com/send?text=Análise%20completa%20da%20PEC%20da%20Bandidagem%20-%20https://pec-bandidagem.vercel.app"
+          target="_blank"
+          onclick="PECAnalytics.trackSocialShare('whatsapp', 'homepage_share', 'homepage')"
+          style="
+            background: #25d366;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s;
+          ">
+          💬 WhatsApp
+        </a>
+        <button
+          onclick="navigator.clipboard.writeText('https://pec-bandidagem.vercel.app'); alert('Link copiado!'); PECAnalytics.trackSocialShare('copy_link', 'homepage_share', 'homepage')"
+          style="
+            background: #6b7280;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+          ">
+          🔗 Copiar Link
+        </button>
+      </div>
     </div>
 
     <div class="footer">
-        <div class="footer-content">
-            <h3>🔬 Transparência e Reprodutibilidade</h3>
-            <p>
-                Esta análise foi desenvolvida com foco na transparência e precisão dos dados.
-                Todos os números foram verificados independentemente e estão prontos para publicação acadêmica ou jornalística.
-            </p>
-            <div class="data-sources">
-                <a href="docs/RELATORIO_PEC_BANDIDAGEM.md" class="source-link">📄 Relatório Completo</a>
-                <a href="docs/VALIDATION_REPORT.md" class="source-link">✅ Relatório de Validação</a>
-                <a href="docs/DEVELOPMENT.md" class="source-link">🛠️ Documentação Técnica</a>
-                <a href="https://www.reddit.com/r/brasil/comments/1niy6g4/c%C3%A2mara_aprova_pec_da_blindagem_em_1%C2%BA_turno/" class="source-link" target="_blank">📝 Post Original</a>
-            </div>
-            <div id="version-info" style="margin-top: 2rem; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                <!-- Version info will be injected here by version.js -->
-            </div>
-            <p style="margin-top: 1rem; font-size: 0.9rem; color: #94a3b8;">
-                Criado por <a href="https://github.com/fcavalcantirj" class="source-link">fcavalcantirj</a> •
-                Análise gerada em setembro de 2025 • Dados validados para publicação pública
-            </p>
+      <div class="footer-content">
+        <h3>🔬 Transparência e Reprodutibilidade</h3>
+        <p>
+          Esta análise foi desenvolvida com foco na transparência e precisão dos
+          dados. Todos os números foram verificados independentemente e estão
+          prontos para publicação acadêmica ou jornalística.
+        </p>
+        <div class="data-sources">
+          <a href="docs/RELATORIO_PEC_BANDIDAGEM.md" class="source-link"
+            >📄 Relatório Completo</a
+          >
+          <a href="docs/VALIDATION_REPORT.md" class="source-link"
+            >✅ Relatório de Validação</a
+          >
+          <a href="docs/DEVELOPMENT.md" class="source-link"
+            >🛠️ Documentação Técnica</a
+          >
+          <a
+            href="https://www.reddit.com/r/brasil/comments/1niy6g4/c%C3%A2mara_aprova_pec_da_blindagem_em_1%C2%BA_turno/"
+            class="source-link"
+            target="_blank"
+            >📝 Post Original</a
+          >
         </div>
+        <div
+          id="version-info"
+          style="
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+          ">
+          <!-- Version info will be injected here by version.js -->
+        </div>
+        <p style="margin-top: 1rem; font-size: 0.9rem; color: #94a3b8">
+          Criado por
+          <a href="https://github.com/fcavalcantirj" class="source-link"
+            >fcavalcantirj</a
+          >
+          • Análise gerada em setembro de 2025 • Dados validados para publicação
+          pública
+        </p>
+      </div>
     </div>
 
     <script src="data.js"></script>
     <script src="version.js"></script>
     <script>
-        // Use embedded data to avoid CORS issues
-        if (typeof VISUALIZATION_DATA !== 'undefined') {
-            console.log('Data loaded successfully for', VISUALIZATION_DATA.round1.length, 'deputies in round 1');
-        } else {
-            console.log('Using static values');
-        }
+      // Use embedded data to avoid CORS issues
+      if (typeof VISUALIZATION_DATA !== "undefined") {
+        console.log(
+          "Data loaded successfully for",
+          VISUALIZATION_DATA.round1.length,
+          "deputies in round 1"
+        );
+      } else {
+        console.log("Using static values");
+      }
 
-        // Add smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
+      // Add smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          document.querySelector(this.getAttribute("href")).scrollIntoView({
+            behavior: "smooth",
+          });
+        });
+      });
+
+      // Add intersection observer for animations
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px",
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = "1";
+            entry.target.style.transform = "translateY(0)";
+          }
+        });
+      }, observerOptions);
+
+      // Observe all cards for animation
+      document
+        .querySelectorAll(".nav-card, .overview-card, .methodology-item")
+        .forEach((card) => {
+          card.style.opacity = "0";
+          card.style.transform = "translateY(20px)";
+          card.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+          observer.observe(card);
         });
 
-        // Add intersection observer for animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // Observe all cards for animation
-        document.querySelectorAll('.nav-card, .overview-card, .methodology-item').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(card);
-        });
-
-        // Add loading animation
-        window.addEventListener('load', function() {
-            document.querySelectorAll('.overview-number').forEach((number, index) => {
-                setTimeout(() => {
-                    number.style.transform = 'scale(1.1)';
-                    setTimeout(() => {
-                        number.style.transform = 'scale(1)';
-                    }, 200);
-                }, index * 100);
-            });
-        });
+      // Add loading animation
+      window.addEventListener("load", function () {
+        document
+          .querySelectorAll(".overview-number")
+          .forEach((number, index) => {
+            setTimeout(() => {
+              number.style.transform = "scale(1.1)";
+              setTimeout(() => {
+                number.style.transform = "scale(1)";
+              }, 200);
+            }, index * 100);
+          });
+      });
     </script>
-</body>
+  </body>
 </html>
