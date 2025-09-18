@@ -11,8 +11,13 @@
     <meta property="og:description" content="Descubra quais dos 488 deputados votaram a favor da controversa PEC da Bandidagem. Análise completa com visualizações interativas por partido e estado.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://pec-bandidagem.vercel.app/">
+    <meta property="og:image" content="https://pec-bandidagem.vercel.app/og-image.png">
+    <meta property="og:image:alt" content="Análise da PEC da Bandidagem - 353 deputados votaram SIM">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <link rel="canonical" href="https://pec-bandidagem.vercel.app/">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://pec-bandidagem.vercel.app/og-image.png">
     <meta name="twitter:title" content="PEC da Bandidagem - Análise Interativa dos Padrões de Votação">
     <meta name="twitter:description" content="353 deputados votaram SIM na PEC da Bandidagem. Veja a análise completa com dados oficiais da Câmara dos Deputados.">
 
@@ -105,11 +110,70 @@
     }
     </script>
 
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "O que é a PEC da Bandidagem?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A PEC da Bandidagem é uma Proposta de Emenda à Constituição que foi votada na Câmara dos Deputados. 353 deputados votaram SIM, representando 72.3% dos votos válidos."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Quantos deputados votaram a favor da PEC?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "353 deputados votaram SIM na PEC da Bandidagem, enquanto 131 votaram NÃO. Houve alta correlação (r=0.83) com a defesa do voto secreto."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Quais partidos mais apoiaram a PEC?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "PL teve 100% de disciplina partidária votando SIM. Partidos de direita apresentaram apoio massivo (>90%), enquanto PT e outros partidos de esquerda fizeram oposição."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Como posso ver os dados dos deputados do meu estado?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Use nossa análise por estados para ver como sua região votou. Estados como Tocantins e Piauí tiveram 100% de aprovação, enquanto outros foram mais divididos."
+          }
+        }
+      ]
+    }
+    </script>
+
     <!-- Resource preloading for performance -->
     <link rel="preload" href="https://d3js.org/d3.v7.min.js" as="script">
     <link rel="preload" href="data.js" as="script">
     <link rel="dns-prefetch" href="//www.googletagmanager.com">
     <link rel="dns-prefetch" href="//www.google-analytics.com">
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//api.whatsapp.com">
+    <link rel="dns-prefetch" href="//twitter.com">
+    <link rel="dns-prefetch" href="//facebook.com">
+    <link rel="dns-prefetch" href="//linkedin.com">
+
+    <!-- Performance optimization -->
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="PEC Bandidagem">
+    <link rel="apple-touch-icon" href="/icon-192.png">
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-P47CK1TDL8"></script>
@@ -1253,6 +1317,42 @@
                     disponível demonstrando acurácia para publicação.
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Social Sharing Section -->
+    <div class="social-sharing" style="background: rgba(255,255,255,0.95); margin: 2rem auto; padding: 2rem; border-radius: 16px; max-width: 1200px; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.1);">
+        <h3 style="margin-bottom: 1rem; color: #1e293b;">📢 Compartilhe esta Análise</h3>
+        <p style="margin-bottom: 1.5rem; color: #64748b;">Ajude a espalhar transparência política</p>
+        <div class="share-buttons" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="https://twitter.com/intent/tweet?text=Análise%20completa%20da%20PEC%20da%20Bandidagem%20-%20Veja%20como%20353%20deputados%20votaram&url=https://pec-bandidagem.vercel.app"
+               target="_blank"
+               onclick="PECAnalytics.trackSocialShare('twitter', 'homepage_share', 'homepage')"
+               style="background: #1da1f2; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: transform 0.2s;">
+                🐦 Twitter
+            </a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https://pec-bandidagem.vercel.app"
+               target="_blank"
+               onclick="PECAnalytics.trackSocialShare('facebook', 'homepage_share', 'homepage')"
+               style="background: #4267B2; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: transform 0.2s;">
+                📘 Facebook
+            </a>
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://pec-bandidagem.vercel.app"
+               target="_blank"
+               onclick="PECAnalytics.trackSocialShare('linkedin', 'homepage_share', 'homepage')"
+               style="background: #0077b5; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: transform 0.2s;">
+                💼 LinkedIn
+            </a>
+            <a href="https://api.whatsapp.com/send?text=Análise%20completa%20da%20PEC%20da%20Bandidagem%20-%20https://pec-bandidagem.vercel.app"
+               target="_blank"
+               onclick="PECAnalytics.trackSocialShare('whatsapp', 'homepage_share', 'homepage')"
+               style="background: #25D366; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: transform 0.2s;">
+                💬 WhatsApp
+            </a>
+            <button onclick="navigator.clipboard.writeText('https://pec-bandidagem.vercel.app'); alert('Link copiado!'); PECAnalytics.trackSocialShare('copy_link', 'homepage_share', 'homepage')"
+                    style="background: #6b7280; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: transform 0.2s;">
+                🔗 Copiar Link
+            </button>
         </div>
     </div>
 

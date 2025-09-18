@@ -9,16 +9,41 @@ Disallow: /docs/
 Disallow: /*.json$
 Disallow: /vercel.json
 Disallow: /build.sh
+Disallow: /node_modules/
+Disallow: /.git/
+Disallow: /analytics.js
+Disallow: /version.js
 
 # Allow all major search engines
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Slurp
 Allow: /
-
-# Crawl delay to be respectful
 Crawl-delay: 1
+
+User-agent: Yandex
+Allow: /
+Crawl-delay: 2
+
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 1
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+# Host directive
+Host: https://pec-bandidagem.vercel.app
