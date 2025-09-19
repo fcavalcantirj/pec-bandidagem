@@ -375,6 +375,38 @@
             font-weight: 500;
         }
 
+        .loading-modal {
+            text-align: center;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .loading-modal .modal-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 2rem;
+        }
+
+        .loading-spinner-large {
+            width: 60px;
+            height: 60px;
+            border: 5px solid #e5e7eb;
+            border-top: 5px solid #4f46e5;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-modal p {
+            font-size: 1.1rem;
+            color: #6b7280;
+            margin: 0;
+            font-weight: 500;
+        }
+
         /* Mobile optimizations */
         @media (max-width: 768px) {
             .header h1 {
@@ -965,10 +997,6 @@
         function loadDeputyData() {
             // Loading state is shown by default in HTML
 
-            // Add minimum loading time to ensure users see the loading state
-            const startTime = Date.now();
-            const minimumLoadingTime = 800; // 800ms minimum
-
             if (typeof VISUALIZATION_DATA !== 'undefined') {
                 console.log('Loading deputy data...');
 
@@ -1003,19 +1031,12 @@
                 setupFilters();
                 filterDeputies();
 
-                // Ensure minimum loading time before hiding
-                const elapsedTime = Date.now() - startTime;
-                const remainingTime = Math.max(0, minimumLoadingTime - elapsedTime);
-
-                setTimeout(() => {
-                    hideLoadingState();
-                    trackVisualizationInteraction('deputy_search', 'data_loaded', `${allDeputies.length} deputies`);
-                }, remainingTime);
+                // Hide loading state immediately when data is ready
+                hideLoadingState();
+                trackVisualizationInteraction('deputy_search', 'data_loaded', `${allDeputies.length} deputies`);
             } else {
                 console.error('Deputy data not found');
-                setTimeout(() => {
-                    hideLoadingState();
-                }, minimumLoadingTime);
+                hideLoadingState();
             }
         }
 
@@ -1186,6 +1207,9 @@
         async function showDeputyDetails(deputyName) {
             const deputy = allDeputies.find(d => d.name === deputyName);
             if (deputy) {
+                // Show loading modal immediately
+                showLoadingModal(deputyName);
+
                 // Track deputy click with consistent naming across pages
                 trackVisualizationInteraction('deputy_search', 'deputy_selected', deputyName);
 
@@ -1394,6 +1418,40 @@
             if (modal) {
                 modal.remove();
             }
+        }
+
+        function showLoadingModal(deputyName) {
+            // Remove existing modal if any
+            const existingModal = document.getElementById('deputyModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+
+            // Create loading modal HTML
+            const modalHTML = `
+                <div id="deputyModal" class="modal-overlay">
+                    <div class="modal-content loading-modal">
+                        <div class="modal-header">
+                            <h2>Carregando informações de ${deputyName}</h2>
+                        </div>
+                        <div class="modal-body">
+                            <div class="loading-spinner-large"></div>
+                            <p>Buscando dados detalhados do deputado...</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add modal to page
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+            // Add click outside to close functionality
+            const modal = document.getElementById('deputyModal');
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeDeputyModal();
+                }
+            });
         }
 
         function copyToClipboard(textareaId) {
