@@ -3,11 +3,11 @@
 // Build date: 2025-09-18T19:08:14.245Z
 
 window.PROJECT_VERSION = {
-  version: "1.1.0",
+  version: "1.2.0",
   name: "pec-bandidagem-visualizations",
-  buildDate: "2025-09-18",
-  buildTime: "2025-09-18T19:08:14.245Z",
-  gitCommit: "62bf67f",
+  buildDate: "2025-09-19",
+  buildTime: "2025-09-19T00:14:09.000Z",
+  gitCommit: "b050909",
   deploymentUrl: typeof window !== 'undefined' ? window.location.origin : 'localhost'
 };
 

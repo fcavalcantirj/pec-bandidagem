@@ -1,6 +1,6 @@
 {
   "name": "pec-bandidagem-visualizations",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Visualizações interativas dos padrões de votação da PEC da Bandidagem na Câmara dos Deputados. Análise detalhada de 488 deputados (1º turno) e 477 deputados (2º turno) com dados validados e verificados independentemente.",
   "main": "index.html",
   "homepage": "https://fcavalcantirj.github.io/pec-bandidagem",
