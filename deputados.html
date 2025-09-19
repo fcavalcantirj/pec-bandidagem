@@ -910,11 +910,11 @@
             </div>
         </div>
 
-        <div class="deputies-grid" id="deputiesGrid">
+        <div class="deputies-grid" id="deputiesGrid" style="display: none;">
             <!-- Deputies will be populated here -->
         </div>
 
-        <div class="loading-state" id="loadingState">
+        <div class="loading-state" id="loadingState" style="display: flex;">
             <div class="loading-spinner"></div>
             <p>Carregando deputados...</p>
         </div>
@@ -963,8 +963,11 @@
 
         // Load and process deputy data
         function loadDeputyData() {
-            // Show loading state
-            showLoadingState();
+            // Loading state is shown by default in HTML
+
+            // Add minimum loading time to ensure users see the loading state
+            const startTime = Date.now();
+            const minimumLoadingTime = 800; // 800ms minimum
 
             if (typeof VISUALIZATION_DATA !== 'undefined') {
                 console.log('Loading deputy data...');
@@ -1000,12 +1003,19 @@
                 setupFilters();
                 filterDeputies();
 
-                // Hide loading state after data is loaded
-                hideLoadingState();
-                trackVisualizationInteraction('deputy_search', 'data_loaded', `${allDeputies.length} deputies`);
+                // Ensure minimum loading time before hiding
+                const elapsedTime = Date.now() - startTime;
+                const remainingTime = Math.max(0, minimumLoadingTime - elapsedTime);
+
+                setTimeout(() => {
+                    hideLoadingState();
+                    trackVisualizationInteraction('deputy_search', 'data_loaded', `${allDeputies.length} deputies`);
+                }, remainingTime);
             } else {
                 console.error('Deputy data not found');
-                hideLoadingState();
+                setTimeout(() => {
+                    hideLoadingState();
+                }, minimumLoadingTime);
             }
         }
 
